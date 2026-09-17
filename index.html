@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Licorería Pao - Control y Ventas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-main: #0b0f17;
+      --card-bg: rgba(20, 26, 38, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --input-bg: #161f30;
+      --accent: #f59e0b;
+      --accent-grad: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --danger: #ef4444;
+      --danger-grad: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      --success: #10b981;
+      --success-grad: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background-color: var(--bg-main); color: var(--text-main); padding-bottom: 90px; min-height: 100vh; }
+
+    /* Header Moderno */
+    header {
+      background: rgba(11, 15, 23, 0.85);
+      backdrop-filter: blur(16px);
+      padding: 16px 20px;
+      text-align: center;
+      border-bottom: 1px solid var(--card-border);
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+    }
+    header h1 {
+      font-size: 1.35rem; font-weight: 800;
+      background: var(--accent-grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+    header .badge-pao {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700;
+    }
+
+    /* Navegación Flotante Estilo App */
+    nav {
+      position: fixed; bottom: 16px; left: 16px; right: 16px;
+      background: rgba(18, 24, 38, 0.9);
+      backdrop-filter: blur(20px);
+      display: flex; justify-content: space-around; padding: 8px 6px;
+      border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5); z-index: 100;
+    }
+    nav button {
+      background: none; border: none; color: var(--text-muted);
+      font-size: 0.75rem; font-weight: 600;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      padding: 8px 16px; border-radius: 16px; cursor: pointer; transition: all 0.25s ease;
+    }
+    nav button.active {
+      background: rgba(245, 158, 11, 0.15); color: var(--accent);
+    }
+    nav button svg { width: 22px; height: 22px; fill: currentColor; }
+
+    /* Layout y Pestañas */
+    .tab-content { display: none; padding: 18px; max-width: 650px; margin: 0 auto; animation: fadeIn 0.25s ease-in-out; }
+    .tab-content.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Tarjetas de Resumen */
+    .summary-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      padding: 18px; margin-bottom: 20px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+    .summary-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+    
+    .cart-total-badge {
+      font-size: 1.4rem; font-weight: 800; color: var(--accent);
+      text-shadow: 0 0 12px rgba(245, 158, 11, 0.25);
+    }
+
+    /* Grid de Productos */
+    .grid-products {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+      gap: 14px; margin-top: 12px;
+    }
+    .card-product {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      border: 1px solid var(--card-border);
+      overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .card-product:active { transform: scale(0.98); }
+    .card-product img {
+      width: 100%; height: 125px; object-fit: cover;
+      background: #111827; border-bottom: 1px solid var(--card-border);
+    }
+    .card-product-body { padding: 12px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .card-product-title { font-weight: 700; font-size: 0.95rem; line-height: 1.25; margin-bottom: 8px; }
+    
+    .price-pill {
+      display: inline-block; background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08); padding: 3px 8px;
+      border-radius: 8px; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;
+    }
+    .price-pill strong { color: var(--accent); }
+
+    /* Botones Modernos */
+    .btn {
+      background: var(--accent-grad); color: #000; border: none;
+      padding: 11px 16px; border-radius: 12px; font-weight: 700; font-size: 0.9rem;
+      cursor: pointer; width: 100%; text-align: center; transition: opacity 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn:active { opacity: 0.85; }
+    .btn-danger { background: var(--danger-grad); color: #fff; }
+    .btn-success { background: var(--success-grad); color: #fff; }
+    .btn-outline { background: transparent; border: 1px solid var(--card-border); color: var(--text-muted); }
+
+    /* Formularios */
+    form { display: flex; flex-direction: column; gap: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    input, select {
+      padding: 12px 14px; border-radius: 12px; border: 1px solid var(--card-border);
+      background: var(--input-bg); color: #fff; font-size: 0.95rem; font-weight: 500;
+      outline: none; transition: border-color 0.2s;
+    }
+    input:focus, select:focus { border-color: var(--accent); }
+    .form-row { display: flex; gap: 10px; }
+    .form-row > div { flex: 1; }
+
+    /* Carrito / Lista de Items */
+    .cart-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 0; border-bottom: 1px solid var(--card-border); font-size: 0.9rem;
+    }
+    .cart-item:last-child { border-bottom: none; }
+
+    /* Modal Estilo Sheet */
+    .modal {
+      display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.75); backdrop-filter: blur(8px);
+      z-index: 200; justify-content: center; align-items: flex-end;
+    }
+    .modal-content {
+      background: #121824; border-top: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px 24px 0 0; width: 100%; max-width: 500px; padding: 24px;
+      animation: slideUp 0.25s ease-out;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <span>🍷</span>
+    <h1>Licorería Pao</h1>
+    <span class="badge-pao">SISTEMA</span>
+  </header>
+
+  <!-- TAB 1: VENTAS (POS) -->
+  <div id="tab-ventas" class="tab-content active">
+    <div class="summary-card">
+      <h3>
+        <span>🛒 Venta Actual</span>
+        <span class="cart-total-badge"><span id="cart-total-amount">0.00</span> Bs.</span>
+      </h3>
+      <div id="cart-list">
+        <p style="color: var(--text-muted); text-align: center; padding: 10px 0; font-size: 0.88rem;">
+          No hay productos en el carrito.
+        </p>
+      </div>
+      <button class="btn btn-success" style="margin-top: 14px;" onclick="checkout()">
+        ✅ Finalizar y Cobrar
+      </button>
+    </div>
+
+    <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 8px;">Catálogo de Productos</h3>
+    <div class="grid-products" id="sales-products-grid"></div>
+  </div>
+
+  <!-- TAB 2: INVENTARIO Y REGISTRO -->
+  <div id="tab-inventario" class="tab-content">
+    <div class="summary-card">
+      <h3>➕ Registrar / Modificar Producto</h3>
+      <form id="product-form" onsubmit="saveProduct(event)">
+        <input type="hidden" id="prod-id">
+        
+        <div class="form-group">
+          <label>Nombre del Producto</label>
+          <input type="text" id="prod-name" placeholder="Ej: Cerveza Huari, Coca en Hoja, Cigarrillos" required>
+        </div>
+
+        <div class="form-group">
+          <label>Foto del Producto</label>
+          <input type="file" id="prod-image" accept="image/*" onchange="previewImage(event)">
+          <input type="hidden" id="prod-image-base64">
+        </div>
+        
+        <div class="form-row">
+          <div class="form-group">
+            <label>Unidad Principal</label>
+            <select id="prod-unit1">
+              <option value="Unidad">Unidad</option>
+              <option value="Lata">Lata</option>
+              <option value="Botella">Botella</option>
+              <option value="Kilo">Kilo</option>
+              <option value="Cuartilla">Cuartilla</option>
+              <option value="Libra">Libra</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Precio (Bs.)</label>
+            <input type="number" step="0.5" id="prod-price1" placeholder="0.00" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Unidad Secundaria (Opcional)</label>
+            <select id="prod-unit2">
+              <option value="">Ninguna</option>
+              <option value="Paquete">Paquete</option>
+              <option value="Caja">Caja</option>
+              <option value="Six-pack">Six-pack</option>
+              <option value="Cuartilla">Cuartilla</option>
+              <option value="Kilo">Kilo</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Precio Mayor (Bs.)</label>
+            <input type="number" step="0.5" id="prod-price2" placeholder="0.00">
+          </div>
+        </div>
+
+        <button type="submit" class="btn" style="margin-top: 6px;">Guardar en Registro</button>
+      </form>
+    </div>
+
+    <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 8px;">Inventario Registrado</h3>
+    <div class="grid-products" id="inventory-products-grid"></div>
+  </div>
+
+  <!-- TAB 3: REPORTES Y HISTORIAL -->
+  <div id="tab-historial" class="tab-content">
+    <div class="summary-card">
+      <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Total Recaudado Hoy</span>
+      <div style="font-size: 2rem; font-weight: 800; color: var(--accent); margin-top: 4px;">
+        <span id="total-day-sales">0.00</span> Bs.
+      </div>
+    </div>
+
+    <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 12px;">Historial de Ventas</h3>
+    <div id="sales-history-list"></div>
+    
+    <button class="btn btn-danger" style="margin-top: 20px;" onclick="clearHistory()">
+      🗑️ Vaciar Historial del Día
+    </button>
+  </div>
+
+  <!-- MODAL CANTIDAD / PRESENTACIÓN -->
+  <div id="add-modal" class="modal">
+    <div class="modal-content">
+      <h3 id="modal-title" style="font-size: 1.15rem; font-weight: 800; margin-bottom: 16px;">Agregar Producto</h3>
+      
+      <div class="form-group" style="margin-bottom: 12px;">
+        <label>Seleccionar Presentación:</label>
+        <select id="modal-unit-select"></select>
+      </div>
+      
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label>Cantidad:</label>
+        <input type="number" id="modal-qty" value="1" min="0.1" step="any">
+      </div>
+      
+      <div style="display: flex; gap: 10px;">
+        <button class="btn" onclick="confirmAddToCart()">Añadir al Carrito</button>
+        <button class="btn btn-outline" onclick="closeModal()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVEGACIÓN INFERIOR -->
+  <nav>
+    <button class="active" onclick="switchTab('ventas', this)">
+      <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+      Vender
+    </button>
+    <button onclick="switchTab('inventario', this)">
+      <svg viewBox="0 0 24 24"><path d="M20 13H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-6c0-.55-.45-1-1-1zm0-10H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1z"/></svg>
+      Productos
+    </button>
+    <button onclick="switchTab('historial', this)">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+      Reporte
+    </button>
+  </nav>
+
+  <script>
+    let products = JSON.parse(localStorage.getItem('pao_products')) || [
+      { id: 1, name: 'Cerveza Huari', image: '', unit1: 'Botella', price1: 12, unit2: 'Paquete', price2: 130 },
+      { id: 2, name: 'Coca en Hoja', image: '', unit1: 'Libra', price1: 15, unit2: 'Cuartilla', price2: 70 }
+    ];
+    let cart = [];
+    let salesHistory = JSON.parse(localStorage.getItem('pao_history')) || [];
+    let selectedProductForCart = null;
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + tabId).classList.add('active');
+      btn.classList.add('active');
+      renderAll();
+    }
+
+    function previewImage(event) {
+      const reader = new FileReader();
+      reader.onload = function() {
+        document.getElementById('prod-image-base64').value = reader.result;
+      }
+      if(event.target.files[0]) reader.readAsDataURL(event.target.files[0]);
+    }
+
+    function saveProduct(e) {
+      e.preventDefault();
+      const id = document.getElementById('prod-id').value || Date.now();
+      const name = document.getElementById('prod-name').value;
+      const image = document.getElementById('prod-image-base64').value;
+      const unit1 = document.getElementById('prod-unit1').value;
+      const price1 = parseFloat(document.getElementById('prod-price1').value) || 0;
+      const unit2 = document.getElementById('prod-unit2').value;
+      const price2 = parseFloat(document.getElementById('prod-price2').value) || null;
+
+      const existingIndex = products.findIndex(p => p.id == id);
+      const newProduct = { id, name, image, unit1, price1, unit2, price2 };
+
+      if(existingIndex >= 0) {
+        products[existingIndex] = newProduct;
+      } else {
+        products.push(newProduct);
+      }
+
+      localStorage.setItem('pao_products', JSON.stringify(products));
+      document.getElementById('product-form').reset();
+      document.getElementById('prod-id').value = '';
+      document.getElementById('prod-image-base64').value = '';
+      alert('Producto guardado correctamente en Licorería Pao');
+      renderAll();
+    }
+
+    function deleteProduct(id) {
+      if(confirm('¿Eliminar este producto de Licorería Pao?')) {
+        products = products.filter(p => p.id != id);
+        localStorage.setItem('pao_products', JSON.stringify(products));
+        renderAll();
+      }
+    }
+
+    function placeholderImg(name) {
+      return `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150" fill="%23161f30"><rect width="100%" height="100%"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%239ca3af" font-size="14" font-family="sans-serif">${encodeURIComponent(name)}</text></svg>`;
+    }
+
+    function renderInventory() {
+      const grid = document.getElementById('inventory-products-grid');
+      grid.innerHTML = products.map(p => `
+        <div class="card-product">
+          <img src="${p.image || placeholderImg(p.name)}" alt="${p.name}">
+          <div class="card-product-body">
+            <div class="card-product-title">${p.name}</div>
+            <div style="margin-bottom:10px;">
+              <div class="price-pill">${p.unit1}: <strong>${p.price1.toFixed(2)} Bs.</strong></div>
+              ${p.unit2 ? `<div class="price-pill">${p.unit2}: <strong>${p.price2.toFixed(2)} Bs.</strong></div>` : ''}
+            </div>
+            <button class="btn btn-danger" style="padding: 6px; font-size: 0.8rem;" onclick="deleteProduct(${p.id})">Eliminar</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderSalesGrid() {
+      const grid = document.getElementById('sales-products-grid');
+      grid.innerHTML = products.map(p => `
+        <div class="card-product" onclick="openAddToCartModal(${p.id})">
+          <img src="${p.image || placeholderImg(p.name)}" alt="${p.name}">
+          <div class="card-product-body">
+            <div class="card-product-title">${p.name}</div>
+            <div style="margin-bottom:10px;">
+              <div class="price-pill">${p.unit1}: <strong>${p.price1.toFixed(2)} Bs.</strong></div>
+              ${p.unit2 ? `<div class="price-pill">${p.unit2}: <strong>${p.price2.toFixed(2)} Bs.</strong></div>` : ''}
+            </div>
+            <button class="btn">＋ Vender</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openAddToCartModal(id) {
+      selectedProductForCart = products.find(p => p.id == id);
+      document.getElementById('modal-title').innerText = selectedProductForCart.name;
+      const select = document.getElementById('modal-unit-select');
+      select.innerHTML = `
+        <option value="1">${selectedProductForCart.unit1} (${selectedProductForCart.price1} Bs.)</option>
+        ${selectedProductForCart.unit2 ? `<option value="2">${selectedProductForCart.unit2} (${selectedProductForCart.price2} Bs.)</option>` : ''}
+      `;
+      document.getElementById('modal-qty').value = 1;
+      document.getElementById('add-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('add-modal').style.display = 'none';
+    }
+
+    function confirmAddToCart() {
+      const option = document.getElementById('modal-unit-select').value;
+      const qty = parseFloat(document.getElementById('modal-qty').value) || 1;
+      
+      const unitName = option == '1' ? selectedProductForCart.unit1 : selectedProductForCart.unit2;
+      const price = option == '1' ? selectedProductForCart.price1 : selectedProductForCart.price2;
+
+      cart.push({
+        id: Date.now(),
+        productName: selectedProductForCart.name,
+        unit: unitName,
+        price: price,
+        qty: qty,
+        subtotal: price * qty
+      });
+
+      closeModal();
+      renderCart();
+    }
+
+    function renderCart() {
+      const list = document.getElementById('cart-list');
+      const totalElem = document.getElementById('cart-total-amount');
+      
+      if(cart.length === 0) {
+        list.innerHTML = `<p style="color: var(--text-muted); text-align: center; padding: 10px 0; font-size: 0.88rem;">No hay productos en el carrito.</p>`;
+        totalElem.innerText = "0.00";
+        return;
+      }
+
+      let total = 0;
+      list.innerHTML = cart.map((item, index) => {
+        total += item.subtotal;
+        return `
+          <div class="cart-item">
+            <div>
+              <strong style="color: var(--text-main);">${item.productName}</strong><br>
+              <small style="color: var(--text-muted);">${item.qty} ${item.unit} x ${item.price} Bs.</small>
+            </div>
+            <div style="display:flex; align-items:center; gap: 12px;">
+              <span style="font-weight:700; color:var(--accent);">${item.subtotal.toFixed(2)} Bs.</span>
+              <button style="background:none; border:none; color:var(--danger); font-size:1.1rem; cursor:pointer;" onclick="removeFromCart(${index})">✕</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      totalElem.innerText = total.toFixed(2);
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      renderCart();
+    }
+
+    function checkout() {
+      if(cart.length === 0) return alert('El carrito está vacío.');
+      
+      const total = cart.reduce((sum, item) => sum + item.subtotal, 0);
+      const sale = {
+        id: Date.now(),
+        date: new Date().toLocaleString(),
+        items: [...cart],
+        total: total
+      };
+
+      salesHistory.unshift(sale);
+      localStorage.setItem('pao_history', JSON.stringify(salesHistory));
+      
+      cart = [];
+      renderCart();
+      alert('Venta registrada con éxito en Licorería Pao 🍷');
+    }
+
+    function renderHistory() {
+      const list = document.getElementById('sales-history-list');
+      const totalDayElem = document.getElementById('total-day-sales');
+      
+      let grandTotal = 0;
+      list.innerHTML = salesHistory.map(sale => {
+        grandTotal += sale.total;
+        return `
+          <div class="summary-card" style="padding: 14px; margin-bottom: 10px;">
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; color:var(--text-muted);">
+              <span>VENTA #${sale.id.toString().slice(-4)}</span>
+              <span>${sale.date}</span>
+            </div>
+            <div style="margin: 8px 0; border-top: 1px solid var(--card-border); padding-top: 8px;">
+              ${sale.items.map(i => `<div style="font-size:0.85rem;">• ${i.qty} ${i.unit} de ${i.productName} (${i.subtotal.toFixed(2)} Bs.)</div>`).join('')}
+            </div>
+            <div style="text-align:right; font-weight:800; color:var(--accent); font-size: 1.05rem;">
+              Total: ${sale.total.toFixed(2)} Bs.
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      totalDayElem.innerText = grandTotal.toFixed(2);
+    }
+
+    function clearHistory() {
+      if(confirm('¿Seguro que deseas vaciar el historial de ventas del día?')) {
+        salesHistory = [];
+        localStorage.setItem('pao_history', JSON.stringify(salesHistory));
+        renderHistory();
+      }
+    }
+
+    function renderAll() {
+      renderInventory();
+      renderSalesGrid();
+      renderCart();
+      renderHistory();
+    }
+
+    // Inicialización de la App
+    renderAll();
+  </script>
+</body>
+</html>
