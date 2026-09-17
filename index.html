@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Licorería Pao App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #0b1120;
+      color: #f1f5f9;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .accent-bg { background-color: #f59e0b; }
+    .accent-bg:hover { background-color: #d97706; }
+    .accent-text { color: #f59e0b; }
+    .card-bg { background-color: #1e293b; }
+    .input-bg { background-color: #0f172a; border: 1px solid #334155; color: #ffffff; }
+    .input-bg:focus { border-color: #f59e0b; outline: none; }
+    .badge-amber { background-color: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+  </style>
+</head>
+<body class="p-3 max-w-xl mx-auto min-h-screen flex flex-col justify-between">
+
+  <div>
+    <!-- Encabezado -->
+    <header class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
+      <div class="flex items-center gap-2">
+        <div class="p-2 bg-amber-500/10 rounded-xl border border-amber-500/20">
+          <i class="fa-solid text-xl fa-wine-bottle accent-text"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-white flex items-center gap-2">
+            Licorería Pao <span class="text-[10px] font-semibold px-2 py-0.5 rounded badge-amber">SISTEMA</span>
+          </h1>
+          <p class="text-xs text-slate-400">Catálogo Organizado</p>
+        </div>
+      </div>
+      <div class="text-right">
+        <span class="text-[10px] text-slate-400 block uppercase">Ventas Hoy</span>
+        <span id="daily-total" class="text-sm font-bold text-emerald-400">Bs. 0.00</span>
+      </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main>
+      
+      <!-- PESTAÑA 1: VENDER POR CATEGORÍAS -->
+      <section id="tab-vender" class="space-y-4">
+        
+        <!-- Vista 1: Cuadros Principales de Categorías -->
+        <div id="categories-grid-view" class="space-y-3">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Selecciona una Categoría</h2>
+          
+          <div class="grid grid-cols-2 gap-3">
+            
+            <button onclick="openCategory('Cervezas')" class="card-bg p-4 rounded-2xl border border-slate-800 hover:border-amber-500 text-left transition flex flex-col justify-between space-y-3 shadow-lg group">
+              <div class="flex justify-between items-start">
+                <span class="text-3xl">🍺</span>
+                <span id="count-cervezas" class="text-[10px] font-bold bg-slate-800 text-amber-400 px-2 py-0.5 rounded-full border border-slate-700">0 prod.</span>
+              </div>
+              <div>
+                <h3 class="font-bold text-white text-base group-hover:text-amber-400 transition">Cervezas</h3>
+                <p class="text-[11px] text-slate-400">Paceña, Huari y más</p>
+              </div>
+            </button>
+
+            <button onclick="openCategory('Cigarros')" class="card-bg p-4 rounded-2xl border border-slate-800 hover:border-amber-500 text-left transition flex flex-col justify-between space-y-3 shadow-lg group">
+              <div class="flex justify-between items-start">
+                <span class="text-3xl">🚬</span>
+                <span id="count-cigarros" class="text-[10px] font-bold bg-slate-800 text-amber-400 px-2 py-0.5 rounded-full border border-slate-700">0 prod.</span>
+              </div>
+              <div>
+                <h3 class="font-bold text-white text-base group-hover:text-amber-400 transition">Cigarros</h3>
+                <p class="text-[11px] text-slate-400">Marlboro, Camel, etc.</p>
+              </div>
+            </button>
+
+            <button onclick="openCategory('Licores')" class="card-bg p-4 rounded-2xl border border-slate-800 hover:border-amber-500 text-left transition flex flex-col justify-between space-y-3 shadow-lg group">
+              <div class="flex justify-between items-start">
+                <span class="text-3xl">🥃</span>
+                <span id="count-licores" class="text-[10px] font-bold bg-slate-800 text-amber-400 px-2 py-0.5 rounded-full border border-slate-700">0 prod.</span>
+              </div>
+              <div>
+                <h3 class="font-bold text-white text-base group-hover:text-amber-400 transition">Licores</h3>
+                <p class="text-[11px] text-slate-400">Fernet, Singani, Ron</p>
+              </div>
+            </button>
+
+            <button onclick="openCategory('Coca')" class="card-bg p-4 rounded-2xl border border-slate-800 hover:border-amber-500 text-left transition flex flex-col justify-between space-y-3 shadow-lg group">
+              <div class="flex justify-between items-start">
+                <span class="text-3xl">🍃</span>
+                <span id="count-coca" class="text-[10px] font-bold bg-slate-800 text-amber-400 px-2 py-0.5 rounded-full border border-slate-700">0 prod.</span>
+              </div>
+              <div>
+                <h3 class="font-bold text-white text-base group-hover:text-amber-400 transition">Coca</h3>
+                <p class="text-[11px] text-slate-400">Seleccionada, machucada</p>
+              </div>
+            </button>
+
+            <button onclick="openCategory('Refrescos')" class="card-bg p-4 rounded-2xl border border-slate-800 hover:border-amber-500 text-left transition flex flex-col justify-between space-y-3 shadow-lg group">
+              <div class="flex justify-between items-start">
+                <span class="text-3xl">🥤</span>
+                <span id="count-refrescos" class="text-[10px] font-bold bg-slate-800 text-amber-400 px-2 py-0.5 rounded-full border border-slate-700">0 prod.</span>
+              </div>
+              <div>
+                <h3 class="font-bold text-white text-base group-hover:text-amber-400 transition">Refrescos</h3>
+                <p class="text-[11px] text-slate-400">Coca-Cola, aguas</p>
+              </div>
+            </button>
+
+            <button onclick="openCategory('Varios')" class="card-bg p-4 rounded-2xl border border-slate-800 hover:border-amber-500 text-left transition flex flex-col justify-between space-y-3 shadow-lg group">
+              <div class="flex justify-between items-start">
+                <span class="text-3xl">📦</span>
+                <span id="count-varios" class="text-[10px] font-bold bg-slate-800 text-amber-400 px-2 py-0.5 rounded-full border border-slate-700">0 prod.</span>
+              </div>
+              <div>
+                <h3 class="font-bold text-white text-base group-hover:text-amber-400 transition">Varios / Bico</h3>
+                <p class="text-[11px] text-slate-400">Bicarbonato y otros</p>
+              </div>
+            </button>
+
+          </div>
+        </div>
+
+        <!-- Vista 2: Productos de la Categoría Seleccionada -->
+        <div id="category-products-view" class="hidden space-y-3">
+          <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-xl border border-slate-800">
+            <button onclick="closeCategoryView()" class="text-xs font-bold text-amber-400 flex items-center gap-1.5 px-2 py-1 bg-amber-500/10 rounded-lg border border-amber-500/20">
+              <i class="fa-solid fa-arrow-left"></i> Volver
+            </button>
+            <h2 id="selected-cat-title" class="text-sm font-bold text-white">Categoría</h2>
+          </div>
+
+          <div id="category-products-list" class="space-y-2">
+            <!-- Productos renderizados -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- PESTAÑA 2: INVENTARIO -->
+      <section id="tab-productos" class="hidden space-y-3">
+        <div class="flex justify-between items-center">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Productos Registrados</h2>
+          <span id="inventory-total-count" class="text-xs text-amber-400 font-bold">0 productos</span>
+        </div>
+        <div id="inventory-list" class="space-y-2"></div>
+      </section>
+
+      <!-- PESTAÑA 3: AGREGAR PRODUCTO CON FOTO OPCIONAL -->
+      <section id="tab-agregar" class="hidden space-y-3">
+        <div class="card-bg p-4 rounded-2xl border border-slate-800">
+          <h2 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-plus-circle accent-text"></i> Agregar Producto
+          </h2>
+          <form onsubmit="handleAddProduct(event)" class="space-y-3">
+            <div>
+              <label class="block text-[11px] font-semibold uppercase text-slate-400 mb-1">Nombre del Producto</label>
+              <input type="text" id="new-prod-name" placeholder="Ej. Cigarrillos Rom, Paceña, Bico" required class="w-full px-3 py-2 rounded-xl input-bg text-sm">
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[11px] font-semibold uppercase text-slate-400 mb-1">Categoría</label>
+                <select id="new-prod-cat" class="w-full px-3 py-2 rounded-xl input-bg text-sm">
+                  <option value="Cervezas">🍺 Cervezas</option>
+                  <option value="Cigarros">🚬 Cigarros</option>
+                  <option value="Licores">🥃 Licores</option>
+                  <option value="Coca">🍃 Coca</option>
+                  <option value="Refrescos">🥤 Refrescos</option>
+                  <option value="Varios">📦 Varios / Bico</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[11px] font-semibold uppercase text-slate-400 mb-1">Stock Inicial</label>
+                <input type="number" id="new-prod-stock" min="0" value="30" required class="w-full px-3 py-2 rounded-xl input-bg text-sm">
+              </div>
+            </div>
+
+            <!-- Foto opcional -->
+            <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 space-y-2">
+              <label class="block text-[11px] font-semibold uppercase text-amber-400 flex items-center gap-1.5">
+                <i class="fa-solid fa-camera"></i> Foto del Producto (Opcional)
+              </label>
+              <input type="file" id="new-prod-img" accept="image/*" onchange="previewImage(event)" class="w-full text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:bg-amber-500/20 file:text-amber-400 hover:file:bg-amber-500/30">
+              <div id="img-preview-container" class="hidden pt-1 flex items-center gap-2">
+                <img id="img-preview" src="" class="w-12 h-12 object-cover rounded-lg border border-slate-700">
+                <span class="text-[10px] text-emerald-400 font-semibold">Foto lista para guardar</span>
+              </div>
+            </div>
+
+            <!-- Precios -->
+            <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 space-y-2">
+              <span class="text-xs font-bold text-amber-400 block border-b border-slate-800 pb-1">Precios de Venta (Bs.)</span>
+              <div class="grid grid-cols-2 gap-2">
+                <div>
+                  <label class="block text-[10px] text-slate-400 mb-1">Precio x Unidad</label>
+                  <input type="number" step="0.5" id="new-prod-price-unit" placeholder="0.00" required class="w-full px-3 py-1.5 rounded-lg input-bg text-sm font-bold text-emerald-400">
+                </div>
+                <div>
+                  <label class="block text-[10px] text-slate-400 mb-1">Precio x Paquete/Caja</label>
+                  <input type="number" step="0.5" id="new-prod-price-pack" placeholder="0.00" class="w-full px-3 py-1.5 rounded-lg input-bg text-sm font-bold text-emerald-400">
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="w-full py-2.5 rounded-xl accent-bg text-slate-950 font-bold text-xs shadow-md">
+              Guardar en Categoría
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- PESTAÑA 4: REPORTE -->
+      <section id="tab-reporte" class="hidden space-y-3">
+        <div class="card-bg p-4 rounded-2xl border border-slate-800">
+          <div class="flex justify-between items-center mb-2">
+            <h2 class="text-sm font-bold text-white">Ventas del Día</h2>
+            <button onclick="clearSales()" class="text-xs text-rose-400 hover:underline">Reiniciar Caja</button>
+          </div>
+          <div id="sales-report-list" class="space-y-2 max-h-80 overflow-y-auto"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Modal para Registrar Venta -->
+  <div id="sale-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="card-bg rounded-2xl border border-slate-700 w-full max-w-xs p-4 space-y-3 shadow-2xl">
+      <h3 id="sale-modal-title" class="font-bold text-white text-sm">Registrar Venta</h3>
+      <div id="sale-modal-options" class="space-y-2"></div>
+      <div class="flex gap-2 pt-1">
+        <button onclick="closeSaleModal()" class="w-1/3 py-2 rounded-xl border border-slate-700 text-xs text-slate-300">Cancelar</button>
+        <button onclick="confirmSale()" class="w-2/3 py-2 rounded-xl accent-bg text-slate-950 font-bold text-xs">Vender</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menú Inferior -->
+  <nav class="sticky bottom-0 mt-4 bg-slate-900/95 backdrop-blur border-t border-slate-800 p-1.5 rounded-2xl flex justify-around items-center z-40">
+    <button onclick="switchTab('vender')" id="nav-vender" class="flex flex-col items-center gap-1 py-1 px-3 rounded-xl accent-text font-bold text-xs">
+      <i class="fa-solid fa-cart-shopping text-base"></i><span>Vender</span>
+    </button>
+    <button onclick="switchTab('productos')" id="nav-productos" class="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-slate-400 text-xs">
+      <i class="fa-solid fa-boxes-stacked text-base"></i><span>Productos</span>
+    </button>
+    <button onclick="switchTab('agregar')" id="nav-agregar" class="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-slate-400 text-xs">
+      <i class="fa-solid fa-plus-circle text-base"></i><span>+ Agregar</span>
+    </button>
+    <button onclick="switchTab('reporte')" id="nav-reporte" class="flex flex-col items-center gap-1 py-1 px-3 rounded-xl text-slate-400 text-xs">
+      <i class="fa-solid fa-receipt text-base"></i><span>Reporte</span>
+    </button>
+  </nav>
+
+  <script>
+    let products = JSON.parse(localStorage.getItem('pao_img_inv')) || [
+      { id: 1, name: 'Cigarrilllos rem', category: 'Cigarros', priceUnit: 1.00, pricePack: 5.00, stock: 50, image: null },
+      { id: 2, name: 'Cigarrilllos rom', category: 'Cigarros', priceUnit: 3.00, pricePack: 9.00, stock: 40, image: null },
+      { id: 3, name: 'Cerveza huari', category: 'Cervezas', priceUnit: 35.00, pricePack: 220.00, stock: 24, image: null }
+    ];
+
+    let sales = JSON.parse(localStorage.getItem('pao_img_sales')) || [];
+    let currentCategoryOpen = null;
+    let selectedProductId = null;
+    let uploadedImageBase64 = null;
+
+    function saveStorage() {
+      localStorage.setItem('pao_img_inv', JSON.stringify(products));
+      localStorage.setItem('pao_img_sales', JSON.stringify(sales));
+      updateCategoryCounts();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCategoryCounts();
+      renderInventory();
+      renderReport();
+    });
+
+    function updateCategoryCounts() {
+      const cats = ['Cervezas', 'Cigarros', 'Licores', 'Coca', 'Refrescos', 'Varios'];
+      cats.forEach(c => {
+        const count = products.filter(p => p.category === c).length;
+        const el = document.getElementById(`count-${c.toLowerCase()}`);
+        if(el) el.innerText = `${count} prod.`;
+      });
+    }
+
+    function openCategory(categoryName) {
+      currentCategoryOpen = categoryName;
+      document.getElementById('categories-grid-view').classList.add('hidden');
+      document.getElementById('category-products-view').classList.remove('hidden');
+      document.getElementById('selected-cat-title').innerText = categoryName;
+
+      renderCategoryProducts();
+    }
+
+    function closeCategoryView() {
+      document.getElementById('category-products-view').classList.add('hidden');
+      document.getElementById('categories-grid-view').classList.remove('hidden');
+      currentCategoryOpen = null;
+    }
+
+    function renderCategoryProducts() {
+      const container = document.getElementById('category-products-list');
+      container.innerHTML = '';
+
+      const filtered = products.filter(p => p.category === currentCategoryOpen);
+
+      if(filtered.length === 0) {
+        container.innerHTML = `<div class="text-center text-slate-500 py-8 text-xs">No hay productos en esta sección.</div>`;
+        return;
+      }
+
+      filtered.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'card-bg p-3 rounded-2xl border border-slate-800 flex justify-between items-center gap-2';
+        
+        const imgHTML = p.image 
+          ? `<img src="${p.image}" class="w-12 h-12 object-cover rounded-xl border border-slate-700 flex-shrink-0">` 
+          : '';
+
+        card.innerHTML = `
+          <div class="flex items-center gap-2.5 min-w-0">
+            ${imgHTML}
+            <div class="truncate">
+              <h4 class="font-bold text-white text-sm truncate">${p.name}</h4>
+              <div class="text-xs text-slate-300 mt-0.5 space-x-1">
+                <span>Unidad: <b class="text-amber-400">Bs. ${p.priceUnit.toFixed(2)}</b></span>
+                ${p.pricePack > 0 ? `<span>| Paq: <b class="text-amber-400">Bs. ${p.pricePack.toFixed(2)}</b></span>` : ''}
+              </div>
+              <span class="text-[10px] text-slate-400 block mt-0.5">Stock: ${p.stock} u.</span>
+            </div>
+          </div>
+          <button onclick="openSaleModal(${p.id})" class="px-3 py-2 accent-bg text-slate-950 font-bold text-xs rounded-xl shadow flex-shrink-0">
+            + Vender
+          </button>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function previewImage(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          uploadedImageBase64 = evt.target.result;
+          document.getElementById('img-preview').src = uploadedImageBase64;
+          document.getElementById('img-preview-container').classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function openSaleModal(id) {
+      selectedProductId = id;
+      const p = products.find(x => x.id === id);
+      if(!p) return;
+
+      document.getElementById('sale-modal-title').innerText = `Vender: ${p.name}`;
+      
+      let html = `
+        <label class="flex items-center gap-2 p-2 rounded-xl bg-slate-900 border border-slate-800 text-xs cursor-pointer">
+          <input type="radio" name="saleType" value="unit" checked class="accent-amber-500">
+          <div class="flex-1 text-white font-bold">Por Unidad: Bs. ${p.priceUnit.toFixed(2)}</div>
+        </label>
+      `;
+
+      if(p.pricePack > 0) {
+        html += `
+          <label class="flex items-center gap-2 p-2 rounded-xl bg-slate-900 border border-slate-800 text-xs cursor-pointer">
+            <input type="radio" name="saleType" value="pack" class="accent-amber-500">
+            <div class="flex-1 text-white font-bold">Por Paquete/Caja: Bs. ${p.pricePack.toFixed(2)}</div>
+          </label>
+        `;
+      }
+
+      document.getElementById('sale-modal-options').innerHTML = html;
+      document.getElementById('sale-modal').classList.remove('hidden');
+    }
+
+    function closeSaleModal() {
+      document.getElementById('sale-modal').classList.add('hidden');
+    }
+
+    function confirmSale() {
+      const p = products.find(x => x.id === selectedProductId);
+      if(!p) return;
+
+      const radios = document.getElementsByName('saleType');
+      let type = 'unit';
+      radios.forEach(r => { if(r.checked) type = r.value; });
+
+      let price = type === 'unit' ? p.priceUnit : p.pricePack;
+
+      p.stock = Math.max(0, p.stock - 1);
+      sales.unshift({ id: Date.now(), name: p.name, type: type === 'unit' ? 'Unidad' : 'Paquete', total: price, time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) });
+
+      saveStorage();
+      closeSaleModal();
+      if(currentCategoryOpen) renderCategoryProducts();
+      renderReport();
+    }
+
+    function renderInventory() {
+      const list = document.getElementById('inventory-list');
+      document.getElementById('inventory-total-count').innerText = `${products.length} productos`;
+      list.innerHTML = '';
+
+      products.forEach(p => {
+        const imgHTML = p.image 
+          ? `<img src="${p.image}" class="w-10 h-10 object-cover rounded-lg border border-slate-700 flex-shrink-0">` 
+          : '';
+
+        const item = document.createElement('div');
+        item.className = 'card-bg p-2.5 rounded-xl border border-slate-800 flex justify-between items-center text-xs gap-2';
+        item.innerHTML = `
+          <div class="flex items-center gap-2 min-w-0">
+            ${imgHTML}
+            <div class="truncate">
+              <div class="font-bold text-white truncate">${p.name} <span class="text-[10px] text-amber-400 bg-amber-500/10 px-1 py-0.5 rounded border border-amber-500/20">${p.category}</span></div>
+              <div class="text-slate-400 mt-0.5">Unidad: Bs. ${p.priceUnit.toFixed(2)}</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <span class="font-bold text-white">${p.stock} u.</span>
+            <button onclick="deleteProduct(${p.id})" class="p-1.5 text-rose-400 hover:bg-rose-950/50 rounded"><i class="fa-solid fa-trash"></i></button>
+          </div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function handleAddProduct(e) {
+      e.preventDefault();
+      const name = document.getElementById('new-prod-name').value.trim();
+      const category = document.getElementById('new-prod-cat').value;
+      const stock = parseInt(document.getElementById('new-prod-stock').value) || 0;
+      const priceUnit = parseFloat(document.getElementById('new-prod-price-unit').value) || 0;
+      const pricePack = parseFloat(document.getElementById('new-prod-price-pack').value) || 0;
+
+      products.unshift({ id: Date.now(), name, category, priceUnit, pricePack, stock, image: uploadedImageBase64 });
+      saveStorage();
+      renderInventory();
+      
+      document.getElementById('new-prod-name').value = '';
+      document.getElementById('new-prod-img').value = '';
+      document.getElementById('img-preview-container').classList.add('hidden');
+      uploadedImageBase64 = null;
+
+      alert(`"${name}" agregado exitosamente.`);
+      switchTab('vender');
+    }
+
+    function deleteProduct(id) {
+      if(confirm('¿Eliminar este producto?')) {
+        products = products.filter(p => p.id !== id);
+        saveStorage();
+        renderInventory();
+        if(currentCategoryOpen) renderCategoryProducts();
+      }
+    }
+
+    function renderReport() {
+      const list = document.getElementById('sales-report-list');
+      const totalEl = document.getElementById('daily-total');
+      list.innerHTML = '';
+
+      let total = 0;
+      sales.forEach(s => {
+        total += s.total;
+        const item = document.createElement('div');
+        item.className = 'flex justify-between items-center p-2 rounded-lg bg-slate-900 border border-slate-800 text-xs';
+        item.innerHTML = `
+          <div><div class="font-bold text-white">${s.name}</div><div class="text-slate-400">${s.type} • ${s.time}</div></div>
+          <div class="font-bold text-emerald-400">Bs. ${s.total.toFixed(2)}</div>
+        `;
+        list.appendChild(item);
+      });
+
+      totalEl.innerText = `Bs. ${total.toFixed(2)}`;
+    }
+
+    function clearSales() {
+      if(confirm('¿Reiniciar el total de ventas del día?')) {
+        sales = [];
+        saveStorage();
+        renderReport();
+      }
+    }
+
+    function switchTab(tab) {
+      ['vender', 'productos', 'agregar', 'reporte'].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.add('hidden');
+        const btn = document.getElementById(`nav-${t}`);
+        btn.classList.remove('accent-text', 'font-bold');
+        btn.classList.add('text-slate-400');
+      });
+
+      document.getElementById(`tab-${tab}`).classList.remove('hidden');
+      const activeBtn = document.getElementById(`nav-${tab}`);
+      activeBtn.classList.add('accent-text', 'font-bold');
+      activeBtn.classList.remove('text-slate-400');
+
+      if(tab === 'vender') closeCategoryView();
+      if(tab === 'productos') renderInventory();
+      if(tab === 'reporte') renderReport();
+    }
+  </script>
+</body>
+</html>
