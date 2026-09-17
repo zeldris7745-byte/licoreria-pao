@@ -9,23 +9,6 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Licorería Pao">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍻</text></svg>">
-  
-  <link rel="manifest" href='data:application/manifest+json,{
-    "name": "Licorería Pao - Control y Venta",
-    "short_name": "Licorería Pao",
-    "start_url": "./",
-    "display": "standalone",
-    "background_color": "#0b0f17",
-    "theme_color": "#0b0f17",
-    "icons": [
-      {
-        "src": "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍻</text></svg>",
-        "sizes": "192x192",
-        "type": "image/svg+xml"
-      }
-    ]
-  }'>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,13 +38,6 @@
     .ventas-hoy-header { text-align: right; }
     .ventas-hoy-label { font-size: 0.62rem; color: var(--texto-silenciado); text-transform: uppercase; letter-spacing: 0.5px; }
     .ventas-hoy-val { font-size: 1rem; font-weight: 700; color: var(--exito); }
-
-    .install-banner {
-      display: none; background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(16, 185, 129, 0.2));
-      border: 1px solid var(--acento); padding: 10px 14px; border-radius: 12px; margin-bottom: 14px; justify-content: space-between; align-items: center; gap: 10px;
-    }
-    .install-banner.show { display: flex; }
-    .btn-install { background: var(--acento); color: #000; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 0.78rem; cursor: pointer; }
 
     .container { display: grid; gap: 14px; max-width: 1000px; margin: 0 auto; }
     
@@ -156,15 +132,7 @@
       </div>
     </header>
 
-    <div class="install-banner" id="installBanner">
-      <div>
-        <strong style="font-size:0.82rem; display:block;">📲 Instalar Licorería Pao</strong>
-        <span style="font-size:0.72rem; color:var(--texto-silenciado);">Acceso rápido tipo app nativa</span>
-      </div>
-      <button class="btn-install" id="installBtn">Instalar</button>
-    </div>
-
-    {/* VISTA 1: MENÚ DE CATEGORÍAS */}
+    <!-- VISTA 1: MENÚ DE CATEGORÍAS -->
     <div id="viewCategories">
       <div class="section-title-sub">SELECCIONA UNA CATEGORÍA</div>
       <div class="categories-grid">
@@ -236,7 +204,7 @@
       </div>
     </div>
 
-    {/* VISTA 2: DENTRO DE UNA CATEGORÍA */}
+    <!-- VISTA 2: DENTRO DE UNA CATEGORÍA -->
     <div id="viewCategoryDetail" style="display:none;">
       <div class="subcat-topbar">
         <button class="btn-volver" onclick="backToCategories()">← Volver</button>
@@ -247,7 +215,7 @@
         <div class="prods-list" id="categoryProductsContainer"></div>
       </div>
 
-      {/* Si es categoría coca, mostramos caja coca rápida */}
+      <!-- Si es categoría coca, mostramos caja coca rápida -->
       <div id="detailCardCoca" class="card" style="display:none; margin-top:10px;">
         <div class="card-title"><span>🌿 Venta de Coca Rápida</span></div>
         <div class="coca-special-box">
@@ -281,7 +249,7 @@
       </div>
     </div>
 
-    {/* Carrito de Venta Actual */}
+    <!-- Carrito de Venta Actual -->
     <div class="card">
       <div class="card-title">
         <span>🛒 Carrito de Venta Actual</span>
@@ -325,25 +293,6 @@
   </nav>
 
   <script>
-    // PWA Install prompt
-    let deferredPrompt;
-    const installBanner = document.getElementById('installBanner');
-    const installBtn = document.getElementById('installBtn');
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      installBanner.classList.add('show');
-    });
-    installBtn.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') installBanner.classList.remove('show');
-        deferredPrompt = null;
-      }
-    });
-
-    // Catálogo inicial con precios por unidad y paquete/caja por categoría
     let catalog = JSON.parse(localStorage.getItem('pao_catalog_v2') || JSON.stringify([
       { id: 1, category: 'cervezas', name: 'Cerveza Huari', priceUnit: 35, pricePack: 220, stock: 23 },
       { id: 2, category: 'cervezas', name: 'Cerveza Paceña 6pk / Bote', priceUnit: 12, pricePack: 65, stock: 30 },
@@ -360,7 +309,6 @@
       updateCategoryCounts();
     }
 
-    // Control temporal de cantidad por fila: { [id]: { unitQty: 0, packQty: 0 } }
     const lineSelectors = {};
     catalog.forEach(p => {
       lineSelectors[p.id] = { unitQty: 0, packQty: 0 };
@@ -370,7 +318,6 @@
     let cocaMultiplier = 1;
     let cart = [];
     let dailyRevenue = parseFloat(localStorage.getItem('pao_daily_rev') || '0');
-    let dailyItemsCount = parseInt(localStorage.getItem('pao_daily_count') || '0', 10);
     let dayLogHistory = localStorage.getItem('pao_day_history') || '';
 
     const viewCategories = document.getElementById('viewCategories');
@@ -544,7 +491,7 @@
       catalog.push(newProd);
       lineSelectors[newProd.id] = { unitQty: 0, packQty: 0 };
       saveCatalog();
-      alert(`¡Producto "${newProd.name}" agregado a ${catTarget.toUpperCase()!}`);
+      alert(`¡Producto "${newProd.name}" agregado a ${catTarget.toUpperCase()}!`);
       if (currentCategoryKey && currentCategoryKey !== 'coca') {
         renderCategoryProducts(currentCategoryKey);
       }
@@ -628,3 +575,4 @@
   </script>
 </body>
 </html>
+
