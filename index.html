@@ -4,13 +4,36 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Licorería Pao - Control y Venta</title>
+  
+  <meta name="theme-color" content="#0b0f17">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Licorería Pao">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍻</text></svg>">
+  
+  <link rel="manifest" href='data:application/manifest+json,{
+    "name": "Licorería Pao - Control y Venta",
+    "short_name": "Licorería Pao",
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#0b0f17",
+    "theme_color": "#0b0f17",
+    "icons": [
+      {
+        "src": "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍻</text></svg>",
+        "sizes": "192x192",
+        "type": "image/svg+xml"
+      }
+    ]
+  }'>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-main: #0b0f17;
-      --card-bg: rgba(20, 26, 38, 0.85);
+      --card-bg: rgba(20, 26, 38, 0.9);
       --borde-tarjeta: rgba(255, 255, 255, 0.1);
       --input-bg: #161f30;
       --acento: #f59e0b;
@@ -22,100 +45,157 @@
       --radio: 16px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-    body { background-color: var(--bg-main); color: var(--texto-principal); min-height: 100vh; padding: 14px; padding-bottom: 40px; }
-    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
-    h1 { font-size: 1.35rem; color: var(--acento); }
-    .day-summary-box { background: var(--input-bg); border: 1px solid var(--borde-tarjeta); padding: 8px 12px; border-radius: 10px; font-size: 0.85rem; display: flex; gap: 12px; align-items: center; }
-    .day-summary-box strong { color: var(--exito); }
-    .container { display: grid; gap: 14px; max-width: 1200px; margin: 0 auto; }
-    .card { background: var(--card-bg); border: 1px solid var(--borde-tarjeta); border-radius: var(--radio); padding: 14px; backdrop-filter: blur(10px); }
-    .card h3 { font-size: 1rem; margin-bottom: 10px; color: var(--acento); display: flex; justify-content: space-between; align-items: center; }
+    body { background-color: var(--bg-main); color: var(--texto-principal); min-height: 100vh; padding: 14px; padding-bottom: 90px; }
     
-    .coca-special-box { background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 12px; margin-bottom: 14px; display: flex; flex-direction: column; gap: 10px; }
-    .coca-title { font-weight: 700; color: var(--coca-accent); font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center; }
-    .coca-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .coca-opt-btn { background: var(--input-bg); border: 1px solid var(--borde-tarjeta); color: var(--texto-principal); padding: 10px; border-radius: 10px; text-align: left; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; gap: 2px; }
-    .coca-opt-btn:hover { border-color: var(--coca-accent); background: rgba(16, 185, 129, 0.15); }
-    .coca-opt-name { font-weight: 600; font-size: 0.82rem; }
-    .coca-opt-price { color: var(--coca-accent); font-size: 0.78rem; font-weight: 700; }
-    .coca-qty-row { display: flex; align-items: center; justify-content: space-between; background: var(--bg-main); padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; }
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
+    .brand-area { display: flex; align-items: center; gap: 8px; }
+    .brand-icon { background: rgba(245, 158, 11, 0.15); border: 1px solid var(--acento); width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+    h1 { font-size: 1.2rem; color: var(--texto-principal); }
+    .badge-sistema { background: rgba(245, 158, 11, 0.2); color: var(--acento); font-size: 0.65rem; font-weight: 700; padding: 3px 6px; border-radius: 6px; letter-spacing: 0.5px; }
+    .ventas-hoy-header { text-align: right; }
+    .ventas-hoy-label { font-size: 0.65rem; color: var(--texto-silenciado); text-transform: uppercase; letter-spacing: 0.5px; }
+    .ventas-hoy-val { font-size: 1.05rem; font-weight: 700; color: var(--exito); }
 
-    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
-    .prod-card { background: var(--input-bg); border: 1px solid var(--borde-tarjeta); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
-    .prod-info { display: flex; flex-direction: column; }
-    .prod-name { font-weight: 600; font-size: 0.85rem; }
-    .prod-price { color: var(--acento); font-size: 0.8rem; font-weight: 700; }
-    .qty-control { display: flex; align-items: center; justify-content: space-between; background: var(--bg-main); border-radius: 8px; padding: 2px; border: 1px solid var(--borde-tarjeta); }
-    .qty-btn { background: transparent; border: none; color: var(--texto-principal); width: 28px; height: 28px; font-weight: bold; cursor: pointer; font-size: 1rem; }
-    .qty-num { font-size: 0.85rem; font-weight: 600; min-width: 20px; text-align: center; }
-    .add-btn { background: var(--acento); color: #000; border: none; padding: 6px; border-radius: 8px; font-weight: 700; font-size: 0.75rem; cursor: pointer; }
+    .install-banner {
+      display: none; background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(16, 185, 129, 0.2));
+      border: 1px solid var(--acento); padding: 10px 14px; border-radius: 12px; margin-bottom: 14px; justify-content: space-between; align-items: center; gap: 10px;
+    }
+    .install-banner.show { display: flex; }
+    .btn-install { background: var(--acento); color: #000; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 700; font-size: 0.78rem; cursor: pointer; }
+
+    .container { display: grid; gap: 14px; max-width: 1000px; margin: 0 auto; }
+    .card { background: var(--card-bg); border: 1px solid var(--borde-tarjeta); border-radius: var(--radio); padding: 14px; }
+    .card-title { font-size: 0.95rem; font-weight: 600; color: var(--texto-principal); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+
+    /* Estilo estilo captura para productos/cervezas */
+    .prods-list { display: flex; flex-direction: column; gap: 10px; }
+    .prod-row-card {
+      background: var(--input-bg);
+      border: 1px solid var(--borde-tarjeta);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .prod-header-info { display: flex; justify-content: space-between; align-items: flex-start; }
+    .prod-name-main { font-weight: 600; font-size: 0.95rem; color: var(--texto-principal); }
+    .prod-prices-meta { font-size: 0.78rem; color: var(--acento); margin-top: 2px; font-weight: 500; }
+    .prod-stock-meta { font-size: 0.72rem; color: var(--texto-silenciado); margin-top: 2px; }
+
+    .modes-buy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: rgba(0,0,0,0.25); padding: 8px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
+    .mode-col { display: flex; flex-direction: column; gap: 4px; }
+    .mode-label { font-size: 0.7rem; color: var(--texto-silenciado); display: flex; justify-content: space-between; }
     
-    .cart-list { margin: 10px 0; max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+    .qty-control-inline { display: flex; align-items: center; justify-content: space-between; background: var(--bg-main); border-radius: 8px; padding: 2px; border: 1px solid var(--borde-tarjeta); height: 32px; }
+    .qty-btn-sm { background: transparent; border: none; color: var(--texto-principal); width: 26px; height: 100%; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
+    .qty-num-sm { font-size: 0.8rem; font-weight: 600; text-align: center; }
+    
+    .btn-add-line {
+      background: var(--acento); color: #000; border: none; padding: 8px; border-radius: 10px;
+      font-weight: 700; font-size: 0.8rem; cursor: pointer; text-align: center;
+    }
+
+    /* Caja de Coca Especial */
+    .coca-special-box { background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+    .coca-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .coca-opt-btn { background: var(--input-bg); border: 1px solid var(--borde-tarjeta); color: var(--texto-principal); padding: 9px; border-radius: 10px; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 2px; }
+    .coca-opt-btn:hover { border-color: var(--coca-accent); background: rgba(16, 185, 129, 0.15); }
+    .coca-opt-name { font-weight: 600; font-size: 0.8rem; }
+    .coca-opt-price { color: var(--coca-accent); font-size: 0.75rem; font-weight: 700; }
+
+    /* Carrito */
+    .cart-list { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
     .cart-item { display: flex; justify-content: space-between; align-items: center; background: var(--input-bg); padding: 8px 10px; border-radius: 8px; font-size: 0.8rem; }
-    .total-section { font-size: 1rem; font-weight: 700; margin: 10px 0; display: flex; justify-content: space-between; }
+    .total-section { font-size: 1rem; font-weight: 700; margin: 10px 0; display: flex; justify-content: space-between; border-top: 1px solid var(--borde-tarjeta); padding-top: 10px; }
     .actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .btn-action { background: var(--exito); color: #000; border: none; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.9rem; }
-    .btn-danger { background: var(--peligro); color: #fff; border: none; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.9rem; }
-    .history-box { font-size: 0.8rem; color: var(--texto-silenciado); background: var(--input-bg); padding: 10px; border-radius: 10px; margin-top: 10px; line-height: 1.4; }
+    .btn-action { background: var(--exito); color: #000; border: none; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.88rem; }
+    .btn-danger { background: var(--peligro); color: #fff; border: none; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.88rem; }
+    .history-box { font-size: 0.78rem; color: var(--texto-silenciado); background: var(--input-bg); padding: 10px; border-radius: 10px; line-height: 1.4; }
+
+    /* Barra de Navegación Inferior (Estilo Captura) */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0; background: #0e1420; border-top: 1px solid var(--borde-tarjeta);
+      display: grid; grid-template-columns: repeat(4, 1fr); padding: 6px 0; z-index: 1000;
+    }
+    .nav-item { background: transparent; border: none; color: var(--texto-silenciado); display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.68rem; cursor: pointer; }
+    .nav-item.active { color: var(--acento); font-weight: 600; }
+    .nav-icon { font-size: 1.1rem; }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>🍻 Licorería Pao</h1>
-      <div class="day-summary-box">
-        <span>Ventas Día: <strong id="dailyTotalText">0.00 BOL</strong></span>
-        <span style="font-size:0.75rem; color:var(--texto-silenciado);" id="dailyCountText">(0 uds)</span>
+      <div class="brand-area">
+        <div class="brand-icon">🍻</div>
+        <div>
+          <h1>Licorería Pao</h1>
+          <span class="badge-sistema">SISTEMA</span>
+        </div>
+      </div>
+      <div class="ventas-hoy-header">
+        <div class="ventas-hoy-label">Ventas hoy</div>
+        <div class="ventas-hoy-val" id="dailyTotalText">Bs. 0.00</div>
       </div>
     </header>
 
-    <!-- Sección Especial de Coca -->
+    <div class="install-banner" id="installBanner">
+      <div>
+        <strong style="font-size:0.82rem; display:block;">📲 Instalar Licorería Pao</strong>
+        <span style="font-size:0.72rem; color:var(--texto-silenciado);">Acceso rápido tipo app nativa</span>
+      </div>
+      <button class="btn-install" id="installBtn">Instalar</button>
+    </div>
+
+    <!-- Pestaña / Vista: Venta de Licores, Cervezas y Bebidas con cantidad por Unidad o Caja/Paquete -->
     <div class="card">
-      <h3>🌿 Venta de Coca Rápida</h3>
+      <div class="card-title">
+        <span>Catálogo Organizado (Unidad o Caja/Paquete)</span>
+        <span style="font-size:0.72rem; color:var(--texto-silenciado);" id="dailyCountText">(0 uds/cajas)</span>
+      </div>
+      <div class="prods-list" id="productGrid"></div>
+    </div>
+
+    <!-- Pestaña Especial de Coca -->
+    <div class="card">
+      <div class="card-title"><span>🌿 Venta de Coca Rápida</span></div>
       <div class="coca-special-box">
-        <div class="coca-title">
-          <span>Seleccionar porción / tipo</span>
+        <div style="display:flex; align-items:center; justify-content:space-between; font-size:0.8rem;">
+          <span style="color:var(--coca-accent); font-weight:600;">Multiplicador porciones:</span>
           <div style="display:flex; align-items:center; gap:6px;">
-            <button class="qty-btn" style="width:24px;height:24px;background:var(--input-bg);border-radius:6px;" onclick="changeCocaQty(-1)">-</button>
-            <span id="cocaTempQty" style="font-size:0.85rem;font-weight:700;min-width:18px;text-align:center;">1</span>
-            <button class="qty-btn" style="width:24px;height:24px;background:var(--input-bg);border-radius:6px;" onclick="changeCocaQty(1)">+</button>
-            <span style="font-size:0.75rem;color:var(--texto-silenciado);">porción(es)</span>
+            <button class="qty-btn-sm" style="background:var(--input-bg);border-radius:6px;" onclick="changeCocaQty(-1)">-</button>
+            <span id="cocaTempQty" style="font-size:0.85rem;font-weight:700;min-width:20px;text-align:center;">1</span>
+            <button class="qty-btn-sm" style="background:var(--input-bg);border-radius:6px;" onclick="changeCocaQty(1)">+</button>
           </div>
         </div>
         <div class="coca-options">
           <button class="coca-opt-btn" onclick="addCocaCustom('Coca de 5 Bs', 5)">
             <span class="coca-opt-name">Porción 5 Bs</span>
-            <span class="coca-opt-price">5.00 BOL</span>
+            <span class="coca-opt-price">Bs. 5.00</span>
           </button>
           <button class="coca-opt-btn" onclick="addCocaCustom('Coca Machucada (10 Bs)', 10)">
             <span class="coca-opt-name">Machucada / 10 Bs</span>
-            <span class="coca-opt-price">10.00 BOL</span>
+            <span class="coca-opt-price">Bs. 10.00</span>
           </button>
           <button class="coca-opt-btn" onclick="addCocaCustom('Porción 15 Bs', 15)">
             <span class="coca-opt-name">Porción 15 Bs</span>
-            <span class="coca-opt-price">15.00 BOL</span>
+            <span class="coca-opt-price">Bs. 15.00</span>
           </button>
           <button class="coca-opt-btn" onclick="addCocaCustom('1 Libra de Coca', 40)">
             <span class="coca-opt-name">1 Libra</span>
-            <span class="coca-opt-price">40.00 BOL</span>
+            <span class="coca-opt-price">Bs. 40.00</span>
           </button>
         </div>
       </div>
     </div>
 
-    <!-- Sección de Productos / Bebidas / Bicos -->
+    <!-- Carrito de Venta Actual -->
     <div class="card">
-      <h3>Bebidas, Cervezas y Bicos (por unidades)</h3>
-      <div class="products-grid" id="productGrid"></div>
-    </div>
-
-    <!-- Carrito y Control de Jornada -->
-    <div class="card">
-      <h3>Carrito de Venta Actual</h3>
+      <div class="card-title"><span>🛒 Carrito de Venta Actual</span></div>
       <div class="cart-list" id="cartList"></div>
       <div class="total-section">
         <span>Total Venta:</span>
-        <span id="currentTotal">0.00 BOL</span>
+        <span id="currentTotal" style="color:var(--acento);">Bs. 0.00</span>
       </div>
       <div class="actions-grid">
         <button class="btn-action" onclick="completeSale()">Cobrar / Vender</button>
@@ -124,27 +204,67 @@
     </div>
 
     <div class="card" id="historyCard" style="display:none;">
-      <h3>Resumen del Día Guardado</h3>
+      <div class="card-title"><span>📋 Resumen del Día Guardado</span></div>
       <div class="history-box" id="historyLog"></div>
     </div>
   </div>
 
+  <!-- Barra inferior fija estilo tu captura -->
+  <nav class="bottom-nav">
+    <button class="nav-item active">
+      <span class="nav-icon">🛒</span>
+      <span>Vender</span>
+    </button>
+    <button class="nav-item" onclick="alert('Sección Catálogo / Productos completos (Inventario principal)')">
+      <span class="nav-icon">📦</span>
+      <span>Productos</span>
+    </button>
+    <button class="nav-item" onclick="alert('Opción para agregar nuevo producto al sistema')">
+      <span class="nav-icon">➕</span>
+      <span>+ Agregar</span>
+    </button>
+    <button class="nav-item" onclick="document.getElementById('historyCard').scrollIntoView({behavior:'smooth'})">
+      <span class="nav-icon">📄</span>
+      <span>Reporte</span>
+    </button>
+  </nav>
+
   <script>
+    // PWA Install prompt
+    let deferredPrompt;
+    const installBanner = document.getElementById('installBanner');
+    const installBtn = document.getElementById('installBtn');
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBanner.classList.add('show');
+    });
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') installBanner.classList.remove('show');
+        deferredPrompt = null;
+      }
+    });
+
+    // Productos con precio Unidad, precio Paquete/Caja y unidades por paquete por referencia
     const products = [
-      { id: 1, name: 'Singani Rivas', price: 45 },
-      { id: 2, name: 'Cerveza Paceña 6pk', price: 65 },
-      { id: 3, name: 'Fernet Branca', price: 95 },
-      { id: 4, name: 'Ron Abuelo', price: 80 },
-      { id: 5, name: 'Cerveza Huari 6pk', price: 70 },
-      { id: 6, name: 'Singani San Pedro', price: 50 },
-      { id: 7, name: 'Cigarros Marlboro', price: 18 },
-      { id: 8, name: 'Soda 3L (Pepsi/Coca)', price: 17 }
+      { id: 1, name: 'Cerveza Huari', priceUnit: 35, pricePack: 220, unitsPerPack: 6, stock: 23, unitLabel: 'u.' },
+      { id: 2, name: 'Cerveza Paceña 6pk', priceUnit: 12, pricePack: 65, unitsPerPack: 6, stock: 30, unitLabel: 'u.' },
+      { id: 3, name: 'Singani Rivas', priceUnit: 45, pricePack: 250, unitsPerPack: 6, stock: 12, unitLabel: 'u.' },
+      { id: 4, name: 'Fernet Branca', priceUnit: 95, pricePack: 540, unitsPerPack: 6, stock: 8, unitLabel: 'u.' },
+      { id: 5, name: 'Ron Abuelo', priceUnit: 80, pricePack: 450, unitsPerPack: 6, stock: 10, unitLabel: 'u.' },
+      { id: 6, name: 'Soda 3L (Pepsi/Coca)', priceUnit: 17, pricePack: 95, unitsPerPack: 6, stock: 15, unitLabel: 'u.' }
     ];
 
-    const selectQty = {};
-    products.forEach(p => selectQty[p.id] = 1);
-    let cocaMultiplier = 1;
+    // Control temporal de cantidad por fila: { [id]: { unitQty: 0, packQty: 0 } }
+    const lineSelectors = {};
+    products.forEach(p => {
+      lineSelectors[p.id] = { unitQty: 0, packQty: 0 };
+    });
 
+    let cocaMultiplier = 1;
     let cart = [];
     let dailyRevenue = parseFloat(localStorage.getItem('pao_daily_rev') || '0');
     let dailyItemsCount = parseInt(localStorage.getItem('pao_daily_count') || '0', 10);
@@ -160,36 +280,62 @@
     const cocaTempQtyEl = document.getElementById('cocaTempQty');
 
     function updateDaySummaryDisplay() {
-      dailyTotalText.innerText = `${dailyRevenue.toFixed(2)} BOL`;
-      dailyCountText.innerText = `(${dailyItemsCount} uds/porciones vendidas hoy)`;
+      dailyTotalText.innerText = `Bs. ${dailyRevenue.toFixed(2)}`;
+      dailyCountText.innerText = `(${dailyItemsCount} ventas/paquetes/uds)`;
       if (dayLogHistory) {
         historyCard.style.display = 'block';
         historyLog.innerHTML = dayLogHistory;
       }
     }
 
-    function changeTempQty(id, delta) {
-      if (!selectQty[id]) selectQty[id] = 1;
-      selectQty[id] += delta;
-      if (selectQty[id] < 1) selectQty[id] = 1;
+    function changeLineQty(id, type, delta) {
+      if (!lineSelectors[id]) lineSelectors[id] = { unitQty: 0, packQty: 0 };
+      if (type === 'unit') {
+        lineSelectors[id].unitQty = Math.max(0, lineSelectors[id].unitQty + delta);
+      } else {
+        lineSelectors[id].packQty = Math.max(0, lineSelectors[id].packQty + delta);
+      }
       renderProducts();
     }
 
+    function addLineToCart(id) {
+      const p = products.find(x => x.id === id);
+      const sel = lineSelectors[id];
+      if (!sel || (sel.unitQty === 0 && sel.packQty === 0)) {
+        return alert('Selecciona al menos una unidad suelta o una caja/paquete con los botones + / -');
+      }
+
+      if (sel.unitQty > 0) {
+        const nameUnit = `${p.name} (Unidad)`;
+        const foundU = cart.find(c => c.name === nameUnit);
+        if (foundU) foundU.qty += sel.unitQty;
+        else cart.push({ id: id + '_u', name: nameUnit, price: p.priceUnit, qty: sel.unitQty });
+      }
+
+      if (sel.packQty > 0) {
+        const namePack = `${p.name} (Paquete/Caja completo)`;
+        const foundP = cart.find(c => c.name === namePack);
+        if (foundP) foundP.qty += sel.packQty;
+        else cart.push({ id: id + '_p', name: namePack, price: p.pricePack, qty: sel.packQty });
+      }
+
+      lineSelectors[id] = { unitQty: 0, packQty: 0 };
+      renderProducts();
+      renderCart();
+    }
+
     function changeCocaQty(delta) {
-      cocaMultiplier += delta;
-      if (cocaMultiplier < 1) cocaMultiplier = 1;
+      cocaMultiplier = Math.max(1, cocaMultiplier + delta);
       cocaTempQtyEl.innerText = cocaMultiplier;
     }
 
     function addCocaCustom(name, unitPrice) {
-      const finalPrice = unitPrice * cocaMultiplier;
-      const itemName = cocaMultiplier > 1 ? `${name} x${cocaMultiplier}` : name;
-      
-      const found = cart.find(c => c.name === name);
+      const finalName = cocaMultiplier > 1 ? `${name} x${cocaMultiplier}` : name;
+      const found = cart.find(c => c.name === finalName && c.price === unitPrice);
       if (found) {
-        found.qty += cocaMultiplier;
+        found.qty += 1;
       } else {
-        cart.push({ id: 'coca_' + Date.now(), name: name, price: unitPrice, qty: cocaMultiplier });
+        cart.push({ id: 'coca_' + Date.now() + Math.random(), name: finalName, price: unitPrice * cocaMultiplier, qty: 1 });
       }
       cocaMultiplier = 1;
       cocaTempQtyEl.innerText = cocaMultiplier;
@@ -197,49 +343,56 @@
     }
 
     function renderProducts() {
-      grid.innerHTML = products.map(p => `
-        <div class="prod-card">
-          <div class="prod-info">
-            <span class="prod-name">${p.name}</span>
-            <span class="prod-price">${p.price} BOL</span>
-          </div>
-          <div class="qty-control">
-            <button class="qty-btn" onclick="changeTempQty(${p.id}, -1)">-</button>
-            <span class="qty-num">${selectQty[p.id]}</span>
-            <button class="qty-btn" onclick="changeTempQty(${p.id}, 1)">+</button>
-          </div>
-          <button class="add-btn" onclick="addSelectedToCart(${p.id})">Agregar</button>
-        </div>
-      `).join('');
-    }
+      grid.innerHTML = products.map(p => {
+        const sel = lineSelectors[p.id] || { unitQty: 0, packQty: 0 };
+        return `
+          <div class="prod-row-card">
+            <div class="prod-header-info">
+              <div>
+                <div class="prod-name-main">${p.name}</div>
+                <div class="prod-prices-meta">Unidad: Bs. ${p.priceUnit.toFixed(2)} | Paq/Caja: Bs. ${p.pricePack.toFixed(2)}</div>
+                <div class="prod-stock-meta">Stock referencia: ${p.stock} u.</div>
+              </div>
+            </div>
+            
+            <div class="modes-buy-grid">
+              <div class="mode-col">
+                <span class="mode-label"><span>Suelta (u.)</span></span>
+                <div class="qty-control-inline">
+                  <button class="qty-btn-sm" onclick="changeLineQty(${p.id}, 'unit', -1)">-</button>
+                  <span class="qty-num-sm">${sel.unitQty}</span>
+                  <button class="qty-btn-sm" onclick="changeLineQty(${p.id}, 'unit', 1)">+</button>
+                </div>
+              </div>
+              <div class="mode-col">
+                <span class="mode-label"><span>Caja/Paq.</span></span>
+                <div class="qty-control-inline">
+                  <button class="qty-btn-sm" onclick="changeLineQty(${p.id}, 'pack', -1)">-</button>
+                  <span class="qty-num-sm">${sel.packQty}</span>
+                  <button class="qty-btn-sm" onclick="changeLineQty(${p.id}, 'pack', 1)">+</button>
+                </div>
+              </div>
+            </div>
 
-    function addSelectedToCart(id) {
-      const prod = products.find(p => p.id === id);
-      const qtyToAdd = selectQty[id] || 1;
-      const found = cart.find(c => c.id === id);
-      if (found) {
-        found.qty += qtyToAdd;
-      } else {
-        cart.push({ ...prod, qty: qtyToAdd });
-      }
-      selectQty[id] = 1;
-      renderProducts();
-      renderCart();
+            <button class="btn-add-line" onclick="addLineToCart(${p.id})">+ Agregar al Carrito</button>
+          </div>
+        `;
+      }).join('');
     }
 
     function renderCart() {
       if (cart.length === 0) {
-        cartList.innerHTML = '<p style="color:var(--texto-silenciado);font-size:0.8rem;">Carrito vacío</p>';
+        cartList.innerHTML = '<p style="color:var(--texto-silenciado);font-size:0.78rem;">Carrito vacío</p>';
       } else {
         cartList.innerHTML = cart.map(item => `
           <div class="cart-item">
             <span><strong>${item.name}</strong> x${item.qty}</span>
-            <span>${(item.price * item.qty).toFixed(2)} BOL</span>
+            <span>Bs. ${(item.price * item.qty).toFixed(2)}</span>
           </div>
         `).join('');
       }
       const total = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
-      currentTotal.innerText = `${total.toFixed(2)} BOL`;
+      currentTotal.innerText = `Bs. ${total.toFixed(2)}`;
     }
 
     function completeSale() {
@@ -253,7 +406,7 @@
       localStorage.setItem('pao_daily_rev', dailyRevenue.toString());
       localStorage.setItem('pao_daily_count', dailyItemsCount.toString());
 
-      alert(`¡Venta cobrada con éxito por ${saleTotal.toFixed(2)} BOL!`);
+      alert(`¡Venta cobrada con éxito por Bs. ${saleTotal.toFixed(2)}!`);
       cart = [];
       renderCart();
       updateDaySummaryDisplay();
@@ -263,13 +416,13 @@
       if (dailyRevenue === 0 && dailyItemsCount === 0) {
         return alert('No hay ventas registradas en esta jornada todavía.');
       }
-      if (!confirm(`¿Estás segura de TERMINAR LA JORNADA?\nTotal acumulado de hoy: ${dailyRevenue.toFixed(2)} BOL (${dailyItemsCount} unidades/porciones).\nEsto guardará el reporte y reiniciará el día a 0.`)) {
+      if (!confirm(`¿Estás segura de TERMINAR LA JORNADA?\nTotal acumulado de hoy: Bs. ${dailyRevenue.toFixed(2)} (${dailyItemsCount} registros/paquetes/uds).\nEsto guardará el reporte y reiniciará el día a 0.`)) {
         return;
       }
 
       const now = new Date();
       const timeStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
-      const summaryText = `<strong>Jornada cerrada el ${timeStr}</strong><br>Total Ventas: ${dailyRevenue.toFixed(2)} BOL | Unidades/Porciones: ${dailyItemsCount}<br>---<br>` + dayLogHistory;
+      const summaryText = `<strong>Jornada cerrada el ${timeStr}</strong><br>Total Ventas: Bs. ${dailyRevenue.toFixed(2)} | Cantidad: ${dailyItemsCount}<br>---<br>` + dayLogHistory;
 
       dayLogHistory = summaryText;
       localStorage.setItem('pao_day_history', dayLogHistory);
