@@ -10,6 +10,24 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Licorería Pao">
 
+  <!-- Manifest estándar corregido para rutas GitHub Pages -->
+  <link rel="manifest" href='data:application/manifest+json,{
+    "name": "Licorería Pao - Control y Venta",
+    "short_name": "Licorería Pao",
+    "start_url": "https://zeldris7745-byte.github.io/licoreria-pao/",
+    "scope": "https://zeldris7745-byte.github.io/licoreria-pao/",
+    "display": "standalone",
+    "background_color": "#0b0f17",
+    "theme_color": "#0b0f17",
+    "icons": [
+      {
+        "src": "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍻</text></svg>",
+        "sizes": "192x192",
+        "type": "image/svg+xml"
+      }
+    ]
+  }'>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -119,7 +137,7 @@
         <div class="brand-icon">🍻</div>
         <div>
           <h1>Licorería Pao</h1>
-          <span class="badge-sistema">● PERSISTENCIA TOTAL</span>
+          <span class="badge-sistema">● PWA ACTIVA</span>
         </div>
       </div>
       <div class="ventas-hoy-header">
@@ -132,7 +150,7 @@
     <div id="viewCategories">
       <div class="section-title-sub">
         <span>SELECCIONA UNA CATEGORÍA</span>
-        <span style="font-size:0.68rem; color:var(--exito);">● Guardado Automático</span>
+        <span style="font-size:0.68rem; color:var(--exito);">● Memoria Segura Local</span>
       </div>
       <div class="categories-grid">
         <div class="cat-card" onclick="openCategory('cervezas')">
@@ -315,7 +333,6 @@
       updateCategoryCounts();
     }
 
-    // Persistir contadores de filas en localStorage también
     let lineSelectors = JSON.parse(localStorage.getItem('pao_line_selectors') || '{}');
     catalog.forEach(p => {
       if (!lineSelectors[p.id]) {
