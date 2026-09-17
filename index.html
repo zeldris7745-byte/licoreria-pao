@@ -61,6 +61,9 @@
     }
     .btn-volver:hover { border-color: var(--acento); }
     .subcat-title { font-size: 1.05rem; font-weight: 700; color: var(--acento); }
+    .btn-nuevo-mini {
+      background: var(--acento); color: #000; border: none; padding: 7px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; cursor: pointer;
+    }
 
     .card { background: var(--card-bg); border: 1px solid var(--borde-tarjeta); border-radius: var(--radio); padding: 14px; }
     .card-title { font-size: 0.95rem; font-weight: 600; color: var(--texto-principal); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
@@ -70,7 +73,7 @@
       background: var(--input-bg); border: 1px solid var(--borde-tarjeta); border-radius: 12px; padding: 12px;
       display: flex; flex-direction: column; gap: 10px;
     }
-    .prod-name-main { font-weight: 600; font-size: 0.95rem; color: var(--texto-principal); }
+    .prod-name-main { font-weight: 600; font-size: 0.95rem; color: var(--texto-principal); display:flex; justify-content:space-between; align-items:center; }
     .prod-prices-meta { font-size: 0.78rem; color: var(--acento); margin-top: 3px; font-weight: 500; }
     .prod-stock-meta { font-size: 0.72rem; color: var(--texto-silenciado); margin-top: 2px; }
 
@@ -119,7 +122,7 @@
         <div class="brand-icon">🍻</div>
         <div>
           <h1>Licorería Pao</h1>
-          <span class="badge-sistema">● PERSISTENCIA TOTAL</span>
+          <span class="badge-sistema">● CATÁLOGO LIMPIO</span>
         </div>
       </div>
       <div class="ventas-hoy-header">
@@ -132,7 +135,7 @@
     <div id="viewCategories">
       <div class="section-title-sub">
         <span>SELECCIONA UNA CATEGORÍA</span>
-        <span style="font-size:0.68rem; color:var(--exito);">● Guardado Automático</span>
+        <span style="font-size:0.68rem; color:var(--exito);">● Totalmente vacío</span>
       </div>
       <div class="categories-grid">
         <div class="cat-card" onclick="openCategory('cervezas')">
@@ -208,7 +211,7 @@
       <div class="subcat-topbar">
         <button class="btn-volver" onclick="backToCategories()">← Volver</button>
         <span class="subcat-title" id="activeCategoryTitle">Categoría</span>
-        <button class="btn-volver" style="background:var(--acento);color:#000;border:none;" onclick="addNewProductPrompt()">+ Nuevo</button>
+        <button class="btn-nuevo-mini" onclick="addNewProductPromptCurrentCat()">+ Nuevo</button>
       </div>
 
       <div class="card" id="detailCardProducts" style="margin-top:10px;">
@@ -270,10 +273,7 @@
     <div class="card" id="historyCard">
       <div class="card-title">
         <span>📋 Reporte y Cierres de Jornada</span>
-        <div style="display:flex;gap:6px;">
-          <button onclick="clearHistoryLog()" style="background:transparent;border:1px solid var(--peligro);color:var(--peligro);font-size:0.68rem;padding:4px 8px;border-radius:6px;cursor:pointer;">Limpiar Todo</button>
-          <button onclick="clearHistoryLog()" style="background:transparent;border:1px solid var(--borde-tarjeta);color:var(--texto-silenciado);font-size:0.68rem;padding:4px 8px;border-radius:6px;cursor:pointer;">Borrar Reportes</button>
-        </div>
+        <button onclick="clearHistoryLog()" style="background:transparent;border:1px solid var(--borde-tarjeta);color:var(--texto-silenciado);font-size:0.68rem;padding:4px 8px;border-radius:6px;cursor:pointer;">Limpiar Historial</button>
       </div>
       <div class="history-box" id="historyLog">
         <div style="color:var(--texto-silenciado); text-align:center; padding:12px;">No hay reportes de jornada cerrados aún. Toca "Terminar Jornada" al final de tu día.</div>
@@ -291,7 +291,7 @@
       <span class="nav-icon">📦</span>
       <span>Productos</span>
     </button>
-    <button class="nav-item" onclick="addNewProductPrompt()">
+    <button class="nav-item" onclick="addNewProductPromptCurrentCat()">
       <span class="nav-icon">➕</span>
       <span>+ Agregar</span>
     </button>
@@ -302,40 +302,32 @@
   </nav>
 
   <script>
-    let catalog = JSON.parse(localStorage.getItem('pao_catalog_v3') || JSON.stringify([
-      { id: 1, category: 'cervezas', name: 'Cerveza Huari', priceUnit: 35, pricePack: 220, stock: 23 },
-      { id: 2, category: 'cervezas', name: 'Cerveza Paceña 6pk / Bote', priceUnit: 12, pricePack: 65, stock: 30 },
-      { id: 3, category: 'licores', name: 'Singani Rivas', priceUnit: 45, pricePack: 250, stock: 12 },
-      { id: 4, category: 'licores', name: 'Fernet Branca', priceUnit: 95, pricePack: 540, stock: 8 },
-      { id: 5, category: 'licores', name: 'Ron Abuelo', priceUnit: 80, pricePack: 450, stock: 10 },
-      { id: 6, category: 'cigarros', name: 'Cigarros Marlboro', priceUnit: 18, pricePack: 170, stock: 40 },
-      { id: 7, category: 'refrescos', name: 'Soda 3L (Pepsi/Coca)', priceUnit: 17, pricePack: 95, stock: 15 },
-      { id: 8, category: 'varios', name: 'Bicarbonato / Bicos', priceUnit: 5, pricePack: 45, stock: 50 }
-    ]));
+    // --- CATÁLOGO INICIAL LIMPIO (vacío por completo) ---
+    let catalog = JSON.parse(localStorage.getItem('pao_catalog_v5_clean') || '[]');
 
     function saveCatalog() {
-      localStorage.setItem('pao_catalog_v3', JSON.stringify(catalog));
+      localStorage.setItem('pao_catalog_v5_clean', JSON.stringify(catalog));
       updateCategoryCounts();
     }
 
-    let lineSelectors = JSON.parse(localStorage.getItem('pao_line_selectors') || '{}');
+    let lineSelectors = JSON.parse(localStorage.getItem('pao_line_selectors_v5') || '{}');
     catalog.forEach(p => {
       if (!lineSelectors[p.id]) {
         lineSelectors[p.id] = { unitQty: 0, packQty: 0 };
       }
     });
     function saveLineSelectors() {
-      localStorage.setItem('pao_line_selectors', JSON.stringify(lineSelectors));
+      localStorage.setItem('pao_line_selectors_v5', JSON.stringify(lineSelectors));
     }
 
     let currentCategoryKey = null;
     let cocaMultiplier = 1;
-    let cart = JSON.parse(localStorage.getItem('pao_active_cart') || '[]');
-    let dailyRevenue = parseFloat(localStorage.getItem('pao_daily_rev') || '0');
-    let dayLogHistory = localStorage.getItem('pao_day_history') || '';
+    let cart = JSON.parse(localStorage.getItem('pao_active_cart_v5') || '[]');
+    let dailyRevenue = parseFloat(localStorage.getItem('pao_daily_rev_v5') || '0');
+    let dayLogHistory = localStorage.getItem('pao_day_history_v5') || '';
 
     function saveActiveCart() {
-      localStorage.setItem('pao_active_cart', JSON.stringify(cart));
+      localStorage.setItem('pao_active_cart_v5', JSON.stringify(cart));
     }
 
     const viewCategories = document.getElementById('viewCategories');
@@ -364,13 +356,13 @@
 
     function updateDaySummaryDisplay() {
       dailyTotalText.innerText = `Bs. ${dailyRevenue.toFixed(2)}`;
-      localStorage.setItem('pao_daily_rev', dailyRevenue.toString());
+      localStorage.setItem('pao_daily_rev_v5', dailyRevenue.toString());
       if (dayLogHistory.trim()) {
         historyLog.innerHTML = dayLogHistory;
       } else {
         historyLog.innerHTML = `<div style="color:var(--texto-silenciado); text-align:center; padding:12px;">No hay reportes de jornada cerrados aún. Toca "Terminar Jornada" al final de tu día.</div>`;
       }
-      localStorage.setItem('pao_day_history', dayLogHistory);
+      localStorage.setItem('pao_day_history_v5', dayLogHistory);
     }
 
     function openCategory(key) {
@@ -443,13 +435,22 @@
       renderCart();
     }
 
+    function deleteProductFromCatalog(id) {
+      if (!confirm('¿Eliminar este producto de la categoría?')) return;
+      catalog = catalog.filter(p => p.id !== id);
+      delete lineSelectors[id];
+      saveCatalog();
+      saveLineSelectors();
+      if (currentCategoryKey) renderCategoryProducts(currentCategoryKey);
+    }
+
     function renderCategoryProducts(key) {
       const prods = catalog.filter(p => p.category === key);
       if (prods.length === 0) {
         categoryProductsContainer.innerHTML = `
           <div style="text-align:center; padding:20px; color:var(--texto-silenciado); font-size:0.82rem;">
-            No hay productos en esta sección todavía.<br>
-            <button onclick="addNewProductPrompt('${key}')" class="btn-action" style="margin-top:10px; padding:8px 14px; font-size:0.75rem;">+ Agregar nuevo producto aquí</button>
+            No hay productos registrados aquí aún.<br>
+            <button onclick="addNewProductPrompt('${key}')" class="btn-action" style="margin-top:10px; padding:8px 14px; font-size:0.75rem;">+ Agregar producto</button>
           </div>
         `;
         return;
@@ -460,7 +461,10 @@
         return `
           <div class="prod-row-card">
             <div>
-              <div class="prod-name-main">${p.name}</div>
+              <div class="prod-name-main">
+                <span>${p.name}</span>
+                <button onclick="deleteProductFromCatalog(${p.id})" style="background:transparent;border:none;color:var(--peligro);font-size:0.75rem;cursor:pointer;">Eliminar</button>
+              </div>
               <div class="prod-prices-meta">Unidad: Bs. ${Number(p.priceUnit).toFixed(2)} | Paq/Caja: Bs. ${Number(p.pricePack).toFixed(2)}</div>
               <div class="prod-stock-meta">Stock ref: ${p.stock} u.</div>
             </div>
@@ -490,13 +494,18 @@
       }).join('');
     }
 
+    function addNewProductPromptCurrentCat() {
+      const catTarget = currentCategoryKey && currentCategoryKey !== 'coca' ? currentCategoryKey : 'cervezas';
+      addNewProductPrompt(catTarget);
+    }
+
     function addNewProductPrompt(forcedCategory = null) {
       const catTarget = forcedCategory || (currentCategoryKey && currentCategoryKey !== 'coca' ? currentCategoryKey : 'cervezas');
-      const name = prompt('Nombre del producto (ej: Cerveza Heineken):');
+      const name = prompt('Nombre del producto (ej: Cerveza, Singani, Cigarro...):');
       if (!name) return;
       const priceUnitStr = prompt('Precio por unidad en Bolivianos (ej: 15):', '15');
       const pricePackStr = prompt('Precio por caja/paquete en Bolivianos (ej: 90):', '90');
-      const stockStr = prompt('Stock inicial opcional (ej: 20):', '20');
+      const stockStr = prompt('Stock referencia opcional (ej: 20):', '20');
 
       const pUnit = parseFloat(priceUnitStr) || 10;
       const pPack = parseFloat(pricePackStr) || 50;
@@ -515,7 +524,7 @@
       lineSelectors[newProd.id] = { unitQty: 0, packQty: 0 };
       saveCatalog();
       saveLineSelectors();
-      alert(`¡Producto "${newProd.name}" agregado a ${catTarget.toUpperCase()} y guardado permanentemente!`);
+      alert(`¡Producto "${newProd.name}" agregado a ${catTarget.toUpperCase()}!`);
       if (currentCategoryKey && currentCategoryKey !== 'coca') {
         renderCategoryProducts(currentCategoryKey);
       }
@@ -579,7 +588,7 @@
       saveActiveCart();
       updateDaySummaryDisplay();
 
-      alert(`¡Venta cobrada con éxito por Bs. ${saleTotal.toFixed(2)}! Guardado en la jornada.`);
+      alert(`¡Venta cobrada con éxito por Bs. ${saleTotal.toFixed(2)}!`);
       cart = [];
       renderCart();
     }
@@ -597,10 +606,10 @@
       const summaryText = `<div class="history-entry" style="background:rgba(16,185,129,0.1);padding:6px;border-radius:6px;margin-bottom:8px;"><strong>🔒 JORNADA CERRADA (${timeStr})</strong><br><strong>Total Venta Día: Bs. ${dailyRevenue.toFixed(2)}</strong></div>`;
 
       dayLogHistory = summaryText + dayLogHistory;
-      localStorage.setItem('pao_day_history', dayLogHistory);
+      localStorage.setItem('pao_day_history_v5', dayLogHistory);
 
       dailyRevenue = 0;
-      localStorage.setItem('pao_daily_rev', '0');
+      localStorage.setItem('pao_daily_rev_v5', '0');
 
       updateDaySummaryDisplay();
       alert('Jornada finalizada y guardada de forma segura en el reporte.');
@@ -609,7 +618,7 @@
     function clearHistoryLog() {
       if (confirm('¿Vaciar todo el historial de reportes guardados?')) {
         dayLogHistory = '';
-        localStorage.removeItem('pao_day_history');
+        localStorage.removeItem('pao_day_history_v5');
         updateDaySummaryDisplay();
       }
     }
