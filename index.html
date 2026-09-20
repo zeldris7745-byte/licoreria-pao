@@ -18,7 +18,6 @@
             overflow: hidden;
         }
 
-        /* Fondo decorativo con siluetas de bebidas estilo original */
         .header-bg-drinks {
             position: absolute; top: 0; left: 0; right: 0; bottom: 0;
             opacity: 0.12; pointer-events: none;
@@ -28,7 +27,6 @@
 
         .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px; position: relative; z-index: 2; }
         
-        /* Título original con badge circular dorado de fondo superior izq */
         .title-container-wrapper { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .gold-circle-badge {
             width: 44px; height: 44px; border-radius: 50%;
@@ -46,7 +44,6 @@
         
         h1 { font-size: 1.5rem; color: #ff5e9c; font-style: italic; }
         
-        /* Contenedor de copitas brindando en movimiento al lado del título */
         .brindis-container {
             display: inline-flex;
             align-items: center;
@@ -80,9 +77,11 @@
             flex-direction: column;
             justify-content: space-between;
             min-height: 115px;
+            cursor: pointer;
+            transition: transform 0.15s, border-color 0.15s;
         }
+        .cat-card:active { transform: scale(0.97); border-color: rgba(255,180,0,0.5); }
         
-        /* Contenedor doradito original para los íconos de las tarjetas */
         .icon-gold-box {
             width: 42px; height: 42px; border-radius: 12px;
             background: rgba(255, 180, 0, 0.08);
@@ -98,7 +97,7 @@
         .cat-title { font-size: 1rem; font-weight: bold; margin-bottom: 2px; }
         .cat-sub { font-size: 0.75rem; color: #6e7996; }
 
-        /* --- Animaciones en los íconos dentro de los fonditos doraditos --- */
+        /* Animaciones en íconos */
         .card-cervezas .cat-icon-inner { font-size: 1.5rem; position: relative; display: inline-block; }
         .card-cervezas .cat-icon-inner::after {
             content: '💦'; position: absolute; top: -8px; right: -10px; font-size: 0.65rem;
@@ -127,7 +126,22 @@
         .snowflake-anim { display: inline-block; font-size: 1.4rem; animation: girarCopo 4s linear infinite; }
         @keyframes girarCopo { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* --- Carrito de Venta --- */
+        /* Vistas dinámicas ocultas por defecto */
+        .view-section { display: none; }
+        .view-section.active-view { display: block; }
+
+        /* Panel interno para categoría seleccionada, catálogo, etc. */
+        .panel-card {
+            background: #141724;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        .back-btn { background: rgba(255,255,255,0.08); color: #fff; border: none; padding: 8px 14px; border-radius: 10px; cursor: pointer; margin-bottom: 14px; font-size: 0.8rem; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+        /* Carrito de Venta */
         .cart-card {
             background: #141724;
             border: 1px solid rgba(255,255,255,0.06);
@@ -148,20 +162,20 @@
         .btn-primary { background: #00ff96; color: #0b0c10; }
         .btn-danger { background: #ff4757; color: #fff; }
 
-        /* --- Barra de Navegación inferior (Tamaño original restaurado) --- */
+        /* Barra de Navegación inferior */
         .nav-bar {
             position: fixed; bottom: 0; left: 0; right: 0; background: #12141f;
             border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-around;
             padding: 12px 4px; z-index: 100;
         }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #6e7996; gap: 5px; text-decoration: none; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #6e7996; gap: 5px; text-decoration: none; cursor: pointer; border: none; background: transparent; }
         .nav-item.active { color: #ffb400; font-weight: 500; }
     </style>
 </head>
 <body>
 
+    <!-- CABECERA PRINCIPAL -->
     <div class="header-card">
-        <!-- Fondo de bebidas silueteadas estilo original -->
         <div class="header-bg-drinks">
             <span>🍷</span><span>🍺</span><span>🥂</span><span>🥃</span><span>🍷</span><span>🍺</span><span>🥂</span><span>🥃</span>
         </div>
@@ -178,93 +192,231 @@
             </div>
             <div class="offline-badge">● MODO LOCAL 100% OFFLINE</div>
         </div>
-        <div class="ventas-hoy">VENTAS HOY<br><span>Bs. 0.00</span></div>
+        <div class="ventas-hoy">VENTAS HOY<br><span>Bs. <strong id="totalVentasText">0.00</strong></span></div>
     </div>
 
-    <div class="section-header">
-        <span>SELECCIONA UNA CATEGORÍA</span>
-        <span style="color:#00ff96;">● CERO INTERNET REQUERIDO</span>
+    <!-- VISTA 1: VENDER (Categorías + Carrito) -->
+    <div id="view-vender" class="view-section active-view">
+        <div class="section-header">
+            <span>SELECCIONA UNA CATEGORÍA</span>
+            <span style="color:#00ff96;">● CERO INTERNET REQUERIDO</span>
+        </div>
+
+        <div class="categories-grid">
+            <div class="cat-card card-cervezas" onclick="abrirCategoria('Cervezas')">
+                <span class="prod-badge">Paceña, etc.</span>
+                <div class="icon-gold-box"><span class="cat-icon-inner">🍾</span></div>
+                <div>
+                    <div class="cat-title">Cervezas</div>
+                    <div class="cat-sub">Paceña, Huari y más</div>
+                </div>
+            </div>
+
+            <div class="cat-card card-cigarros" onclick="abrirCategoria('Cigarros')">
+                <span class="prod-badge">Marlboro</span>
+                <div class="icon-gold-box"><span class="cat-icon-inner">🚬</span></div>
+                <div>
+                    <div class="cat-title">Cigarros</div>
+                    <div class="cat-sub">Marlboro, Camel, etc.</div>
+                </div>
+            </div>
+
+            <div class="cat-card card-licores" onclick="abrirCategoria('Licores')">
+                <span class="prod-badge">Fernet</span>
+                <div class="icon-gold-box"><span class="cat-icon-inner">🥃</span></div>
+                <div>
+                    <div class="cat-title">Licores</div>
+                    <div class="cat-sub">Fernet, Singani, Ron</div>
+                </div>
+            </div>
+
+            <div class="cat-card" onclick="abrirCategoria('Coca')">
+                <span class="rapida-badge">Rápida</span>
+                <div class="icon-gold-box"><span style="font-size: 1.4rem;">🌿</span></div>
+                <div>
+                    <div class="cat-title">Coca</div>
+                    <div class="cat-sub">Seleccionada, machucada</div>
+                </div>
+            </div>
+
+            <div class="cat-card card-refrescos" onclick="abrirCategoria('Refrescos')">
+                <span class="prod-badge">Sodas</span>
+                <div class="icon-gold-box"><span class="cat-icon-inner">🥤</span></div>
+                <div>
+                    <div class="cat-title">Refrescos</div>
+                    <div class="cat-sub">Coca-Cola, aguas frías</div>
+                </div>
+            </div>
+
+            <div class="cat-card" onclick="abrirCategoria('Varios / Bico')">
+                <span class="prod-badge">Hielo</span>
+                <div class="icon-gold-box"><span class="snowflake-anim">❄️</span></div>
+                <div>
+                    <div class="cat-title">Varios / Bico</div>
+                    <div class="cat-sub">Bicarbonato, hielo</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cart-card">
+            <div class="cart-header">
+                <div class="cart-title">🛒 Carrito de Venta Actual</div>
+                <div class="cart-items-count"><span id="countItems">0</span> items</div>
+            </div>
+            <div id="cartContent" class="cart-empty">Carrito vacío</div>
+            <div class="total-row">
+                <span class="total-label">Total Venta:</span>
+                <span class="total-value">Bs. <strong id="totalCartText">0.00</strong></span>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="cobrarVenta()">Cobrar / Vender<br><span style="font-size:0.65rem; font-weight:normal;">(Descuenta Stock)</span></button>
+                <button class="btn btn-danger" onclick="terminarJornada()">Terminar Jornada</button>
+            </div>
+        </div>
     </div>
 
-    <div class="categories-grid">
-        <div class="cat-card card-cervezas">
-            <span class="prod-badge">0 prod.</span>
-            <div class="icon-gold-box"><span class="cat-icon-inner">🍾</span></div>
-            <div>
-                <div class="cat-title">Cervezas</div>
-                <div class="cat-sub">Paceña, Huari y más</div>
-            </div>
-        </div>
-
-        <div class="cat-card card-cigarros">
-            <span class="prod-badge">0 prod.</span>
-            <div class="icon-gold-box"><span class="cat-icon-inner">🚬</span></div>
-            <div>
-                <div class="cat-title">Cigarros</div>
-                <div class="cat-sub">Marlboro, Camel, etc.</div>
-            </div>
-        </div>
-
-        <div class="cat-card card-licores">
-            <span class="prod-badge">0 prod.</span>
-            <div class="icon-gold-box"><span class="cat-icon-inner">🥃</span></div>
-            <div>
-                <div class="cat-title">Licores</div>
-                <div class="cat-sub">Fernet, Singani, Ron</div>
-            </div>
-        </div>
-
-        <div class="cat-card">
-            <span class="rapida-badge">Rápida</span>
-            <div class="icon-gold-box"><span style="font-size: 1.4rem;">🌿</span></div>
-            <div>
-                <div class="cat-title">Coca</div>
-                <div class="cat-sub">Seleccionada, machucada</div>
-            </div>
-        </div>
-
-        <div class="cat-card card-refrescos">
-            <span class="prod-badge">0 prod.</span>
-            <div class="icon-gold-box"><span class="cat-icon-inner">🥤</span></div>
-            <div>
-                <div class="cat-title">Refrescos</div>
-                <div class="cat-sub">Coca-Cola, aguas frías</div>
-            </div>
-        </div>
-
-        <div class="cat-card">
-            <span class="prod-badge">0 prod.</span>
-            <div class="icon-gold-box"><span class="snowflake-anim">❄️</span></div>
-            <div>
-                <div class="cat-title">Varios / Bico</div>
-                <div class="cat-sub">Bicarbonato, hielo</div>
-            </div>
+    <!-- VISTA INTERNA DE CATEGORÍA SELECCIONADA -->
+    <div id="view-categoria" class="view-section">
+        <div class="panel-card">
+            <button class="back-btn" onclick="volverAVender()">← Volver a categorías</button>
+            <h2 id="catPanelTitle" style="color:#ffb400; margin-bottom: 14px; font-size: 1.2rem;">Productos</h2>
+            <div id="catProductList"></div>
         </div>
     </div>
 
-    <div class="cart-card">
-        <div class="cart-header">
-            <div class="cart-title">🛒 Carrito de Venta Actual</div>
-            <div class="cart-items-count">0 items</div>
-        </div>
-        <div class="cart-empty">Carrito vacío</div>
-        <div class="total-row">
-            <span class="total-label">Total Venta:</span>
-            <span class="total-value">Bs. 0.00</span>
-        </div>
-        <div class="action-buttons">
-            <button class="btn btn-primary">Cobrar / Vender<br><span style="font-size:0.65rem; font-weight:normal;">(Descuenta Stock)</span></button>
-            <button class="btn btn-danger">Terminar Jornada</button>
+    <!-- VISTA 2: CATÁLOGO/STOCK -->
+    <div id="view-catalogo" class="view-section">
+        <div class="panel-card">
+            <h2 style="color:#ffb400; margin-bottom: 14px; font-size: 1.2rem;">📦 Catálogo / Stock Local</h2>
+            <div class="item-row"><span>Paceña 620ml</span><span>Stock: 24 u.</span></div>
+            <div class="item-row"><span>Huari 500ml</span><span>Stock: 18 u.</span></div>
+            <div class="item-row"><span>Marlboro Rojo</span><span>Stock: 10 caj.</span></div>
+            <div class="item-row"><span>Singani San Pedro</span><span>Stock: 6 u.</span></div>
+            <div class="item-row"><span>Bicarbonato Bico</span><span>Stock: 15 u.</span></div>
         </div>
     </div>
 
+    <!-- VISTA 3: COMPRAS -->
+    <div id="view-compras" class="view-section">
+        <div class="panel-card">
+            <h2 style="color:#ffb400; margin-bottom: 14px; font-size: 1.2rem;">📦 Registro de Compras</h2>
+            <p style="color:#8892b0; font-size: 0.85rem;">No hay compras registradas hoy en modo offline.</p>
+        </div>
+    </div>
+
+    <!-- VISTA 4: PEDIR -->
+    <div id="view-pedir" class="view-section">
+        <div class="panel-card">
+            <h2 style="color:#ffb400; margin-bottom: 14px; font-size: 1.2rem;">⚠️ Lista de Pedidos a Proveedor</h2>
+            <div class="item-row"><span>Huari 500ml (Stock bajo)</span><span style="color:#ff4757;">Sugerir Pedir</span></div>
+            <div class="item-row"><span>Marlboro Rojo (Stock bajo)</span><span style="color:#ff4757;">Sugerir Pedir</span></div>
+        </div>
+    </div>
+
+    <!-- VISTA 5: REPORTE -->
+    <div id="view-reporte" class="view-section">
+        <div class="panel-card">
+            <h2 style="color:#ffb400; margin-bottom: 14px; font-size: 1.2rem;">📄 Reporte del Día</h2>
+            <p style="font-size: 0.9rem; color:#aaa;">Total acumulado hoy: <span style="color:#00ff96; font-weight:bold;">Bs. <span id="reportTotal">0.00</span></span></p>
+        </div>
+    </div>
+
+    <!-- BARRA DE NAVEGACIÓN INFERIOR -->
     <div class="nav-bar">
-        <a href="#" class="nav-item active"><span style="font-size:1.1rem;">🛒</span> Vender</a>
-        <a href="#" class="nav-item"><span style="font-size:1.1rem;">📦</span> Catálogo/Stock</a>
-        <a href="#" class="nav-item"><span style="font-size:1.1rem;">📦</span> Compras</a>
-        <a href="#" class="nav-item"><span style="font-size:1.1rem;">⚠️</span> Pedir</a>
-        <a href="#" class="nav-item"><span style="font-size:1.1rem;">📄</span> Reporte</a>
+        <button class="nav-item active" onclick="cambiarVista('vender', this)"><span style="font-size:1.1rem;">🛒</span> Vender</button>
+        <button class="nav-item" onclick="cambiarVista('catalogo', this)"><span style="font-size:1.1rem;">📦</span> Catálogo/Stock</button>
+        <button class="nav-item" onclick="cambiarVista('compras', this)"><span style="font-size:1.1rem;">📦</span> Compras</button>
+        <button class="nav-item" onclick="cambiarVista('pedir', this)"><span style="font-size:1.1rem;">⚠️</span> Pedir</button>
+        <button class="nav-item" onclick="cambiarVista('reporte', this)"><span style="font-size:1.1rem;">📄</span> Reporte</button>
     </div>
 
+    <script>
+        let carrito = [];
+        let ventasTotales = 0;
+
+        const productosPorCategoria = {
+            'Cervezas': [{nombre: 'Paceña 620ml', precio: 15}, {nombre: 'Huari 500ml', precio: 18}],
+            'Cigarros': [{nombre: 'Marlboro Rojo', precio: 18}, {nombre: 'Camel Azul', precio: 16}],
+            'Licores': [{nombre: 'Fernet Branca', precio: 85}, {nombre: 'Singani San Pedro', precio: 45}],
+            'Coca': [{nombre: 'Coca Seleccionada 10bs', precio: 10}, {nombre: 'Coca Machucada 5bs', precio: 5}],
+            'Refrescos': [{nombre: 'Coca-Cola 2L', precio: 15}, {nombre: 'Agua 600ml', precio: 5}],
+            'Varios / Bico': [{nombre: 'Bicarbonato Bico', precio: 5}, {nombre: 'Bolsa de Hielo', precio: 10}]
+        };
+
+        function cambiarVista(vistaId, btnElement) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
+            document.getElementById('view-' + vistaId).classList.add('active-view');
+            
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            if(btnElement) btnElement.classList.add('active');
+        }
+
+        function abrirCategoria(catNombre) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
+            document.getElementById('view-categoria').classList.add('active-view');
+            document.getElementById('catPanelTitle').textContent = 'Categoría: ' + catNombre;
+            
+            const listContainer = document.getElementById('catProductList');
+            listContainer.innerHTML = '';
+            
+            const prods = productosPorCategoria[catNombre] || [];
+            prods.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'item-row';
+                div.innerHTML = `<span>${p.nombre} (Bs. ${p.precio})</span> <button style="background:#00ff96; color:#0b0c10; border:none; padding:6px 12px; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="agregarAlCarrito('${p.nombre}', ${p.precio})">+ Agregar</button>`;
+                listContainer.appendChild(div);
+            });
+        }
+
+        function volverAVender() {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
+            document.getElementById('view-vender').classList.add('active-view');
+        }
+
+        function agregarAlCarrito(nombre, precio) {
+            carrito.push({nombre, precio});
+            actualizarCarritoUI();
+        }
+
+        function actualizarCarritoUI() {
+            const countItems = document.getElementById('countItems');
+            const cartContent = document.getElementById('cartContent');
+            const totalCartText = document.getElementById('totalCartText');
+            
+            countItems.textContent = carrito.length;
+            
+            let total = carrito.reduce((sum, item) => sum + item.precio, 0);
+            totalCartText.textContent = total.toFixed(2);
+            reportTotal.textContent = (ventasTotales + total).toFixed(2);
+
+            if(carrito.length === 0) {
+                cartContent.innerHTML = 'Carrito vacío';
+                cartContent.className = 'cart-empty';
+            } else {
+                cartContent.className = '';
+                cartContent.innerHTML = carrito.map(i => `<div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px;"><span>${i.nombre}</span><span>Bs. ${i.precio}</span></div>`).join('');
+            }
+        }
+
+        function cobrarVenta() {
+            if(carrito.length === 0) {
+                alert('El carrito está vacío.');
+                return;
+            }
+            let total = carrito.reduce((sum, item) => sum + item.precio, 0);
+            ventasTotales += total;
+            document.getElementById('totalVentasText').textContent = ventasTotales.toFixed(2);
+            document.getElementById('reportTotal').textContent = ventasTotales.toFixed(2);
+            carrito = [];
+            actualizarCarritoUI();
+            alert('¡Venta cobrada con éxito! Stock descontado offline.');
+        }
+
+        function terminarJornada() {
+            if(confirm('¿Seguro que deseas terminar la jornada del día?')) {
+                alert(`Jornada terminada. Ventas totales del día: Bs. ${ventasTotales.toFixed(2)}`);
+            }
+        }
+    </script>
 </body>
 </html>
