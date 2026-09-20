@@ -197,6 +197,19 @@
             font-size: 0.8rem;
         }
 
+        /* Compras estilo tarjeta / lista */
+        .compra-item-row {
+            background: rgba(255,255,255,0.04);
+            border-radius: 10px;
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            border-left: 3px solid #ffb400;
+        }
+
         /* Modal genérico offline */
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.75);
@@ -211,7 +224,7 @@
         .modal-card h3 { color: #ffb400; font-size: 1.05rem; margin-bottom: 14px; }
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; font-size: 0.75rem; color: #8892b0; margin-bottom: 4px; }
-        .form-group input { width: 100%; background: #0b0c10; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #fff; padding: 10px; font-size: 0.85rem; }
+        .form-group input, .form-group select { width: 100%; background: #0b0c10; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #fff; padding: 10px; font-size: 0.85rem; }
         .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 
         /* Carrito de Venta */
@@ -383,6 +396,18 @@
         </div>
     </div>
 
+    <!-- VISTA COMPRAS -->
+    <div id="view-compras" class="view-section">
+        <div class="panel-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+                <h2 style="color:#ffb400; font-size: 1.2rem;">📦 Registro de Compras</h2>
+                <button class="btn-new-prod" onclick="abrirModalNuevaCompra()">+ Registrar Compra</button>
+            </div>
+            <p style="color:#8892b0; font-size:0.8rem; margin-bottom:14px;">Registra abastecimiento o mercadería adquirida para incrementar tu stock:</p>
+            <div id="comprasListaContainer"></div>
+        </div>
+    </div>
+
     <!-- MODAL EDITAR PRECIOS RÁPIDOS -->
     <div id="modalEditarPrecios" class="modal-overlay">
         <div class="modal-card">
@@ -418,12 +443,43 @@
         </div>
     </div>
 
-    <!-- OTRAS VISTAS (CATÁLOGO, COMPRAS, PEDIR, REPORTE) -->
+    <!-- MODAL NUEVA COMPRA -->
+    <div id="modalNuevaCompra" class="modal-overlay">
+        <div class="modal-card">
+            <h3>🛒 Registrar Compra / Mercadería</h3>
+            <div class="form-group">
+                <label>Categoría:</label>
+                <select id="inputCompraCat" onchange="actualizarSelectItemsCompra()">
+                    <option value="Cervezas">Cervezas</option>
+                    <option value="Licores">Licores</option>
+                    <option value="Coca">Coca</option>
+                    <option value="Varios / Bico">Varios / Bico</option>
+                    <option value="Refrescos">Refrescos</option>
+                    <option value="Cigarros">Cigarros</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Producto (o escribe nuevo):</label>
+                <input type="text" id="inputCompraNombre" placeholder="Ej: Paceña 620ml o producto nuevo">
+            </div>
+            <div class="form-group">
+                <label>Cantidad de Unidades Compradas:</label>
+                <input type="number" id="inputCompraCantidad" placeholder="24" value="1">
+            </div>
+            <div class="form-group">
+                <label>Costo total pagado (Bs.):</label>
+                <input type="number" id="inputCompraCosto" step="0.5" placeholder="320.00">
+            </div>
+            <div class="modal-actions">
+                <button class="back-btn" onclick="cerrarModales()">Cancelar</button>
+                <button class="btn-new-prod" onclick="guardarNuevaCompra()">Guardar Compra</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OTRAS VISTAS (CATÁLOGO, PEDIR, REPORTE) -->
     <div id="view-catalogo" class="view-section">
         <div class="panel-card"><h2 style="color:#ffb400; font-size: 1.2rem;">📦 Catálogo / Stock Local</h2><p style="color:#8892b0; font-size:0.85rem; margin-top:10px;">Sincronizado con inventario offline.</p></div>
-    </div>
-    <div id="view-compras" class="view-section">
-        <div class="panel-card"><h2 style="color:#ffb400; font-size: 1.2rem;">📦 Registro de Compras</h2><p style="color:#8892b0; font-size:0.85rem; margin-top:10px;">Sin compras offline hoy.</p></div>
     </div>
     <div id="view-pedir" class="view-section">
         <div class="panel-card"><h2 style="color:#ffb400; font-size: 1.2rem;">⚠️ Lista de Pedidos a Proveedor</h2><p style="color:#8892b0; font-size:0.85rem; margin-top:10px;">Todo en orden.</p></div>
@@ -451,7 +507,6 @@
         let categoriaActual = 'Cervezas';
         let modoModalInventario = false;
 
-        // Datos iniciales guardados en memoria o localStorage
         let opcionesPorCat = JSON.parse(localStorage.getItem('pau_opciones_rapidas')) || {
             'Cervezas': [
                 {nombre: 'Botella Individual', precio: 15},
@@ -492,6 +547,7 @@
         };
 
         let inventarioDetallado = JSON.parse(localStorage.getItem('pau_inventario_detallado')) || {};
+        let historialCompras = JSON.parse(localStorage.getItem('pau_historial_compras')) || [];
 
         function actualizarBadgesHome() {
             Object.keys(opcionesPorCat).forEach(cat => {
@@ -507,6 +563,10 @@
             document.getElementById('view-' + vistaId).classList.add('active-view');
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             if(btnElement) btnElement.classList.add('active');
+
+            if(vistaId === 'compras') {
+                renderizarListaCompras();
+            }
         }
 
         function abrirCategoria(catNombre) {
@@ -584,7 +644,7 @@
             actualizarCarritoUI();
         }
 
-        // Modales
+        // Modales Precios & Inventario
         function abrirModalEditarPrecios() {
             const fields = document.getElementById('editPricesFields');
             const lista = opcionesPorCat[categoriaActual] || [];
@@ -646,6 +706,79 @@
             renderizarInventarioDetallado();
             actualizarBadgesHome();
             cerrarModales();
+        }
+
+        // Compras Logística
+        function abrirModalNuevaCompra() {
+            document.getElementById('inputCompraCat').value = categoriaActual || 'Cervezas';
+            document.getElementById('inputCompraNombre').value = '';
+            document.getElementById('inputCompraCantidad').value = '12';
+            document.getElementById('inputCompraCosto').value = '120.00';
+            document.getElementById('modalNuevaCompra').classList.add('active');
+        }
+
+        function actualizarSelectItemsCompra() {
+            // Placeholder por si se quiere expandir con selector de items existentes
+        }
+
+        function guardarNuevaCompra() {
+            const cat = document.getElementById('inputCompraCat').value;
+            const nombre = document.getElementById('inputCompraNombre').value.trim();
+            const cantidad = parseInt(document.getElementById('inputCompraCantidad').value);
+            const costo = parseFloat(document.getElementById('inputCompraCosto').value);
+
+            if(!nombre || isNaN(cantidad) || isNaN(costo)) {
+                alert('Completa los campos de compra correctamente.');
+                return;
+            }
+
+            // Registrar en historial de compras
+            const nuevaCompraObj = {
+                id: Date.now(),
+                fecha: new Date().toLocaleDateString('es-BO'),
+                cat,
+                nombre,
+                cantidad,
+                costo
+            };
+            historialCompras.unshift(nuevaCompraObj);
+            localStorage.setItem('pau_historial_compras', JSON.stringify(historialCompras));
+
+            // Si el producto existe en el inventario detallado de esa categoría, sumar stock automáticamente
+            if(!inventarioDetallado[cat]) inventarioDetallado[cat] = [];
+            const idxEnInv = inventarioDetallado[cat].findIndex(item => item.nombre.toLowerCase() === nombre.toLowerCase());
+            if(idxEnInv > -1) {
+                inventarioDetallado[cat][idxEnInv].stock += cantidad;
+            } else {
+                // Agregar al inventario con estimación básica de precio unitario
+                inventarioDetallado[cat].push({
+                    nombre,
+                    precio: Number((costo / Math.max(1, cantidad)) * 1.3).toFixed(2),
+                    stock: cantidad
+                });
+            }
+            localStorage.setItem('pau_inventario_detallado', JSON.stringify(inventarioDetallado));
+            actualizarBadgesHome();
+            renderizarListaCompras();
+            cerrarModales();
+            alert('¡Compra registrada y stock actualizado offline!');
+        }
+
+        function renderizarListaCompras() {
+            const container = document.getElementById('comprasListaContainer');
+            if(historialCompras.length === 0) {
+                container.innerHTML = `<span style="color:#6e7996; font-size:0.8rem;">No hay compras registradas aún.</span>`;
+                return;
+            }
+            container.innerHTML = historialCompras.map(c => `
+                <div class="compra-item-row">
+                    <div>
+                        <div style="font-weight:bold; color:#fff;">${c.nombre} <span style="font-size:0.75rem; color:#8892b0;">(${c.cat})</span></div>
+                        <div style="font-size:0.75rem; color:#8892b0;">Fecha: ${c.fecha} • Cantidad: +${c.cantidad} u.</div>
+                    </div>
+                    <div style="font-weight:bold; color:#00ff96;">Bs. ${Number(c.costo).toFixed(2)}</div>
+                </div>
+            `).join('');
         }
 
         function cerrarModales() {
