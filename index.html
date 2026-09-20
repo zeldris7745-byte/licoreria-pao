@@ -56,7 +56,6 @@
         .inner-dot { width: 14px; height: 14px; border-radius: 50%; background: #6e7996; border: 2px solid #ffb400; animation: pulsoPunto 2s infinite; }
         @keyframes pulsoPunto { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); box-shadow: 0 0 8px #ffb400; } }
         
-        /* Título con movimiento y brillo neón elegante */
         h1.titulo-animado {
             font-size: 1.5rem;
             color: #ff5e9c;
@@ -64,32 +63,14 @@
             animation: brilloNeonTitulo 3s ease-in-out infinite;
         }
         @keyframes brilloNeonTitulo {
-            0% { 
-                opacity: 0.85; 
-                text-shadow: 0 0 5px rgba(255,94,156,0.4), 0 0 10px rgba(255,180,0,0.2);
-                transform: translateY(0px);
-            }
-            50% { 
-                opacity: 1; 
-                text-shadow: 0 0 12px rgba(255,94,156,0.9), 0 0 25px rgba(255,215,0,0.7);
-                transform: translateY(-2px);
-            }
-            100% { 
-                opacity: 0.85; 
-                text-shadow: 0 0 5px rgba(255,94,156,0.4), 0 0 10px rgba(255,180,0,0.2);
-                transform: translateY(0px);
-            }
+            0% { opacity: 0.85; text-shadow: 0 0 5px rgba(255,94,156,0.4), 0 0 10px rgba(255,180,0,0.2); transform: translateY(0px); }
+            50% { opacity: 1; text-shadow: 0 0 12px rgba(255,94,156,0.9), 0 0 25px rgba(255,215,0,0.7); transform: translateY(-2px); }
+            100% { opacity: 0.85; text-shadow: 0 0 5px rgba(255,94,156,0.4), 0 0 10px rgba(255,180,0,0.2); transform: translateY(0px); }
         }
         
         .brindis-container {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 6px 12px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px dashed rgba(255, 94, 156, 0.4);
-            animation: brillarBordes 3s infinite alternate;
+            display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05); border: 1px dashed rgba(255, 94, 156, 0.4); animation: brillarBordes 3s infinite alternate;
         }
         .copa { font-size: 1.25rem; display: inline-block; animation: chocarCopas 1.5s ease-in-out infinite; }
         .copa-left { transform-origin: bottom right; }
@@ -105,67 +86,32 @@
         
         .categories-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .cat-card {
-            background: rgba(20, 23, 36, 0.9);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 16px;
-            padding: 14px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 115px;
-            cursor: pointer;
-            transition: transform 0.15s, border-color 0.15s;
+            background: rgba(20, 23, 36, 0.9); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px; padding: 14px; position: relative; display: flex; flex-direction: column;
+            justify-content: space-between; min-height: 115px; cursor: pointer; transition: transform 0.15s, border-color 0.15s;
         }
         .cat-card:active { transform: scale(0.97); border-color: rgba(255,180,0,0.5); }
         
         .icon-gold-box {
-            width: 42px; height: 42px; border-radius: 12px;
-            background: rgba(255, 180, 0, 0.08);
-            border: 1px solid rgba(255, 180, 0, 0.25);
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 10px;
-            position: relative;
+            width: 42px; height: 42px; border-radius: 12px; background: rgba(255, 180, 0, 0.08);
+            border: 1px solid rgba(255, 180, 0, 0.25); display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
         }
-        /* Movimiento animado para los iconos de categorías */
-        .icon-animated {
-            font-size: 1.4rem;
-            display: inline-block;
-            animation: bounceIcon 2.5s ease-in-out infinite;
-        }
-        @keyframes bounceIcon {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-4px) rotate(4deg); }
-        }
+        .icon-animated { font-size: 1.4rem; display: inline-block; animation: bounceIcon 2.5s ease-in-out infinite; }
+        @keyframes bounceIcon { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-4px) rotate(4deg); } }
 
         .prod-badge { position: absolute; top: 12px; right: 12px; background: rgba(255,180,0,0.15); color: #ffb400; font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; }
-        
         .cat-title { font-size: 1rem; font-weight: bold; margin-bottom: 2px; }
         .cat-sub { font-size: 0.75rem; color: #6e7996; }
 
         .view-section { display: none; }
         .view-section.active-view { display: block; }
 
-        .panel-card {
-            background: rgba(20, 23, 36, 0.92);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 20px;
-        }
+        .panel-card { background: rgba(20, 23, 36, 0.92); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
         .top-cat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
         .back-btn { background: rgba(255,255,255,0.08); color: #fff; border: none; padding: 8px 14px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; }
         .btn-new-prod { background: #ffb400; color: #0b0c10; border: none; padding: 8px 14px; border-radius: 10px; font-weight: bold; font-size: 0.8rem; cursor: pointer; }
 
-        .venta-rapida-box {
-            background: rgba(18, 21, 32, 0.85);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 14px;
-            padding: 14px;
-            margin-bottom: 16px;
-        }
+        .venta-rapida-box { background: rgba(18, 21, 32, 0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 14px; margin-bottom: 16px; }
         .vr-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
         .vr-title { font-size: 0.95rem; font-weight: bold; color: #fff; }
         .btn-edit-fast { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #ffb400; padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; }
@@ -177,80 +123,29 @@
         .mult-val { font-size: 0.95rem; font-weight: bold; min-width: 16px; text-align: center; }
 
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .option-tile {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 10px;
-            padding: 10px;
-            cursor: pointer;
-            transition: border-color 0.15s;
-        }
+        .option-tile { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px; cursor: pointer; transition: border-color 0.15s; }
         .option-tile:active { border-color: #ffb400; background: rgba(255,180,0,0.08); }
         .option-name { font-size: 0.8rem; color: #fff; margin-bottom: 4px; font-weight: 500; }
         .option-price { font-size: 0.8rem; color: #ffb400; font-weight: bold; }
 
-        .inventario-box {
-            text-align: center;
-            padding: 20px 10px;
-            border-top: 1px dashed rgba(255,255,255,0.1);
-        }
+        .inventario-box { text-align: center; padding: 20px 10px; border-top: 1px dashed rgba(255,255,255,0.1); }
         .inv-text { font-size: 0.8rem; color: #8892b0; margin-bottom: 12px; line-height: 1.4; }
         .btn-register-inv { background: rgba(0,255,150,0.15); color: #00ff96; border: 1px solid rgba(0,255,150,0.3); padding: 10px 16px; border-radius: 10px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
-        
-        .inv-list-container {
-            margin-top: 12px;
-            text-align: left;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .inv-item-row {
-            background: rgba(255,255,255,0.04);
-            border-radius: 8px;
-            padding: 8px 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
-        }
+        .inv-list-container { margin-top: 12px; text-align: left; display: flex; flex-direction: column; gap: 6px; }
+        .inv-item-row { background: rgba(255,255,255,0.04); border-radius: 8px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
 
-        .compra-item-row {
-            background: rgba(255,255,255,0.04);
-            border-radius: 10px;
-            padding: 10px 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            font-size: 0.85rem;
-            border-left: 3px solid #ffb400;
-        }
+        .compra-item-row { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.85rem; border-left: 3px solid #ffb400; }
 
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.75);
-            display: none; align-items: center; justify-content: center; z-index: 500;
-            padding: 16px;
-        }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; z-index: 500; padding: 16px; }
         .modal-overlay.active { display: flex; }
-        .modal-card {
-            background: #141724; border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 16px; width: 100%; max-width: 380px; padding: 20px;
-            max-height: 90vh; overflow-y: auto;
-        }
+        .modal-card { background: #141724; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; width: 100%; max-width: 380px; padding: 20px; max-height: 90vh; overflow-y: auto; }
         .modal-card h3 { color: #ffb400; font-size: 1.05rem; margin-bottom: 14px; }
         .form-group { margin-bottom: 12px; }
         .form-group label { display: block; font-size: 0.75rem; color: #8892b0; margin-bottom: 4px; }
         .form-group input, .form-group select { width: 100%; background: #0b0c10; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #fff; padding: 10px; font-size: 0.85rem; }
         .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 
-        .cart-card {
-            background: rgba(20, 23, 36, 0.92);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 20px;
-        }
+        .cart-card { background: rgba(20, 23, 36, 0.92); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
         .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
         .cart-title { font-size: 1rem; font-weight: bold; display: flex; align-items: center; gap: 8px; }
         .cart-items-count { font-size: 0.75rem; color: #8892b0; }
@@ -264,12 +159,7 @@
         .btn-primary { background: #00ff96; color: #0b0c10; }
         .btn-danger { background: #ff4757; color: #fff; }
 
-        .nav-bar {
-            position: fixed; bottom: 0; left: 0; right: 0; background: rgba(18, 20, 31, 0.95);
-            backdrop-filter: blur(6px);
-            border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-around;
-            padding: 12px 4px; z-index: 100;
-        }
+        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(18, 20, 31, 0.95); backdrop-filter: blur(6px); border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-around; padding: 12px 4px; z-index: 100; }
         .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #6e7996; gap: 5px; text-decoration: none; cursor: pointer; border: none; background: transparent; }
         .nav-item.active { color: #ffb400; font-weight: 500; }
     </style>
@@ -302,9 +192,7 @@
             <span>SELECCIONA UNA CATEGORÍA</span>
             <span style="color:#00ff96;">● CERO INTERNET REQUERIDO</span>
         </div>
-
         <div class="categories-grid" id="homeCategoriesGrid"></div>
-
         <div class="cart-card">
             <div class="cart-header">
                 <div class="cart-title">🛒 Carrito de Venta Actual</div>
@@ -334,7 +222,10 @@
             <div class="venta-rapida-box">
                 <div class="vr-header">
                     <div class="vr-title" id="vrTitleLabel">⚡ Venta Rápida</div>
-                    <button class="btn-edit-fast" onclick="abrirModalEditarPrecios()">⚙️ Editar Precios</button>
+                    <div style="display:flex; gap:6px;">
+                        <button class="btn-edit-fast" onclick="abrirModalAgregarOpcionRapida()">+ Agregar Ítem</button>
+                        <button class="btn-edit-fast" onclick="abrirModalEditarPrecios()">⚙️ Editar</button>
+                    </div>
                 </div>
                 
                 <div class="multiplicador-row">
@@ -364,7 +255,7 @@
                 <h2 style="color:#ffb400; font-size: 1.2rem;">📦 Registro de Compras</h2>
                 <button class="btn-new-prod" onclick="abrirModalNuevaCompra()">+ Registrar Compra</button>
             </div>
-            <p style="color:#8892b0; font-size:0.8rem; margin-bottom:14px;">Registra abastecimiento o mercadería (unidades, libras, kilos, bico, etc.):</p>
+            <p style="color:#8892b0; font-size:0.8rem; margin-bottom:14px;">Registra abastecimiento o mercadería:</p>
             <div id="comprasListaContainer"></div>
         </div>
     </div>
@@ -377,6 +268,25 @@
             <div class="modal-actions">
                 <button class="back-btn" onclick="cerrarModales()">Cancelar</button>
                 <button class="btn-new-prod" onclick="guardarPreciosRapidos()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL AGREGAR ÍTEM RÁPIDO CUSTOM -->
+    <div id="modalAgregarOpcionRapida" class="modal-overlay">
+        <div class="modal-card">
+            <h3>➕ Agregar Opción Rápida</h3>
+            <div class="form-group">
+                <label>Nombre del ítem / Presentación (ej. Cuartilla, 1.5 L, etc.):</label>
+                <input type="text" id="inputCustomFastNombre" placeholder="Ej: Soda 1.5L / Cuartilla">
+            </div>
+            <div class="form-group">
+                <label>Precio (Bs.):</label>
+                <input type="number" id="inputCustomFastPrecio" step="0.5" placeholder="15.00">
+            </div>
+            <div class="modal-actions">
+                <button class="back-btn" onclick="cerrarModales()">Cancelar</button>
+                <button class="btn-new-prod" onclick="guardarOpcionRapidaCustom()">Agregar</button>
             </div>
         </div>
     </div>
@@ -404,18 +314,16 @@
         </div>
     </div>
 
-    <!-- MODAL NUEVA COMPRA (CON UNIDADES EDITABLES/LIBRES) -->
+    <!-- MODAL NUEVA COMPRA -->
     <div id="modalNuevaCompra" class="modal-overlay">
         <div class="modal-card">
             <h3>🛒 Registrar Compra / Mercadería</h3>
-            
             <div class="form-group">
                 <label>Categoría (Elige o escribe nueva):</label>
                 <select id="inputCompraCatSelect" onchange="toggleNuevaCategoriaCompra(this.value)">
                     <option value="Cervezas">Cervezas</option>
                     <option value="Licores">Licores</option>
                     <option value="Coca">Coca</option>
-                    <option value="Varios / Bico">Varios / Bico</option>
                     <option value="Refrescos">Refrescos</option>
                     <option value="Cigarros">Cigarros</option>
                     <option value="__nueva__">+ [ Escribir nueva categoría... ]</option>
@@ -425,23 +333,29 @@
 
             <div class="form-group">
                 <label>Producto (nombre exacto):</label>
-                <input type="text" id="inputCompraNombre" placeholder="Ej: Coca machucada o Bico tradicional">
+                <input type="text" id="inputCompraNombre" placeholder="Ej: Coca machucada o Blue">
             </div>
 
             <div class="form-group">
                 <label>Tipo de Presentación / Unidad de Medida:</label>
                 <select id="inputCompraPresentacion" onchange="togglePresentacionPersonalizada(this.value)">
                     <option value="Unidad(es) suelta(s)">Unidad(es) suelta(s)</option>
+                    <option value="Paquete">Paquete</option>
+                    <option value="Medio paquete">Medio paquete</option>
                     <option value="Caja">Caja</option>
-                    <option value="Six-pack">Six-pack</option>
-                    <option value="Blíster / Paquete">Blíster / Paquete</option>
-                    <option value="Libra (lb)">Libra (lb)</option>
-                    <option value="Kilo (kg)">Kilo (kg)</option>
-                    <option value="Gramo (g)">Gramo (g)</option>
-                    <option value="Litro (L)">Litro (L)</option>
+                    <option value="Media caja">Media caja</option>
+                    <option value="Six-pack botellas">Six-pack botellas</option>
+                    <option value="Six-pack latas">Six-pack latas</option>
+                    <option value="2 unidades">2 unidades</option>
+                    <option value="3 unidades">3 unidades</option>
+                    <option value="1 Litro (1L)">1 Litro (1L)</option>
+                    <option value="1.5 Litros (1.5L)">1.5 Litros (1.5L)</option>
+                    <option value="2 Litros (2L)">2 Litros (2L)</option>
+                    <option value="2.5 Litros (2.5L)">2.5 Litros (2.5L)</option>
+                    <option value="3 Litros (3L)">3 Litros (3L)</option>
                     <option value="__custom_pres__">✏️ Escribir otra unidad personalizada...</option>
                 </select>
-                <input type="text" id="inputCompraPresPersonalizada" placeholder="Ej: Saco, Arroba, Atado..." style="display:none; margin-top:6px;">
+                <input type="text" id="inputCompraPresPersonalizada" placeholder="Ej: Cuartilla, bico..." style="display:none; margin-top:6px;">
             </div>
 
             <div class="form-group">
@@ -490,62 +404,64 @@
     </div>
 
     <script>
-        // Cargar persistencia con localStorage seguro
         let carrito = JSON.parse(localStorage.getItem('pau_carrito_actual')) || [];
         let ventasTotales = parseFloat(localStorage.getItem('pau_ventas_hoy')) || 0;
         let multiplicadorActual = 1;
         let categoriaActual = 'Cervezas';
 
-        let categoriasBase = ['Cervezas', 'Cigarros', 'Licores', 'Coca', 'Refrescos', 'Varios / Bico'];
+        let categoriasBase = ['Cervezas', 'Cigarros', 'Licores', 'Coca', 'Refrescos'];
         let categoriasAdicionales = JSON.parse(localStorage.getItem('pau_categorias_extra')) || [];
 
         function obtenerTodasCategorias() {
             return [...categoriasBase, ...categoriasAdicionales];
         }
 
+        // Estructura actualizada con 1L, 1.5L, 2L, 2.5L y 3L incluidos en refrescos
         let opcionesPorCat = JSON.parse(localStorage.getItem('pau_opciones_rapidas')) || {
             'Cervezas': [
-                {nombre: 'Botella Individual', precio: 15},
-                {nombre: 'Six-pack / 6 botellas', precio: 85},
-                {nombre: 'Caja 12 botellas', precio: 165},
-                {nombre: 'Vaso de cerveza', precio: 10}
+                {nombre: 'Botella individual', precio: 15},
+                {nombre: 'Six-pack botellas', precio: 85},
+                {nombre: 'Six-pack latas', precio: 75},
+                {nombre: 'Caja 12 botellas', precio: 165}
             ],
             'Licores': [
-                {nombre: 'Shot / Trago corto', precio: 15},
                 {nombre: 'Media botella', precio: 45},
                 {nombre: 'Botella entera', precio: 90},
+                {nombre: 'Medio paquete / combo', precio: 55},
                 {nombre: 'Combo Fernet/Coca', precio: 110}
             ],
             'Coca': [
                 {nombre: 'Porción 5 Bs', precio: 5},
                 {nombre: 'Machucada / 10 Bs', precio: 10},
                 {nombre: 'Porción 15 Bs', precio: 15},
-                {nombre: '1 Libra', precio: 40}
-            ],
-            'Varios / Bico': [
-                {nombre: 'Bolsa Bicarbonato', precio: 5},
-                {nombre: 'Bolsa Hielo pequeña', precio: 10},
-                {nombre: 'Bolsa Hielo grande', precio: 18},
-                {nombre: 'Vaso térmico extra', precio: 2}
+                {nombre: '1 Libra', precio: 40},
+                {nombre: 'Cuartilla (medida)', precio: 20}
             ],
             'Refrescos': [
-                {nombre: 'Soda Personal', precio: 7},
-                {nombre: 'Soda 2 Litros', precio: 15},
-                {nombre: 'Agua 600ml', precio: 5},
-                {nombre: 'Agua 2L', precio: 12}
+                {nombre: 'Soda personal (350ml)', precio: 7},
+                {nombre: 'Soda personal (400ml)', precio: 8},
+                {nombre: 'Soda de 1 L', precio: 10},
+                {nombre: 'Soda de 1.5 L', precio: 13},
+                {nombre: 'Soda de 2 L', precio: 15},
+                {nombre: 'Soda de 2.5 L', precio: 18},
+                {nombre: 'Soda de 3 L', precio: 22},
+                {nombre: 'Agua de 600 ml', precio: 5},
+                {nombre: 'Agua de 1 L', precio: 8},
+                {nombre: 'Agua de 1.5 L', precio: 11},
+                {nombre: 'Agua de 2 L', precio: 14},
+                {nombre: 'Agua de 2.5 L', precio: 17},
+                {nombre: 'Agua de 3 L', precio: 20}
             ],
             'Cigarros': [
                 {nombre: 'Cigarro suelto', precio: 2},
                 {nombre: 'Cajetilla x 10', precio: 10},
-                {nombre: 'Caja dura regular', precio: 18},
-                {nombre: 'Caja mentolada', precio: 19}
+                {nombre: 'Caja dura regular', precio: 18}
             ]
         };
 
         let inventarioDetallado = JSON.parse(localStorage.getItem('pau_inventario_detallado')) || {};
         let historialCompras = JSON.parse(localStorage.getItem('pau_historial_compras')) || [];
 
-        // Inicializar vistas con los datos guardados al cargar la página
         document.getElementById('totalVentasText').textContent = ventasTotales.toFixed(2);
         document.getElementById('reportTotal').textContent = ventasTotales.toFixed(2);
 
@@ -553,12 +469,11 @@
             const grid = document.getElementById('homeCategoriesGrid');
             const todas = obtenerTodasCategorias();
             const iconosDefecto = {
-                'Cervezas': {icon: '🍾', sub: 'Paceña, Huari y más'},
+                'Cervezas': {icon: '🍾', sub: 'Botellas, latas, six-packs'},
                 'Cigarros': {icon: '🚬', sub: 'Marlboro, Camel, etc.'},
-                'Licores': {icon: '🥃', sub: 'Fernet, Singani, Ron'},
-                'Coca': {icon: '🌿', sub: 'Seleccionada, machucada'},
-                'Refrescos': {icon: '🥤', sub: 'Coca-Cola, aguas frías'},
-                'Varios / Bico': {icon: '❄️', sub: 'Bicarbonato, hielo'}
+                'Licores': {icon: '🥃', sub: 'Botellas, cajas y combos'},
+                'Coca': {icon: '🌿', sub: 'Porciones, machucada, libra'},
+                'Refrescos': {icon: '🥤', sub: 'Sodas y aguas 1L a 3L'}
             };
 
             grid.innerHTML = todas.map(cat => {
@@ -672,7 +587,6 @@
 
         function abrirModalEditarPrecios() {
             const fields = document.getElementById('editPricesFields');
-            const lista = opcionesPorCat[categoriaActual] || [];
             if(!opcionesPorCat[categoriaActual]) opcionesPorCat[categoriaActual] = [];
             fields.innerHTML = (opcionesPorCat[categoriaActual]).map((opt, i) => `
                 <div class="form-group" style="margin-bottom:8px;">
@@ -692,6 +606,26 @@
                     if(!isNaN(val)) opt.precio = val;
                 }
             });
+            localStorage.setItem('pau_opciones_rapidas', JSON.stringify(opcionesPorCat));
+            renderizarOpcionesRapidas();
+            cerrarModales();
+        }
+
+        function abrirModalAgregarOpcionRapida() {
+            document.getElementById('inputCustomFastNombre').value = '';
+            document.getElementById('inputCustomFastPrecio').value = '';
+            document.getElementById('modalAgregarOpcionRapida').classList.add('active');
+        }
+
+        function guardarOpcionRapidaCustom() {
+            const nombre = document.getElementById('inputCustomFastNombre').value.trim();
+            const precio = parseFloat(document.getElementById('inputCustomFastPrecio').value);
+            if(!nombre || isNaN(precio)) {
+                alert('Ingresa nombre y precio válidos.');
+                return;
+            }
+            if(!opcionesPorCat[categoriaActual]) opcionesPorCat[categoriaActual] = [];
+            opcionesPorCat[categoriaActual].push({nombre, precio});
             localStorage.setItem('pau_opciones_rapidas', JSON.stringify(opcionesPorCat));
             renderizarOpcionesRapidas();
             cerrarModales();
@@ -741,13 +675,11 @@
         }
 
         function toggleNuevaCategoriaCompra(val) {
-            const inputNew = document.getElementById('inputCompraCatNueva');
-            inputNew.style.display = val === '__nueva__' ? 'block' : 'none';
+            document.getElementById('inputCompraCatNueva').style.display = val === '__nueva__' ? 'block' : 'none';
         }
 
         function togglePresentacionPersonalizada(val) {
-            const inputCustom = document.getElementById('inputCompraPresPersonalizada');
-            inputCustom.style.display = val === '__custom_pres__' ? 'block' : 'none';
+            document.getElementById('inputCompraPresPersonalizada').style.display = val === '__custom_pres__' ? 'block' : 'none';
         }
 
         function abrirModalNuevaCompra() {
@@ -756,8 +688,8 @@
             toggleNuevaCategoriaCompra(document.getElementById('inputCompraCatSelect').value);
             document.getElementById('inputCompraCatNueva').value = '';
             document.getElementById('inputCompraNombre').value = '';
-            document.getElementById('inputCompraPresentacion').value = 'Libra (lb)';
-            togglePresentacionPersonalizada('Libra (lb)');
+            document.getElementById('inputCompraPresentacion').value = 'Unidad(es) suelta(s)';
+            togglePresentacionPersonalizada('Unidad(es) suelta(s)');
             document.getElementById('inputCompraPresPersonalizada').value = '';
             document.getElementById('inputCompraCantidad').value = '1';
             document.getElementById('inputCompraCosto').value = '';
@@ -858,7 +790,6 @@
             totalCartText.textContent = total.toFixed(2);
             document.getElementById('reportTotal').textContent = (ventasTotales + total).toFixed(2);
 
-            // Guardar carrito en localStorage para persistencia al cerrar app o reiniciar
             localStorage.setItem('pau_carrito_actual', JSON.stringify(carrito));
 
             if(carrito.length === 0) {
@@ -880,7 +811,6 @@
             document.getElementById('totalVentasText').textContent = ventasTotales.toFixed(2);
             document.getElementById('reportTotal').textContent = ventasTotales.toFixed(2);
             
-            // Guardar total de ventas persistente
             localStorage.setItem('pau_ventas_hoy', ventasTotales);
 
             carrito = [];
