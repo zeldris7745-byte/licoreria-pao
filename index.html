@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Licorería Pao - App Local Offline</title>
+  <title>Licorería Pau - App Local Offline</title>
   
   <meta name="theme-color" content="#0b0f17">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Licorería Pao">
+  <meta name="apple-mobile-web-app-title" content="Licorería Pau">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-main: #0b0f17;
@@ -20,24 +20,65 @@
       --borde-tarjeta: rgba(255, 255, 255, 0.1);
       --input-bg: #161f30;
       --acento: #f59e0b;
-      --coca-accent: #10b981;
+      --acento-secundario: #ec4899;
+      --exito: #10b981;
+      --peligro: #ef4444;
       --texto-principal: #f3f4f6;
       --texto-silenciado: #9ca3af;
-      --peligro: #ef4444;
-      --exito: #10b981;
       --radio: 16px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
     body { background-color: var(--bg-main); color: var(--texto-principal); min-height: 100vh; padding: 14px; padding-bottom: 95px; }
     
     header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
-    .brand-area { display: flex; align-items: center; gap: 8px; }
-    .brand-icon { background: rgba(245, 158, 11, 0.15); border: 1px solid var(--acento); width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; }
-    h1 { font-size: 1.15rem; color: var(--texto-principal); }
-    .badge-sistema { background: rgba(16, 185, 129, 0.2); color: var(--exito); font-size: 0.62rem; font-weight: 700; padding: 2px 6px; border-radius: 6px; letter-spacing: 0.5px; }
+    .brand-area { display: flex; align-items: center; gap: 10px; }
+    
+    /* Icono animado con pulso y rotación suave al hover */
+    .brand-icon { 
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(236, 72, 153, 0.25)); 
+      border: 1.5px solid var(--acento); 
+      width: 44px; height: 44px; border-radius: 12px; 
+      display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
+      animation: pulseGlow 3s infinite ease-in-out;
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .brand-icon:hover { transform: scale(1.12) rotate(8deg); }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.2); border-color: var(--acento); }
+      50% { box-shadow: 0 0 18px rgba(236, 72, 153, 0.4); border-color: var(--acento-secundario); }
+    }
+
+    /* Título con estilo y degradado animado */
+    h1 { 
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.4rem; 
+      font-weight: 800; 
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #f59e0b, #fbbf24, #ec4899, #f59e0b);
+      background-size: 300% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 6s ease infinite;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .badge-sistema { 
+      background: rgba(16, 185, 129, 0.15); color: var(--exito); 
+      font-size: 0.6rem; font-weight: 700; padding: 2px 7px; border-radius: 6px; 
+      letter-spacing: 0.5px; display: inline-block; margin-top: 2px;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
     .ventas-hoy-header { text-align: right; }
     .ventas-hoy-label { font-size: 0.62rem; color: var(--texto-silenciado); text-transform: uppercase; letter-spacing: 0.5px; }
-    .ventas-hoy-val { font-size: 1rem; font-weight: 700; color: var(--exito); }
+    .ventas-hoy-val { font-size: 1.1rem; font-weight: 700; color: var(--exito); font-family: 'Outfit', sans-serif; }
 
     .container { display: grid; gap: 14px; max-width: 1000px; margin: 0 auto; }
     
@@ -45,28 +86,29 @@
     .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
     .cat-card {
       background: var(--card-bg); border: 1px solid var(--borde-tarjeta); border-radius: 16px; padding: 14px;
-      display: flex; flex-direction: column; justify-content: space-between; gap: 10px; cursor: pointer; transition: 0.2s;
+      display: flex; flex-direction: column; justify-content: space-between; gap: 10px; cursor: pointer; transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .cat-card:hover { border-color: var(--acento); transform: translateY(-2px); }
+    .cat-card:hover { border-color: var(--acento); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
     .cat-header { display: flex; justify-content: space-between; align-items: flex-start; }
-    .cat-icon-box { font-size: 1.5rem; background: rgba(255,255,255,0.05); width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+    .cat-icon-box { font-size: 1.5rem; background: rgba(255,255,255,0.05); width: 42px; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; transition: 0.3s; }
+    .cat-card:hover .cat-icon-box { transform: scale(1.1); background: rgba(245, 158, 11, 0.15); }
     .cat-badge-cnt { font-size: 0.68rem; color: var(--acento); background: rgba(245, 158, 11, 0.12); padding: 3px 8px; border-radius: 20px; font-weight: 600; }
-    .cat-info h3 { font-size: 0.98rem; font-weight: 700; color: var(--texto-principal); }
+    .cat-info h3 { font-size: 0.98rem; font-weight: 700; color: var(--texto-principal); font-family: 'Outfit', sans-serif; }
     .cat-info p { font-size: 0.72rem; color: var(--texto-silenciado); margin-top: 2px; }
 
     .subcat-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
     .btn-volver {
       background: var(--input-bg); border: 1px solid var(--borde-tarjeta); color: var(--texto-principal);
-      padding: 7px 14px; border-radius: 10px; font-size: 0.78rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;
+      padding: 7px 14px; border-radius: 10px; font-size: 0.78rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;
     }
-    .btn-volver:hover { border-color: var(--acento); }
-    .subcat-title { font-size: 1.05rem; font-weight: 700; color: var(--acento); }
+    .btn-volver:hover { border-color: var(--acento); background: rgba(245,158,11,0.1); }
+    .subcat-title { font-size: 1.1rem; font-weight: 700; color: var(--acento); font-family: 'Outfit', sans-serif; }
     .btn-nuevo-mini {
       background: var(--acento); color: #000; border: none; padding: 7px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; cursor: pointer;
     }
 
     .card { background: var(--card-bg); border: 1px solid var(--borde-tarjeta); border-radius: var(--radio); padding: 14px; }
-    .card-title { font-size: 0.95rem; font-weight: 600; color: var(--texto-principal); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .card-title { font-size: 0.98rem; font-weight: 700; color: var(--texto-principal); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; font-family: 'Outfit', sans-serif; }
 
     .prods-list { display: flex; flex-direction: column; gap: 10px; }
     .prod-row-card {
@@ -87,7 +129,9 @@
     .btn-add-line {
       background: var(--acento); color: #000; border: none; padding: 9px; border-radius: 10px;
       font-weight: 700; font-size: 0.8rem; cursor: pointer; text-align: center;
+      transition: transform 0.15s;
     }
+    .btn-add-line:active { transform: scale(0.97); }
 
     .fast-special-box { background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
     .fast-brand-selector { margin-bottom: 4px; }
@@ -95,8 +139,8 @@
     .fast-brand-selector select { width: 100%; background: var(--bg-main); border: 1px solid var(--borde-tarjeta); color: var(--texto-principal); padding: 8px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; }
     
     .fast-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .fast-opt-btn { background: var(--input-bg); border: 1px solid var(--borde-tarjeta); color: var(--texto-principal); padding: 9px; border-radius: 10px; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 2px; }
-    .fast-opt-btn:hover { border-color: var(--acento); background: rgba(245, 158, 11, 0.15); }
+    .fast-opt-btn { background: var(--input-bg); border: 1px solid var(--borde-tarjeta); color: var(--texto-principal); padding: 9px; border-radius: 10px; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 2px; transition: 0.2s; }
+    .fast-opt-btn:hover { border-color: var(--acento); background: rgba(245, 158, 11, 0.15); transform: translateY(-1px); }
     .fast-opt-name { font-weight: 600; font-size: 0.8rem; }
     .fast-opt-price { color: var(--acento); font-size: 0.75rem; font-weight: 700; }
 
@@ -108,31 +152,34 @@
     .low-stock-card { background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.3); padding: 10px; border-radius: 10px; font-size: 0.78rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 
     .cart-list { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
-    .cart-item { display: flex; justify-content: space-between; align-items: center; background: var(--input-bg); padding: 8px 10px; border-radius: 8px; font-size: 0.8rem; }
-    .total-section { font-size: 1rem; font-weight: 700; margin: 10px 0; display: flex; justify-content: space-between; border-top: 1px solid var(--borde-tarjeta); padding-top: 10px; }
+    .cart-item { display: flex; justify-content: space-between; align-items: center; background: var(--input-bg); padding: 8px 10px; border-radius: 8px; font-size: 0.8rem; animation: fadeInCart 0.2s ease-out; }
+    @keyframes fadeInCart { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    .total-section { font-size: 1.05rem; font-weight: 700; margin: 10px 0; display: flex; justify-content: space-between; border-top: 1px solid var(--borde-tarjeta); padding-top: 10px; font-family: 'Outfit', sans-serif; }
     .actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .btn-action { background: var(--exito); color: #000; border: none; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.88rem; }
-    .btn-danger { background: var(--peligro); color: #fff; border: none; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.88rem; }
+    .btn-action { background: var(--exito); color: #000; border: none; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.88rem; transition: transform 0.15s; }
+    .btn-action:active { transform: scale(0.97); }
+    .btn-danger { background: var(--peligro); color: #fff; border: none; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.88rem; transition: transform 0.15s; }
+    .btn-danger:active { transform: scale(0.97); }
     
     .history-box { font-size: 0.78rem; color: var(--texto-principal); background: var(--input-bg); padding: 12px; border-radius: 10px; line-height: 1.5; max-height: 280px; overflow-y: auto; border: 1px solid var(--borde-tarjeta); }
     .history-entry { border-bottom: 1px dashed rgba(255,255,255,0.15); padding-bottom: 8px; margin-bottom: 8px; }
 
     .bottom-nav {
-      position: fixed; bottom: 0; left: 0; right: 0; background: #0e1420; border-top: 1px solid var(--borde-tarjeta);
+      position: fixed; bottom: 0; left: 0; right: 0; background: rgba(14, 20, 32, 0.92); backdrop-filter: blur(10px); border-top: 1px solid var(--borde-tarjeta);
       display: grid; grid-template-columns: repeat(5, 1fr); padding: 6px 0; z-index: 1000;
     }
-    .nav-item { background: transparent; border: none; color: var(--texto-silenciado); display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.62rem; cursor: pointer; }
-    .nav-item.active { color: var(--acento); font-weight: 600; }
-    .nav-icon { font-size: 1rem; }
+    .nav-item { background: transparent; border: none; color: var(--texto-silenciado); display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.62rem; cursor: pointer; transition: 0.2s; }
+    .nav-item.active { color: var(--acento); font-weight: 600; transform: translateY(-2px); }
+    .nav-icon { font-size: 1.1rem; }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
       <div class="brand-area">
-        <div class="brand-icon">🍻</div>
+        <div class="brand-icon" title="¡Salud! 🍻" onclick="triggerPartyEffect()">🍻</div>
         <div>
-          <h1>Licorería Pao</h1>
+          <h1>Licorería Pau</h1>
           <span class="badge-sistema">● MODO LOCAL 100% OFFLINE</span>
         </div>
       </div>
@@ -342,14 +389,13 @@
   </nav>
 
   <script>
-    // --- PERSISTENCIA LOCAL OFFLINE PURO (v12 universal brand fast-sale) ---
-    let catalog = JSON.parse(localStorage.getItem('pao_catalog_local_v9') || '[]');
-    let purchasesLog = JSON.parse(localStorage.getItem('pao_purchases_local_v9') || '[]');
-    let lineSelectors = JSON.parse(localStorage.getItem('pao_selectors_local_v9') || '{}');
-    let cart = JSON.parse(localStorage.getItem('pao_cart_local_v9') || '[]');
-    let dailyRevenue = parseFloat(localStorage.getItem('pao_daily_rev_local_v9') || '0');
-    let dayLogHistory = localStorage.getItem('pao_history_local_v9') || '';
-    let selectedBrandForCategory = JSON.parse(localStorage.getItem('pao_selected_brands_v12') || '{}');
+    let catalog = JSON.parse(localStorage.getItem('pao_catalog_local_v13') || '[]');
+    let purchasesLog = JSON.parse(localStorage.getItem('pao_purchases_local_v13') || '[]');
+    let lineSelectors = JSON.parse(localStorage.getItem('pao_selectors_local_v13') || '{}');
+    let cart = JSON.parse(localStorage.getItem('pao_cart_local_v13') || '[]');
+    let dailyRevenue = parseFloat(localStorage.getItem('pao_daily_rev_local_v13') || '0');
+    let dayLogHistory = localStorage.getItem('pao_history_local_v13') || '';
+    let selectedBrandForCategory = JSON.parse(localStorage.getItem('pao_selected_brands_v13') || '{}');
 
     const defaultFastConfigs = {
       cervezas: [
@@ -390,17 +436,17 @@
       ]
     };
 
-    let fastConfigs = JSON.parse(localStorage.getItem('pao_fast_configs_v11') || JSON.stringify(defaultFastConfigs));
+    let fastConfigs = JSON.parse(localStorage.getItem('pao_fast_configs_v13') || JSON.stringify(defaultFastConfigs));
 
     function saveAll() {
-      localStorage.setItem('pao_catalog_local_v9', JSON.stringify(catalog));
-      localStorage.setItem('pao_purchases_local_v9', JSON.stringify(purchasesLog));
-      localStorage.setItem('pao_selectors_local_v9', JSON.stringify(lineSelectors));
-      localStorage.setItem('pao_cart_local_v9', JSON.stringify(cart));
-      localStorage.setItem('pao_daily_rev_local_v9', dailyRevenue.toString());
-      localStorage.setItem('pao_history_local_v9', dayLogHistory);
-      localStorage.setItem('pao_fast_configs_v11', JSON.stringify(fastConfigs));
-      localStorage.setItem('pao_selected_brands_v12', JSON.stringify(selectedBrandForCategory));
+      localStorage.setItem('pao_catalog_local_v13', JSON.stringify(catalog));
+      localStorage.setItem('pao_purchases_local_v13', JSON.stringify(purchasesLog));
+      localStorage.setItem('pao_selectors_local_v13', JSON.stringify(lineSelectors));
+      localStorage.setItem('pao_cart_local_v13', JSON.stringify(cart));
+      localStorage.setItem('pao_daily_rev_local_v13', dailyRevenue.toString());
+      localStorage.setItem('pao_history_local_v13', dayLogHistory);
+      localStorage.setItem('pao_fast_configs_v13', JSON.stringify(fastConfigs));
+      localStorage.setItem('pao_selected_brands_v13', JSON.stringify(selectedBrandForCategory));
       updateCategoryCounts();
       renderPurchasesLog();
       renderLowStockAlerts();
@@ -432,6 +478,12 @@
     const purchasesLogList = document.getElementById('purchasesLogList');
     const lowStockContainer = document.getElementById('lowStockContainer');
     const lowStockCountBadge = document.getElementById('lowStockCountBadge');
+
+    function triggerPartyEffect() {
+      const icon = document.querySelector('.brand-icon');
+      icon.style.transform = 'scale(1.3) rotate(360deg)';
+      setTimeout(() => { icon.style.transform = ''; }, 400);
+    }
 
     function updateCategoryCounts() {
       const keys = ['cervezas', 'cigarros', 'licores', 'refrescos', 'varios', 'coca'];
@@ -526,8 +578,6 @@
         }
       }
 
-      const finalName = `${brandPrefix}${name}${fastMultiplier > `1` ? ` x${fastMultiplier}` : (fastMultiplier > 1 ? ` x${fastMultiplier}` : '')}`;
-      // Clean duplicate x multiplier logic fix
       const multStr = fastMultiplier > 1 ? ` x${fastMultiplier}` : '';
       const cleanName = `${brandPrefix}${name}${multStr}`;
       const finalPrice = unitPrice * fastMultiplier;
