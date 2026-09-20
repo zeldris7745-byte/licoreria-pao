@@ -305,6 +305,10 @@
                 <input type="number" id="inputProdPrecio" step="0.5" placeholder="15.00">
             </div>
             <div class="form-group">
+                <label>Costo de Adquisición Unitario Estimado (Bs., opcional):</label>
+                <input type="number" id="inputProdCostoUnit" step="0.5" placeholder="10.00">
+            </div>
+            <div class="form-group">
                 <label>Cantidad en Stock (unidades/medida):</label>
                 <input type="number" id="inputProdStock" placeholder="24">
             </div>
@@ -390,9 +394,18 @@
         <div class="panel-card"><h2 style="color:#ffb400; font-size: 1.2rem;">⚠️ Lista de Pedidos a Proveedor</h2><p style="color:#8892b0; font-size:0.85rem; margin-top:10px;">Todo en orden.</p></div>
     </div>
     <div id="view-reporte" class="view-section">
-        <div class="panel-card">
-            <h2 style="color:#ffb400; margin-bottom: 14px; font-size: 1.2rem;">📄 Reporte del Día</h2>
-            <p style="font-size: 0.9rem; color:#aaa;">Total acumulado hoy: <span style="color:#00ff96; font-weight:bold;">Bs. <span id="reportTotal">0.00</span></span></p>
+        <div class="panel-card" id="reporteCardContainer">
+            <h2 style="color:#ffb400; margin-bottom: 14px; font-size: 1.2rem;">📄 Reporte del Día y Balance Mensual</h2>
+            <p style="font-size: 0.9rem; color:#aaa; margin-bottom: 14px;">Total acumulado hoy: <span style="color:#00ff96; font-weight:bold;">Bs. <span id="reportTotal">0.00</span></span></p>
+            <div id="reporteMensualBody"></div>
+            
+            <div style="margin-top:20px; padding-top:14px; border-top:1px dashed rgba(255,255,255,0.15); display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn-new-prod" style="flex:1; background:rgba(0,255,150,0.15); color:#00ff96; border:1px solid rgba(0,255,150,0.4);" onclick="exportarRespaldoJSON()">📤 Exportar Respaldo</button>
+                <label class="btn-new-prod" style="flex:1; background:rgba(255,180,0,0.15); color:#ffb400; border:1px solid rgba(255,180,0,0.4); text-align:center; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                    📥 Importar Respaldo
+                    <input type="file" id="inputImportarJson" accept=".json" style="display:none;" onchange="importarRespaldoJSON(event)">
+                </label>
+            </div>
         </div>
     </div>
 
@@ -410,12 +423,8 @@
         if ('serviceWorker' in navigator) {
             const swCode = `
                 const CACHE_NAME = 'pau-offline-cache-v1';
-                self.addEventListener('install', event => {
-                    self.skipWaiting();
-                });
-                self.addEventListener('activate', event => {
-                    event.waitUntil(self.clients.claim());
-                });
+                self.addEventListener('install', event => { self.skipWaiting(); });
+                self.addEventListener('activate', event => { event.waitUntil(self.clients.claim()); });
                 self.addEventListener('fetch', event => {
                     event.respondWith(
                         fetch(event.request).catch(() => caches.match(event.request) || caches.match('./'))
@@ -443,57 +452,120 @@
 
         let opcionesPorCat = JSON.parse(localStorage.getItem('pau_opciones_rapidas')) || {
             'Cervezas': [
-                {nombre: 'Botella individual', precio: 15},
-                {nombre: 'Six-pack botellas', precio: 85},
-                {nombre: 'Six-pack latas', precio: 75},
-                {nombre: 'Caja 12 botellas', precio: 165}
+                {nombre: 'Botella individual', precio: 15, costo: 10},
+                {nombre: 'Six-pack botellas', precio: 85, costo: 60},
+                {nombre: 'Six-pack latas', precio: 75, costo: 52},
+                {nombre: 'Caja 12 botellas', precio: 165, costo: 120}
             ],
             'Licores': [
-                {nombre: 'Media botella', precio: 45},
-                {nombre: 'Botella entera', precio: 90},
-                {nombre: 'Medio paquete / combo', precio: 55},
-                {nombre: 'Combo Fernet/Coca', precio: 110}
+                {nombre: 'Media botella', precio: 45, costo: 30},
+                {nombre: 'Botella entera', precio: 90, costo: 65},
+                {nombre: 'Medio paquete / combo', precio: 55, costo: 40},
+                {nombre: 'Combo Fernet/Coca', precio: 110, costo: 80}
             ],
             'Coca': [
-                {nombre: 'Porción 5 Bs', precio: 5},
-                {nombre: 'Machucada / 10 Bs', precio: 10},
-                {nombre: 'Porción 15 Bs', precio: 15},
-                {nombre: '1 Libra', precio: 40},
-                {nombre: 'Cuartilla (medida)', precio: 20}
+                {nombre: 'Porción 5 Bs', precio: 5, costo: 3},
+                {nombre: 'Machucada / 10 Bs', precio: 10, costo: 6},
+                {nombre: 'Porción 15 Bs', precio: 15, costo: 10},
+                {nombre: '1 Libra', precio: 40, costo: 28},
+                {nombre: 'Cuartilla (medida)', precio: 20, costo: 14}
             ],
             'Refrescos': [
-                {nombre: 'Soda personal (350ml)', precio: 7},
-                {nombre: 'Soda personal (400ml)', precio: 8},
-                {nombre: 'Soda de 1 L', precio: 10},
-                {nombre: 'Soda de 1.5 L', precio: 13},
-                {nombre: 'Soda de 2 L', precio: 15},
-                {nombre: 'Soda de 2.5 L', precio: 18},
-                {nombre: 'Soda de 3 L', precio: 22},
-                {nombre: 'Agua de 600 ml', precio: 5},
-                {nombre: 'Agua de 1 L', precio: 8},
-                {nombre: 'Agua de 1.5 L', precio: 11},
-                {nombre: 'Agua de 2 L', precio: 14},
-                {nombre: 'Agua de 2.5 L', precio: 17},
-                {nombre: 'Agua de 3 L', precio: 20}
+                {nombre: 'Soda personal (350ml)', precio: 7, costo: 4.5},
+                {nombre: 'Soda personal (400ml)', precio: 8, costo: 5},
+                {nombre: 'Soda de 1 L', precio: 10, costo: 6.5},
+                {nombre: 'Soda de 1.5 L', precio: 13, costo: 8.5},
+                {nombre: 'Soda de 2 L', precio: 15, costo: 10},
+                {nombre: 'Soda de 2.5 L', precio: 18, costo: 12},
+                {nombre: 'Soda de 3 L', precio: 22, costo: 15},
+                {nombre: 'Agua de 600 ml', precio: 5, costo: 3},
+                {nombre: 'Agua de 1 L', precio: 8, costo: 5},
+                {nombre: 'Agua de 1.5 L', precio: 11, costo: 7},
+                {nombre: 'Agua de 2 L', precio: 14, costo: 9},
+                {nombre: 'Agua de 2.5 L', precio: 17, costo: 11},
+                {nombre: 'Agua de 3 L', precio: 20, costo: 13}
             ],
             'Varios / Bico': [
-                {nombre: 'Bolsa Bicarbonato', precio: 5},
-                {nombre: 'Bolsa Hielo pequeña', precio: 10},
-                {nombre: 'Bolsa Hielo grande', precio: 18},
-                {nombre: 'Vaso térmico extra', precio: 2}
+                {nombre: 'Bolsa Bicarbonato', precio: 5, costo: 3},
+                {nombre: 'Bolsa Hielo pequeña', precio: 10, costo: 6},
+                {nombre: 'Bolsa Hielo grande', precio: 18, costo: 11},
+                {nombre: 'Vaso térmico extra', precio: 2, costo: 1}
             ],
             'Cigarros': [
-                {nombre: 'Cigarro suelto', precio: 2},
-                {nombre: 'Cajetilla x 10', precio: 10},
-                {nombre: 'Caja dura regular', precio: 18}
+                {nombre: 'Cigarro suelto', precio: 2, costo: 1.2},
+                {nombre: 'Cajetilla x 10', precio: 10, costo: 7},
+                {nombre: 'Caja dura regular', precio: 18, costo: 13}
             ]
         };
 
         let inventarioDetallado = JSON.parse(localStorage.getItem('pau_inventario_detallado')) || {};
         let historialCompras = JSON.parse(localStorage.getItem('pau_historial_compras')) || [];
+        let ventasHistorial = JSON.parse(localStorage.getItem('pau_ventas_historial')) || [];
 
         document.getElementById('totalVentasText').textContent = ventasTotales.toFixed(2);
         document.getElementById('reportTotal').textContent = ventasTotales.toFixed(2);
+
+        function exportarRespaldoJSON() {
+            const dataBackup = {
+                version: '1.0',
+                fechaRespaldo: new Date().toISOString(),
+                ventasTotalesHoy: ventasTotales,
+                categoriasExtra: categoriasAdicionales,
+                opcionesRapidas: opcionesPorCat,
+                inventarioDetallado: inventarioDetallado,
+                historialCompras: historialCompras,
+                ventasHistorial: ventasHistorial
+            };
+            const blob = new Blob([JSON.stringify(dataBackup, null, 2)], {type: 'application/json'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `respaldo_licoreria_pau_${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importarRespaldoJSON(event) {
+            const file = event.target.files;
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    if(parsed.opcionesRapidas) {
+                        opcionesPorCat = parsed.opcionesRapidas;
+                        localStorage.setItem('pau_opciones_rapidas', JSON.stringify(opcionesPorCat));
+                    }
+                    if(parsed.inventarioDetallado) {
+                        inventarioDetallado = parsed.inventarioDetallado;
+                        localStorage.setItem('pau_inventario_detallado', JSON.stringify(inventarioDetallado));
+                    }
+                    if(parsed.historialCompras) {
+                        historialCompras = parsed.historialCompras;
+                        localStorage.setItem('pau_historial_compras', JSON.stringify(historialCompras));
+                    }
+                    if(parsed.ventasHistorial) {
+                        ventasHistorial = parsed.ventasHistorial;
+                        localStorage.setItem('pau_ventas_historial', JSON.stringify(ventasHistorial));
+                    }
+                    if(parsed.categoriasExtra) {
+                        categoriasAdicionales = parsed.categoriasExtra;
+                        localStorage.setItem('pau_categorias_extra', JSON.stringify(categoriasAdicionales));
+                    }
+                    if(typeof parsed.ventasTotalesHoy === 'number') {
+                        ventasTotales = parsed.ventasTotalesHoy;
+                        localStorage.setItem('pau_ventas_hoy', ventasTotales);
+                        document.getElementById('totalVentasText').textContent = ventasTotales.toFixed(2);
+                    }
+                    renderizarGridHome();
+                    renderizarReporteMensual();
+                    alert('¡Respaldo importado y restaurado con éxito!');
+                } catch(err) {
+                    alert('Error al leer el archivo JSON de respaldo.');
+                }
+            };
+            reader.readAsText(file);
+        }
 
         function renderizarGridHome() {
             const grid = document.getElementById('homeCategoriesGrid');
@@ -535,6 +607,69 @@
                 poblarSelectCategoriasCompra();
                 renderizarListaCompras();
             }
+            if(vistaId === 'reporte') {
+                renderizarReporteMensual();
+            }
+        }
+
+        function renderizarReporteMensual() {
+            const mesActual = new Date().toISOString().slice(0, 7); // "YYYY-MM"
+            const ventasMes = ventasHistorial.filter(v => v.mesAnio === mesActual);
+            const totalVentasMes = ventasMes.reduce((sum, v) => sum + Number(v.total), 0);
+            const totalCostoVendidoMes = ventasMes.reduce((sum, v) => sum + Number(v.costoTotalVendido || 0), 0);
+            
+            const cmvFinal = totalCostoVendidoMes > 0 ? totalCostoVendidoMes : (totalVentasMes * 0.7);
+            const gananciaBrutaMes = totalVentasMes - cmvFinal;
+
+            const totalComprasMes = historialCompras.reduce((sum, c) => sum + Number(c.costoTotal), 0);
+            const flujoCajaMes = totalVentasMes - totalComprasMes;
+
+            const conteoProductos = {};
+            ventasMes.forEach(v => {
+                v.items.forEach(item => {
+                    conteoProductos[item.nombre] = (conteoProductos[item.nombre] || 0) + 1;
+                });
+            });
+
+            const productosOrdenados = Object.entries(conteoProductos)
+                .sort((a, b) => b - a)
+                .slice(0, 5);
+
+            document.getElementById('reporteMensualBody').innerHTML = `
+                <div style="display:flex; flex-direction:column; gap:10px; font-size:0.85rem; margin-top:10px;">
+                    <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:10px;">
+                        <div style="color:#8892b0;">1. Ingresos por ventas (Mes actual):</div>
+                        <div style="color:#00ff96; font-size:1.1rem; font-weight:bold;">Bs. ${totalVentasMes.toFixed(2)}</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:10px;">
+                        <div style="color:#8892b0;">2. Costo de Mercadería Vendida (CMV estimado/teórico):</div>
+                        <div style="color:#ffa726; font-size:1.1rem; font-weight:bold;">Bs. ${cmvFinal.toFixed(2)}</div>
+                    </div>
+                    <div style="background:rgba(255,180,0,0.1); padding:10px; border-radius:10px; border:1px solid rgba(255,180,0,0.4);">
+                        <div style="color:#ffb400; font-weight:bold;">3. Ganancia Bruta (Ventas menos CMV):</div>
+                        <div style="color:#ffb400; font-size:1.2rem; font-weight:bold;">Bs. ${gananciaBrutaMes.toFixed(2)}</div>
+                    </div>
+                    <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:10px;">
+                        <div style="color:#8892b0;">Salidas por Compras / Abastecimiento bruto del mes:</div>
+                        <div style="color:#ff4757; font-size:1rem; font-weight:bold;">Bs. ${totalComprasMes.toFixed(2)}</div>
+                    </div>
+                    <div style="background:rgba(0,255,150,0.08); padding:10px; border-radius:10px; border:1px solid rgba(0,255,150,0.3);">
+                        <div style="color:#00ff96; font-weight:bold;">4. Flujo de Caja Mensual (Efectivo Neto):</div>
+                        <div style="color:#00ff96; font-size:1.2rem; font-weight:bold;">Bs. ${flujoCajaMes.toFixed(2)}</div>
+                    </div>
+                    
+                    <div style="margin-top:10px;">
+                        <div style="color:#ffb400; font-weight:bold; margin-bottom:8px;">🔥 Top Productos Más Vendidos (Mes):</div>
+                        ${productosOrdenados.length === 0 ? '<div style="color:#6e7996;">Sin ventas registradas este mes aún.</div>' : 
+                            productosOrdenados.map(([prod, cant]) => `
+                                <div style="display:flex; justify-content:space-between; background:rgba(255,255,255,0.02); padding:6px 10px; border-radius:6px; margin-bottom:4px;">
+                                    <span>${prod}</span>
+                                    <span style="color:#ffb400; font-weight:bold;">${cant} ventas</span>
+                                </div>
+                            `).join('')}
+                    </div>
+                </div>
+            `;
         }
 
         function abrirCategoria(catNombre) {
@@ -558,7 +693,7 @@
                 return;
             }
             grid.innerHTML = listaOpciones.map(opt => `
-                <div class="option-tile" onclick="agregarRapido('${opt.nombre.replace(/'/g, "\\'")}', ${opt.precio})">
+                <div class="option-tile" onclick="agregarRapido('${opt.nombre.replace(/'/g, "\\'")}', ${opt.precio}, ${opt.costo || opt.precio*0.7})">
                     <div class="option-name">${opt.nombre}</div>
                     <div class="option-price">Bs. ${Number(opt.precio).toFixed(2)}</div>
                 </div>
@@ -594,10 +729,11 @@
             document.getElementById('multValue').textContent = multiplicadorActual;
         }
 
-        function agregarRapido(nombre, precioUnitario) {
+        function agregarRapido(nombre, precioUnitario, costoUnitario = 0) {
             const precioTotalItem = precioUnitario * multiplicadorActual;
+            const costoTotalItem = costoUnitario * multiplicadorActual;
             const nombreCompleto = multiplicadorActual > 1 ? `${nombre} (x${multiplicadorActual})` : nombre;
-            carrito.push({nombre: nombreCompleto, precio: precioTotalItem});
+            carrito.push({nombre: nombreCompleto, precio: precioTotalItem, costo: costoTotalItem});
             multiplicadorActual = 1;
             document.getElementById('multValue').textContent = multiplicadorActual;
             actualizarCarritoUI();
@@ -610,7 +746,7 @@
                 return;
             }
             item.stock = Math.max(0, item.stock - 1);
-            carrito.push({nombre: `${item.nombre} (Detallado)`, precio: item.precio});
+            carrito.push({nombre: `${item.nombre} (Detallado)`, precio: item.precio, costo: item.costo || item.precio * 0.7});
             localStorage.setItem('pau_inventario_detallado', JSON.stringify(inventarioDetallado));
             renderizarInventarioDetallado();
             actualizarCarritoUI();
@@ -656,7 +792,7 @@
                 return;
             }
             if(!opcionesPorCat[categoriaActual]) opcionesPorCat[categoriaActual] = [];
-            opcionesPorCat[categoriaActual].push({nombre, precio});
+            opcionesPorCat[categoriaActual].push({nombre, precio, costo: precio * 0.7});
             localStorage.setItem('pau_opciones_rapidas', JSON.stringify(opcionesPorCat));
             renderizarOpcionesRapidas();
             cerrarModales();
@@ -666,6 +802,7 @@
             document.getElementById('modalProdTitle').textContent = `+ Nuevo Producto (${categoriaActual})`;
             document.getElementById('inputProdNombre').value = '';
             document.getElementById('inputProdPrecio').value = '';
+            document.getElementById('inputProdCostoUnit').value = '';
             document.getElementById('inputProdStock').value = '10';
             document.getElementById('modalNuevoProd').classList.add('active');
         }
@@ -674,6 +811,7 @@
             document.getElementById('modalProdTitle').textContent = `+ Registrar Inventario Detallado`;
             document.getElementById('inputProdNombre').value = '';
             document.getElementById('inputProdPrecio').value = '';
+            document.getElementById('inputProdCostoUnit').value = '';
             document.getElementById('inputProdStock').value = '';
             document.getElementById('modalNuevoProd').classList.add('active');
         }
@@ -681,6 +819,7 @@
         function guardarNuevoItemInventario() {
             const nombre = document.getElementById('inputProdNombre').value.trim();
             const precio = parseFloat(document.getElementById('inputProdPrecio').value);
+            const costoUnit = parseFloat(document.getElementById('inputProdCostoUnit').value);
             const stock = parseFloat(document.getElementById('inputProdStock').value);
 
             if(!nombre || isNaN(precio)) {
@@ -691,7 +830,12 @@
             if(!inventarioDetallado[categoriaActual]) {
                 inventarioDetallado[categoriaActual] = [];
             }
-            inventarioDetallado[categoriaActual].push({ nombre, precio, stock: isNaN(stock) ? 0 : stock });
+            inventarioDetallado[categoriaActual].push({ 
+                nombre, 
+                precio, 
+                costo: isNaN(costoUnit) ? precio * 0.7 : costoUnit, 
+                stock: isNaN(stock) ? 0 : stock 
+            });
             localStorage.setItem('pau_inventario_detallado', JSON.stringify(inventarioDetallado));
             renderizarInventarioDetallado();
             renderizarGridHome();
@@ -757,6 +901,7 @@
                 return;
             }
 
+            const costoUnitarioReal = costoTotalPagado / Math.max(1, cantidad);
             const nuevaCompraObj = {
                 id: Date.now(),
                 fecha: new Date().toLocaleDateString('es-BO'),
@@ -765,6 +910,7 @@
                 presentacion: presentacionFinal,
                 cantidad,
                 costoTotal: costoTotalPagado,
+                costoUnitario: costoUnitarioReal,
                 precioVenta: isNaN(precioVentaSugerido) ? null : precioVentaSugerido
             };
             historialCompras.unshift(nuevaCompraObj);
@@ -772,12 +918,13 @@
 
             if(!inventarioDetallado[catFinal]) inventarioDetallado[catFinal] = [];
             let precioVentaFinal = isNaN(precioVentaSugerido) 
-                ? Number((costoTotalPagado / Math.max(1, cantidad)) * 1.3).toFixed(2) 
+                ? Number(costoUnitarioReal * 1.3).toFixed(2) 
                 : precioVentaSugerido;
 
             inventarioDetallado[catFinal].push({
                 nombre: `${nombre} (${presentacionFinal})`,
                 precio: parseFloat(precioVentaFinal),
+                costo: costoUnitarioReal,
                 stock: cantidad
             });
             localStorage.setItem('pau_inventario_detallado', JSON.stringify(inventarioDetallado));
@@ -838,11 +985,22 @@
                 return;
             }
             let total = carrito.reduce((sum, item) => sum + item.precio, 0);
+            let costoTotalVendido = carrito.reduce((sum, item) => sum + (item.costo || item.precio * 0.7), 0);
             ventasTotales += total;
             document.getElementById('totalVentasText').textContent = ventasTotales.toFixed(2);
             document.getElementById('reportTotal').textContent = ventasTotales.toFixed(2);
             
             localStorage.setItem('pau_ventas_hoy', ventasTotales);
+
+            ventasHistorial.push({
+                id: Date.now(),
+                fecha: new Date().toLocaleDateString('es-BO'),
+                mesAnio: new Date().toISOString().slice(0, 7),
+                items: [...carrito],
+                total: total,
+                costoTotalVendido: costoTotalVendido
+            });
+            localStorage.setItem('pau_ventas_historial', JSON.stringify(ventasHistorial));
 
             carrito = [];
             actualizarCarritoUI();
@@ -855,7 +1013,6 @@
                 ventasTotales = 0;
                 localStorage.setItem('pau_ventas_hoy', ventasTotales);
                 document.getElementById('totalVentasText').textContent = '0.00';
-                document.getElementById('reportTotal').textContent = '0.00';
             }
         }
     </script>
