@@ -20,9 +20,14 @@
 
         .header-bg-drinks {
             position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            opacity: 0.12; pointer-events: none;
+            opacity: 0.15; pointer-events: none;
             display: flex; justify-content: space-around; align-items: center;
-            font-size: 1.2rem; filter: drop-shadow(0 0 2px rgba(255,180,0,0.5));
+            font-size: 1.3rem; filter: drop-shadow(0 0 3px rgba(255,180,0,0.6));
+            animation: flotarFondo 6s ease-in-out infinite alternate;
+        }
+        @keyframes flotarFondo {
+            0% { transform: translateY(-3px) scale(0.98); }
+            100% { transform: translateY(3px) scale(1.02); }
         }
 
         .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px; position: relative; z-index: 2; }
@@ -40,9 +45,33 @@
             content: ''; position: absolute; inset: -3px; border-radius: 50%;
             border: 1px dotted rgba(255, 180, 0, 0.3);
         }
-        .inner-dot { width: 14px; height: 14px; border-radius: 50%; background: #6e7996; border: 2px solid #ffb400; }
+        .inner-dot { width: 14px; height: 14px; border-radius: 50%; background: #6e7996; border: 2px solid #ffb400; animation: pulsoPunto 2s infinite; }
+        @keyframes pulsoPunto { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); box-shadow: 0 0 8px #ffb400; } }
         
-        h1 { font-size: 1.5rem; color: #ff5e9c; font-style: italic; }
+        /* Título con movimiento y brillo neón elegante */
+        h1.titulo-animado {
+            font-size: 1.5rem;
+            color: #ff5e9c;
+            font-style: italic;
+            animation: brilloNeonTitulo 3s ease-in-out infinite;
+        }
+        @keyframes brilloNeonTitulo {
+            0% { 
+                opacity: 0.85; 
+                text-shadow: 0 0 5px rgba(255,94,156,0.4), 0 0 10px rgba(255,180,0,0.2);
+                transform: translateY(0px);
+            }
+            50% { 
+                opacity: 1; 
+                text-shadow: 0 0 12px rgba(255,94,156,0.9), 0 0 25px rgba(255,215,0,0.7);
+                transform: translateY(-2px);
+            }
+            100% { 
+                opacity: 0.85; 
+                text-shadow: 0 0 5px rgba(255,94,156,0.4), 0 0 10px rgba(255,180,0,0.2);
+                transform: translateY(0px);
+            }
+        }
         
         .brindis-container {
             display: inline-flex;
@@ -89,6 +118,16 @@
             display: flex; align-items: center; justify-content: center;
             margin-bottom: 10px;
             position: relative;
+        }
+        /* Movimiento animado para los iconos de categorías */
+        .icon-animated {
+            font-size: 1.4rem;
+            display: inline-block;
+            animation: bounceIcon 2.5s ease-in-out infinite;
+        }
+        @keyframes bounceIcon {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-4px) rotate(4deg); }
         }
 
         .prod-badge { position: absolute; top: 12px; right: 12px; background: rgba(255,180,0,0.15); color: #ffb400; font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; }
@@ -234,7 +273,7 @@
                 <div class="gold-circle-badge">
                     <div class="inner-dot"></div>
                 </div>
-                <h1>Licorería Pau</h1>
+                <h1 class="titulo-animado">Licorería Pau</h1>
                 <div class="brindis-container" title="¡Salud!">
                     <span class="copa copa-left">🥂</span>
                     <span class="copa copa-right">🥂</span>
@@ -439,8 +478,9 @@
     </div>
 
     <script>
-        let carrito = [];
-        let ventasTotales = 0;
+        // Cargar persistencia con localStorage seguro
+        let carrito = JSON.parse(localStorage.getItem('pau_carrito_actual')) || [];
+        let ventasTotales = parseFloat(localStorage.getItem('pau_ventas_hoy')) || 0;
         let multiplicadorActual = 1;
         let categoriaActual = 'Cervezas';
 
@@ -493,6 +533,10 @@
         let inventarioDetallado = JSON.parse(localStorage.getItem('pau_inventario_detallado')) || {};
         let historialCompras = JSON.parse(localStorage.getItem('pau_historial_compras')) || [];
 
+        // Inicializar vistas con los datos guardados al cargar la página
+        document.getElementById('totalVentasText').textContent = ventasTotales.toFixed(2);
+        document.getElementById('reportTotal').textContent = ventasTotales.toFixed(2);
+
         function renderizarGridHome() {
             const grid = document.getElementById('homeCategoriesGrid');
             const todas = obtenerTodasCategorias();
@@ -511,7 +555,7 @@
                 return `
                     <div class="cat-card" onclick="abrirCategoria('${cat.replace(/'/g, "\\'")}')">
                         <span class="prod-badge">${invCount} prod.</span>
-                        <div class="icon-gold-box"><span style="font-size:1.4rem;">${info.icon}</span></div>
+                        <div class="icon-gold-box"><span class="icon-animated">${info.icon}</span></div>
                         <div>
                             <div class="cat-title">${cat}</div>
                             <div class="cat-sub">${info.sub}</div>
@@ -521,6 +565,7 @@
             }).join('');
         }
         renderizarGridHome();
+        actualizarCarritoUI();
 
         function cambiarVista(vistaId, btnElement) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
@@ -801,6 +846,9 @@
             totalCartText.textContent = total.toFixed(2);
             document.getElementById('reportTotal').textContent = (ventasTotales + total).toFixed(2);
 
+            // Guardar carrito en localStorage para persistencia al cerrar app o reiniciar
+            localStorage.setItem('pau_carrito_actual', JSON.stringify(carrito));
+
             if(carrito.length === 0) {
                 cartContent.innerHTML = 'Carrito vacío';
                 cartContent.className = 'cart-empty';
@@ -819,14 +867,22 @@
             ventasTotales += total;
             document.getElementById('totalVentasText').textContent = ventasTotales.toFixed(2);
             document.getElementById('reportTotal').textContent = ventasTotales.toFixed(2);
+            
+            // Guardar total de ventas persistente
+            localStorage.setItem('pau_ventas_hoy', ventasTotales);
+
             carrito = [];
             actualizarCarritoUI();
             alert('¡Venta cobrada con éxito!');
         }
 
         function terminarJornada() {
-            if(confirm('¿Seguro que deseas terminar la jornada del día?')) {
+            if(confirm('¿Seguro que deseas terminar la jornada del día y poner a cero las ventas de hoy?')) {
                 alert(`Jornada terminada. Ventas totales del día: Bs. ${ventasTotales.toFixed(2)}`);
+                ventasTotales = 0;
+                localStorage.setItem('pau_ventas_hoy', ventasTotales);
+                document.getElementById('totalVentasText').textContent = '0.00';
+                document.getElementById('reportTotal').textContent = '0.00';
             }
         }
     </script>
