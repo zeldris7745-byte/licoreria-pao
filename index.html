@@ -89,12 +89,12 @@
       font-weight: 700; font-size: 0.8rem; cursor: pointer; text-align: center;
     }
 
-    .coca-special-box { background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
-    .coca-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .coca-opt-btn { background: var(--input-bg); border: 1px solid var(--borde-tarjeta); color: var(--texto-principal); padding: 9px; border-radius: 10px; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 2px; }
-    .coca-opt-btn:hover { border-color: var(--coca-accent); background: rgba(16, 185, 129, 0.15); }
-    .coca-opt-name { font-weight: 600; font-size: 0.8rem; }
-    .coca-opt-price { color: var(--coca-accent); font-size: 0.75rem; font-weight: 700; }
+    .fast-special-box { background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+    .fast-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .fast-opt-btn { background: var(--input-bg); border: 1px solid var(--borde-tarjeta); color: var(--texto-principal); padding: 9px; border-radius: 10px; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 2px; }
+    .fast-opt-btn:hover { border-color: var(--acento); background: rgba(245, 158, 11, 0.15); }
+    .fast-opt-name { font-weight: 600; font-size: 0.8rem; }
+    .fast-opt-price { color: var(--acento); font-size: 0.75rem; font-weight: 700; }
 
     .form-box { background: var(--input-bg); padding: 12px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; border: 1px solid var(--borde-tarjeta); }
     .input-pro { background: var(--bg-main); border: 1px solid var(--borde-tarjeta); color: var(--texto-principal); padding: 9px 12px; border-radius: 8px; font-size: 0.85rem; width: 100%; }
@@ -181,7 +181,7 @@
         <div class="cat-card" onclick="openCategory('coca')">
           <div class="cat-header">
             <div class="cat-icon-box">🌿</div>
-            <span class="cat-badge-cnt">Especial</span>
+            <span class="cat-badge-cnt">Rápida</span>
           </div>
           <div class="cat-info">
             <h3>Coca</h3>
@@ -218,30 +218,31 @@
       <div class="subcat-topbar">
         <button class="btn-volver" onclick="backToCategories()">← Volver</button>
         <span class="subcat-title" id="activeCategoryTitle">Categoría</span>
-        <button class="btn-nuevo-mini" id="btnNuevoProdCat" onclick="addNewProductPromptCurrentCat()">+ Nuevo</button>
+        <button class="btn-nuevo-mini" onclick="addNewProductPromptCurrentCat()">+ Nuevo Prod.</button>
+      </div>
+
+      <!-- VENTA RÁPIDA UNIVERSAL PARA CUALQUIER CATEGORÍA -->
+      <div class="card" style="margin-top:10px;">
+        <div class="card-title">
+          <span id="fastSaleTitleLabel">⚡ Venta Rápida</span>
+          <button onclick="editCategoryFastPrices()" style="background:var(--input-bg);border:1px solid var(--borde-tarjeta);color:var(--acento);font-size:0.7rem;padding:5px 10px;border-radius:8px;cursor:pointer;font-weight:600;">⚙️ Editar Precios Rápidos</button>
+        </div>
+        <div class="fast-special-box">
+          <div style="display:flex; align-items:center; justify-content:space-between; font-size:0.8rem;">
+            <span style="color:var(--acento); font-weight:600;">Multiplicador / Cantidad:</span>
+            <div style="display:flex; align-items:center; gap:6px;">
+              <button class="qty-btn-sm" style="background:var(--input-bg);border-radius:6px;" onclick="changeFastQty(-1)">-</button>
+              <span id="fastTempQty" style="font-size:0.85rem;font-weight:700;min-width:20px;text-align:center;">1</span>
+              <button class="qty-btn-sm" style="background:var(--input-bg);border-radius:6px;" onclick="changeFastQty(1)">+</button>
+            </div>
+          </div>
+          <div class="fast-options" id="fastOptionsContainer"></div>
+        </div>
       </div>
 
       <div class="card" id="detailCardProducts" style="margin-top:10px;">
+        <div style="font-size:0.75rem; color:var(--texto-silenciado); text-transform:uppercase; margin-bottom:8px; font-weight:600;">O Lista Detallada con Stock en Inventario:</div>
         <div class="prods-list" id="categoryProductsContainer"></div>
-      </div>
-
-      <!-- Si es categoría coca, mostramos caja coca rápida editable -->
-      <div id="detailCardCoca" class="card" style="display:none; margin-top:10px;">
-        <div class="card-title">
-          <span>🌿 Venta de Coca Rápida</span>
-          <button onclick="editCocaPrices()" style="background:var(--input-bg);border:1px solid var(--borde-tarjeta);color:var(--acento);font-size:0.7rem;padding:5px 10px;border-radius:8px;cursor:pointer;font-weight:600;">⚙️ Editar Precios</button>
-        </div>
-        <div class="coca-special-box">
-          <div style="display:flex; align-items:center; justify-content:space-between; font-size:0.8rem;">
-            <span style="color:var(--coca-accent); font-weight:600;">Multiplicador porciones:</span>
-            <div style="display:flex; align-items:center; gap:6px;">
-              <button class="qty-btn-sm" style="background:var(--input-bg);border-radius:6px;" onclick="changeCocaQty(-1)">-</button>
-              <span id="cocaTempQty" style="font-size:0.85rem;font-weight:700;min-width:20px;text-align:center;">1</span>
-              <button class="qty-btn-sm" style="background:var(--input-bg);border-radius:6px;" onclick="changeCocaQty(1)">+</button>
-            </div>
-          </div>
-          <div class="coca-options" id="cocaOptionsContainer"></div>
-        </div>
       </div>
     </div>
 
@@ -329,20 +330,55 @@
   </nav>
 
   <script>
-    // --- PERSISTENCIA LOCAL OFFLINE PURO (v10) ---
+    // --- PERSISTENCIA LOCAL OFFLINE PURO (v11 universal fast-sale) ---
     let catalog = JSON.parse(localStorage.getItem('pao_catalog_local_v9') || '[]');
     let purchasesLog = JSON.parse(localStorage.getItem('pao_purchases_local_v9') || '[]');
     let lineSelectors = JSON.parse(localStorage.getItem('pao_selectors_local_v9') || '{}');
     let cart = JSON.parse(localStorage.getItem('pao_cart_local_v9') || '[]');
     let dailyRevenue = parseFloat(localStorage.getItem('pao_daily_rev_local_v9') || '0');
     let dayLogHistory = localStorage.getItem('pao_history_local_v9') || '';
-    
-    let cocaItems = JSON.parse(localStorage.getItem('pao_coca_items_v10') || JSON.stringify([
-      { name: 'Porción 5 Bs', price: 5 },
-      { name: 'Machucada / 10 Bs', price: 10 },
-      { name: 'Porción 15 Bs', price: 15 },
-      { name: '1 Libra', price: 40 }
-    ]));
+
+    // Configuración de ventas rápidas por categoría predeterminadas y editables
+    const defaultFastConfigs = {
+      cervezas: [
+        { name: 'Botella Individual', price: 15 },
+        { name: 'Six-pack / 6 botellas', price: 85 },
+        { name: 'Caja 12 botellas', price: 165 },
+        { name: 'Vaso de chicha/cerveza', price: 10 }
+      ],
+      cigarros: [
+        { name: 'Cajetilla normal', price: 20 },
+        { name: 'Un suelto / cigarrito', price: 2 },
+        { name: 'Cartón x10 cajetillas', price: 190 },
+        { name: 'Promoción 2x35', price: 35 }
+      ],
+      licores: [
+        { name: 'Botella de Fernet/Ron', price: 75 },
+        { name: 'Botella de Singani', price: 55 },
+        { name: 'Shot / Trago medido', price: 15 },
+        { name: 'Mixer o lata mezcladora', price: 12 }
+      ],
+      coca: [
+        { name: 'Porción 5 Bs', price: 5 },
+        { name: 'Machucada / 10 Bs', price: 10 },
+        { name: 'Porción 15 Bs', price: 15 },
+        { name: '1 Libra', price: 40 }
+      ],
+      refrescos: [
+        { name: 'Refresco personal 500ml', price: 8 },
+        { name: 'Soda 2 litros', price: 18 },
+        { name: 'Agua personal', price: 5 },
+        { name: 'Energizante', price: 15 }
+      ],
+      varios: [
+        { name: 'Bicarbonato (Bico) sobre', price: 5 },
+        { name: 'Hielo bolsa grande', price: 15 },
+        { name: 'Vaso desechable x10', price: 4 },
+        { name: 'Fosforera / Encendedor', price: 5 }
+      ]
+    };
+
+    let fastConfigs = JSON.parse(localStorage.getItem('pao_fast_configs_v11') || JSON.stringify(defaultFastConfigs));
 
     function saveAll() {
       localStorage.setItem('pao_catalog_local_v9', JSON.stringify(catalog));
@@ -351,7 +387,7 @@
       localStorage.setItem('pao_cart_local_v9', JSON.stringify(cart));
       localStorage.setItem('pao_daily_rev_local_v9', dailyRevenue.toString());
       localStorage.setItem('pao_history_local_v9', dayLogHistory);
-      localStorage.setItem('pao_coca_items_v10', JSON.stringify(cocaItems));
+      localStorage.setItem('pao_fast_configs_v11', JSON.stringify(fastConfigs));
       updateCategoryCounts();
       renderPurchasesLog();
       renderLowStockAlerts();
@@ -360,16 +396,15 @@
     catalog.forEach(p => { if (!lineSelectors[p.id]) lineSelectors[p.id] = { unitQty: 0, packQty: 0 }; });
 
     let currentCategoryKey = null;
-    let cocaMultiplier = 1;
+    let fastMultiplier = 1;
 
     const viewCategories = document.getElementById('viewCategories');
     const viewCategoryDetail = document.getElementById('viewCategoryDetail');
     const activeCategoryTitle = document.getElementById('activeCategoryTitle');
-    const btnNuevoProdCat = document.getElementById('btnNuevoProdCat');
+    const fastSaleTitleLabel = document.getElementById('fastSaleTitleLabel');
     const categoryProductsContainer = document.getElementById('categoryProductsContainer');
-    const detailCardProducts = document.getElementById('detailCardProducts');
-    const detailCardCoca = document.getElementById('detailCardCoca');
-    const cocaOptionsContainer = document.getElementById('cocaOptionsContainer');
+    const fastOptionsContainer = document.getElementById('fastOptionsContainer');
+    const fastTempQtyEl = document.getElementById('fastTempQty');
     
     const cartSectionCard = document.getElementById('cartSectionCard');
     const purchasesSectionCard = document.getElementById('purchasesSectionCard');
@@ -380,13 +415,12 @@
     const dailyTotalText = document.getElementById('dailyTotalText');
     const historyCard = document.getElementById('historyCard');
     const historyLog = document.getElementById('historyLog');
-    const cocaTempQtyEl = document.getElementById('cocaTempQty');
     const purchasesLogList = document.getElementById('purchasesLogList');
     const lowStockContainer = document.getElementById('lowStockContainer');
     const lowStockCountBadge = document.getElementById('lowStockCountBadge');
 
     function updateCategoryCounts() {
-      const keys = ['cervezas', 'cigarros', 'licores', 'refrescos', 'varios'];
+      const keys = ['cervezas', 'cigarros', 'licores', 'refrescos', 'varios', 'coca'];
       keys.forEach(k => {
         const count = catalog.filter(p => p.category === k).length;
         const el = document.getElementById(`cnt-${k}`);
@@ -413,31 +447,53 @@
       viewCategories.style.display = 'block';
     }
 
-    function renderCocaOptions() {
-      cocaOptionsContainer.innerHTML = cocaItems.map((item, idx) => `
-        <button class="coca-opt-btn" onclick="addCocaCustom('${item.name.replace(/'/g, "\\'")}', ${item.price})">
-          <span class="coca-opt-name">${item.name}</span>
-          <span class="coca-opt-price">Bs. ${Number(item.price).toFixed(2)}</span>
+    function renderFastOptions(catKey) {
+      const items = fastConfigs[catKey] || fastConfigs['varios'];
+      fastOptionsContainer.innerHTML = items.map((item) => `
+        <button class="fast-opt-btn" onclick="addFastCustom('${item.name.replace(/'/g, "\\'")}', ${item.price})">
+          <span class="fast-opt-name">${item.name}</span>
+          <span class="fast-opt-price">Bs. ${Number(item.price).toFixed(2)}</span>
         </button>
       `).join('');
     }
 
-    function editCocaPrices() {
-      let msg = 'Edita los precios de la coca (formato: Nombre:Precio separados por coma):\nEjemplo:\nPorción 5 Bs:5,Machucada / 10 Bs:10,Porción 15 Bs:15,1 Libra:40';
-      const actualStr = cocaItems.map(i => `${i.name}:${i.price}`).join(',');
+    function editCategoryFastPrices() {
+      if (!currentCategoryKey) return;
+      const currentList = fastConfigs[currentCategoryKey] || [];
+      let msg = `Edita los precios rápidos para "${currentCategoryKey.toUpperCase()}" (formato: Nombre:Precio separados por coma):\nEjemplo:\nBotella:15,Sixpack:85`;
+      const actualStr = currentList.map(i => `${i.name}:${i.price}`).join(',');
       const input = prompt(msg, actualStr);
       if (input === null) return;
       const parts = input.split(',').map(p => p.trim()).filter(Boolean);
       if (parts.length === 0) return alert('No ingresaste valores válidos.');
-      cocaItems = parts.map(p => {
+      fastConfigs[currentCategoryKey] = parts.map(p => {
         const sub = p.split(':');
         const priceVal = parseFloat(sub.pop()) || 0;
-        const nameVal = sub.join(':').trim() || 'Porción';
+        const nameVal = sub.join(':').trim() || 'Ítem rápido';
         return { name: nameVal, price: priceVal };
       });
       saveAll();
-      renderCocaOptions();
-      alert('¡Precios de coca actualizados!');
+      renderFastOptions(currentCategoryKey);
+      alert('¡Precios rápidos de esta categoría actualizados!');
+    }
+
+    function changeFastQty(delta) {
+      fastMultiplier = Math.max(1, fastMultiplier + delta);
+      fastTempQtyEl.innerText = fastMultiplier;
+    }
+
+    function addFastCustom(name, unitPrice) {
+      const finalName = fastMultiplier > 1 ? `${name} x${fastMultiplier}` : name;
+      const finalPrice = unitPrice * fastMultiplier;
+      const found = cart.find(c => c.name === finalName && c.price === finalPrice);
+      if (found) {
+        found.qty += 1;
+      } else {
+        cart.push({ id: 'fast_' + Date.now() + Math.random(), name: finalName, price: finalPrice, qty: 1 });
+      }
+      fastMultiplier = 1;
+      fastTempQtyEl.innerText = fastMultiplier;
+      renderCart();
     }
 
     function changeLineQty(id, type, delta) {
@@ -490,9 +546,9 @@
       const prods = catalog.filter(p => p.category === key);
       if (prods.length === 0) {
         categoryProductsContainer.innerHTML = `
-          <div style="text-align:center; padding:20px; color:var(--texto-silenciado); font-size:0.82rem;">
-            No hay productos registrados aquí aún.<br>
-            <button onclick="addNewProductPrompt('${key}')" class="btn-action" style="margin-top:10px; padding:8px 14px; font-size:0.75rem;">+ Agregar producto</button>
+          <div style="text-align:center; padding:14px; color:var(--texto-silenciado); font-size:0.8rem;">
+            No hay productos registrados con inventario específico en esta categoría aún.<br>
+            <button onclick="addNewProductPrompt('${key}')" class="btn-action" style="margin-top:8px; padding:6px 12px; font-size:0.72rem;">+ Registrar inventario detallado</button>
           </div>
         `;
         return;
@@ -537,13 +593,13 @@
     }
 
     function addNewProductPromptCurrentCat() {
-      const catTarget = currentCategoryKey && currentCategoryKey !== 'coca' ? currentCategoryKey : 'cervezas';
-      addNewProductPrompt(catTarget);
+      if (!currentCategoryKey) return;
+      addNewProductPrompt(currentCategoryKey);
     }
 
     function addNewProductPrompt(forcedCategory = null) {
-      const catTarget = forcedCategory || (currentCategoryKey && currentCategoryKey !== 'coca' ? currentCategoryKey : 'cervezas');
-      const name = prompt('Nombre del producto (ej: Cerveza Huari / Cigarro Camel):');
+      const catTarget = forcedCategory || currentCategoryKey || 'cervezas';
+      const name = prompt('Nombre detallado del producto (ej: Cerveza Huari 620ml):');
       if (!name) return;
       const priceUnitStr = prompt('Precio por unidad en Bolivianos (ej: 15):', '15');
       const pricePackStr = prompt('Precio por caja/paquete en Bolivianos (ej: 90):', '90');
@@ -569,7 +625,7 @@
       lineSelectors[newProd.id] = { unitQty: 0, packQty: 0 };
       saveAll();
       alert(`¡Producto "${newProd.name}" guardado permanente con stock ${stock}!`);
-      if (currentCategoryKey && currentCategoryKey !== 'coca') {
+      if (currentCategoryKey) {
         renderCategoryProducts(currentCategoryKey);
       }
     }
@@ -659,7 +715,7 @@
       });
 
       if (alerts.length === 0) {
-        lowStockContainer.innerHTML = '<div style="color:var(--exito);font-size:0.78rem;text-align:center;padding:12px;">✅ Todo el inventario está por encima del nivel mínimo.</div>';
+        lowStockContainer.innerHTML = '<div style="color:var(--exito);font-size:0.78rem;text-align:center;padding:12px;">✅ Todo el inventario detallado está por encima del nivel mínimo.</div>';
         lowStockCountBadge.innerText = '0 alertas';
         return;
       }
@@ -674,25 +730,6 @@
         </div>
       `).join('');
       lowStockCountBadge.innerText = `${alerts.length} por pedir`;
-    }
-
-    function changeCocaQty(delta) {
-      cocaMultiplier = Math.max(1, cocaMultiplier + delta);
-      cocaTempQtyEl.innerText = cocaMultiplier;
-    }
-
-    function addCocaCustom(name, unitPrice) {
-      const finalName = cocaMultiplier > 1 ? `${name} x${cocaMultiplier}` : name;
-      const finalPrice = unitPrice * cocaMultiplier;
-      const found = cart.find(c => c.name === finalName && c.price === finalPrice);
-      if (found) {
-        found.qty += 1;
-      } else {
-        cart.push({ id: 'coca_' + Date.now() + Math.random(), name: finalName, price: finalPrice, qty: 1 });
-      }
-      cocaMultiplier = 1;
-      cocaTempQtyEl.innerText = cocaMultiplier;
-      renderCart();
     }
 
     function renderCart() {
@@ -743,10 +780,10 @@
       saveAll();
       updateDaySummaryDisplay();
 
-      alert(`¡Venta cobrada por Bs. ${saleTotal.toFixed(2)}! Stock descontado de forma permanente.`);
+      alert(`¡Venta cobrada por Bs. ${saleTotal.toFixed(2)}!`);
       cart = [];
       renderCart();
-      if (currentCategoryKey && currentCategoryKey !== 'coca') {
+      if (currentCategoryKey) {
         renderCategoryProducts(currentCategoryKey);
       }
     }
@@ -800,17 +837,11 @@
             coca: 'Venta de Coca'
           };
           activeCategoryTitle.innerText = titles[catKey] || 'Categoría';
-          if (catKey === 'coca') {
-            detailCardProducts.style.display = 'none';
-            detailCardCoca.style.display = 'block';
-            btnNuevoProdCat.style.display = 'none';
-            renderCocaOptions();
-          } else {
-            detailCardProducts.style.display = 'block';
-            detailCardCoca.style.display = 'none';
-            btnNuevoProdCat.style.display = 'block';
-            renderCategoryProducts(catKey);
-          }
+          fastSaleTitleLabel.innerText = `⚡ Venta Rápida - ${titles[catKey] || 'Categoría'}`;
+          fastMultiplier = 1;
+          fastTempQtyEl.innerText = fastMultiplier;
+          renderFastOptions(catKey);
+          renderCategoryProducts(catKey);
         }
         cartSectionCard.style.display = 'block';
       } else if (mode === 'purchases') {
@@ -825,7 +856,7 @@
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
       if (tab === 'vender') {
         document.getElementById('navVender').classList.add('active');
-        showOnlyMainViews('catalog', currentCategoryKey);
+        showOnlyMainViews('catalog', currentCategoryKey || 'cervezas');
       } else if (tab === 'productos') {
         document.getElementById('navProductos').classList.add('active');
         showOnlyMainViews('catalog', 'cervezas');
@@ -848,7 +879,6 @@
     renderPurchasesLog();
     renderLowStockAlerts();
     updateDaySummaryDisplay();
-    renderCocaOptions();
     showOnlyMainViews('catalog', null);
   </script>
 </body>
