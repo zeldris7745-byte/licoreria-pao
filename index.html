@@ -130,7 +130,7 @@
         .view-section { display: none; }
         .view-section.active-view { display: block; }
 
-        /* Panel interno para categoría seleccionada */
+        /* Panel interno idéntico a imagen de referencia */
         .panel-card {
             background: #141724;
             border: 1px solid rgba(255,255,255,0.08);
@@ -141,7 +141,44 @@
         .top-cat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
         .back-btn { background: rgba(255,255,255,0.08); color: #fff; border: none; padding: 8px 14px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; }
         .btn-new-prod { background: #ffb400; color: #0b0c10; border: none; padding: 8px 14px; border-radius: 10px; font-weight: bold; font-size: 0.8rem; cursor: pointer; }
-        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+        .venta-rapida-box {
+            background: #121520;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 16px;
+        }
+        .vr-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+        .vr-title { font-size: 0.95rem; font-weight: bold; color: #fff; }
+        .btn-edit-fast { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #ffb400; padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; }
+        
+        .multiplicador-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 10px; }
+        .multiplicador-row span { font-size: 0.8rem; color: #ffa726; font-weight: bold; }
+        .mult-controls { display: flex; align-items: center; gap: 12px; }
+        .mult-btn { background: rgba(255,255,255,0.1); color: #fff; border: none; width: 28px; height: 28px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
+        .mult-val { font-size: 0.95rem; font-weight: bold; min-width: 16px; text-align: center; }
+
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .option-tile {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 10px;
+            cursor: pointer;
+            transition: border-color 0.15s;
+        }
+        .option-tile:active { border-color: #ffb400; background: rgba(255,180,0,0.08); }
+        .option-name { font-size: 0.8rem; color: #fff; margin-bottom: 4px; font-weight: 500; }
+        .option-price { font-size: 0.8rem; color: #ffb400; font-weight: bold; }
+
+        .inventario-box {
+            text-align: center;
+            padding: 20px 10px;
+            border-top: 1px dashed rgba(255,255,255,0.1);
+        }
+        .inv-text { font-size: 0.8rem; color: #8892b0; margin-bottom: 12px; line-height: 1.4; }
+        .btn-register-inv { background: rgba(0,255,150,0.15); color: #00ff96; border: 1px solid rgba(0,255,150,0.3); padding: 10px 16px; border-radius: 10px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
 
         /* Carrito de Venta */
         .cart-card {
@@ -164,7 +201,7 @@
         .btn-primary { background: #00ff96; color: #0b0c10; }
         .btn-danger { background: #ff4757; color: #fff; }
 
-        /* Barra de Navegación inferior (Tamaño original restaurado) */
+        /* Barra de Navegación inferior */
         .nav-bar {
             position: fixed; bottom: 0; left: 0; right: 0; background: #12141f;
             border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-around;
@@ -277,7 +314,7 @@
         </div>
     </div>
 
-    <!-- VISTA INTERNA CLÁSICA DE CATEGORÍA SELECCIONADA -->
+    <!-- VISTA INTERNA IDÉNTICA A LA IMAGEN DE REFERENCIA PARA TODAS LAS CATEGORÍAS -->
     <div id="view-categoria" class="view-section">
         <div class="panel-card">
             <div class="top-cat-header">
@@ -285,7 +322,46 @@
                 <h2 id="catPanelTitle" style="color:#ffb400; font-size: 1.2rem;">Cervezas</h2>
                 <button class="btn-new-prod" onclick="alert('Función de agregar producto offline')">+ Nuevo Prod.</button>
             </div>
-            <div id="catProductList"></div>
+
+            <div class="venta-rapida-box">
+                <div class="vr-header">
+                    <div class="vr-title" id="vrTitleLabel">⚡ Venta Rápida - Cervezas</div>
+                    <button class="btn-edit-fast" onclick="alert('Editar precios rápidos')">⚙️ Editar Precios Rápidos</button>
+                </div>
+                
+                <div class="multiplicador-row">
+                    <span>Multiplicador / Cantidad:</span>
+                    <div class="mult-controls">
+                        <button class="mult-btn" onclick="cambiarMultiplicador(-1)">-</button>
+                        <span class="mult-val" id="multValue">1</span>
+                        <button class="mult-btn" onclick="cambiarMultiplicador(1)">+</button>
+                    </div>
+                </div>
+
+                <div class="options-grid" id="fastOptionsGrid">
+                    <div class="option-tile" onclick="agregarRapido('Botella Individual', 15)">
+                        <div class="option-name">Botella Individual</div>
+                        <div class="option-price">Bs. 15.00</div>
+                    </div>
+                    <div class="option-tile" onclick="agregarRapido('Six-pack / 6 botellas', 85)">
+                        <div class="option-name">Six-pack / 6 botellas</div>
+                        <div class="option-price">Bs. 85.00</div>
+                    </div>
+                    <div class="option-tile" onclick="agregarRapido('Caja 12 botellas', 165)">
+                        <div class="option-name">Caja 12 botellas</div>
+                        <div class="option-price">Bs. 165.00</div>
+                    </div>
+                    <div class="option-tile" onclick="agregarRapido('Vaso de chicha/cerveza', 10)">
+                        <div class="option-name">Vaso de chicha/cerveza</div>
+                        <div class="option-price">Bs. 10.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inventario-box">
+                <div class="inv-text">📋 LISTA DETALLADA CON STOCK EN INVENTARIO:<br><span style="color:#6e7996; font-size:0.75rem;">No hay productos registrados con inventario específico en esta categoría aún.</span></div>
+                <button class="btn-register-inv" onclick="alert('Registrar inventario detallado')">+ Registrar inventario detallado</button>
+            </div>
         </div>
     </div>
 
@@ -293,11 +369,7 @@
     <div id="view-catalogo" class="view-section">
         <div class="panel-card">
             <h2 style="color:#ffb400; margin-bottom: 14px; font-size: 1.2rem;">📦 Catálogo / Stock Local</h2>
-            <div class="item-row"><span>Paceña 620ml</span><span>Stock: 24 u.</span></div>
-            <div class="item-row"><span>Huari 500ml</span><span>Stock: 18 u.</span></div>
-            <div class="item-row"><span>Marlboro Rojo</span><span>Stock: 10 caj.</span></div>
-            <div class="item-row"><span>Singani San Pedro</span><span>Stock: 6 u.</span></div>
-            <div class="item-row"><span>Bicarbonato Bico</span><span>Stock: 15 u.</span></div>
+            <div style="font-size:0.85rem; color:#aaa;">Gestión de inventario offline disponible.</div>
         </div>
     </div>
 
@@ -313,8 +385,7 @@
     <div id="view-pedir" class="view-section">
         <div class="panel-card">
             <h2 style="color:#ffb400; margin-bottom: 14px; font-size: 1.2rem;">⚠️ Lista de Pedidos a Proveedor</h2>
-            <div class="item-row"><span>Huari 500ml (Stock bajo)</span><span style="color:#ff4757;">Sugerir Pedir</span></div>
-            <div class="item-row"><span>Marlboro Rojo (Stock bajo)</span><span style="color:#ff4757;">Sugerir Pedir</span></div>
+            <p style="color:#8892b0; font-size: 0.85rem;">Todo en orden por ahora.</p>
         </div>
     </div>
 
@@ -326,7 +397,7 @@
         </div>
     </div>
 
-    <!-- BARRA DE NAVEGACIÓN INFERIOR (Tamaño original) -->
+    <!-- BARRA DE NAVEGACIÓN INFERIOR -->
     <div class="nav-bar">
         <button class="nav-item active" onclick="cambiarVista('vender', this)"><span style="font-size:1.1rem;">🛒</span> Vender</button>
         <button class="nav-item" onclick="cambiarVista('catalogo', this)"><span style="font-size:1.1rem;">📦</span> Catálogo/Stock</button>
@@ -338,14 +409,44 @@
     <script>
         let carrito = [];
         let ventasTotales = 0;
-
-        const productosPorCategoria = {
-            'Cervezas': [{nombre: 'Paceña 620ml', precio: 15}, {nombre: 'Huari 500ml', precio: 18}],
-            'Cigarros': [{nombre: 'Marlboro Rojo', precio: 18}, {nombre: 'Camel Azul', precio: 16}],
-            'Licores': [{nombre: 'Fernet Branca', precio: 85}, {nombre: 'Singani San Pedro', precio: 45}],
-            'Coca': [{nombre: 'Coca Seleccionada 10bs', precio: 10}, {nombre: 'Coca Machucada 5bs', precio: 5}],
-            'Refrescos': [{nombre: 'Coca-Cola 2L', precio: 15}, {nombre: 'Agua 600ml', precio: 5}],
-            'Varios / Bico': [{nombre: 'Bicarbonato Bico', precio: 5}, {nombre: 'Bolsa de Hielo', precio: 10}]
+        let multiplicadorActual = 1;
+        let opcionesPorCat = {
+            'Cervezas': [
+                {nombre: 'Botella Individual', precio: 15},
+                {nombre: 'Six-pack / 6 botellas', precio: 85},
+                {nombre: 'Caja 12 botellas', precio: 165},
+                {nombre: 'Vaso de chicha/cerveza', precio: 10}
+            ],
+            'Licores': [
+                {nombre: 'Shot / Trago corto', precio: 15},
+                {nombre: 'Media botella', precio: 45},
+                {nombre: 'Botella entera', precio: 90},
+                {nombre: 'Combo Fernet/Coca', precio: 110}
+            ],
+            'Coca': [
+                {nombre: 'Porción 5 Bs', precio: 5},
+                {nombre: 'Machucada / 10 Bs', precio: 10},
+                {nombre: 'Porción 15 Bs', precio: 15},
+                {nombre: '1 Libra', precio: 40}
+            ],
+            'Varios / Bico': [
+                {nombre: 'Bolsa Bicarbonato', precio: 5},
+                {nombre: 'Bolsa Hielo pequeña', price: 10},
+                {nombre: 'Bolsa Hielo grande', price: 18},
+                {nombre: 'Vaso térmico extra', price: 2}
+            ],
+            'Refrescos': [
+                {nombre: 'Soda Personal', precio: 7},
+                {nombre: 'Soda 2 Litros', precio: 15},
+                {nombre: 'Agua 600ml', precio: 5},
+                {nombre: 'Agua 2L', precio: 12}
+            ],
+            'Cigarros': [
+                {nombre: 'Cigarro suelto', precio: 2},
+                {nombre: 'CajETILLA X 10', precio: 10},
+                {nombre: 'Caja dura regular', precio: 18},
+                {nombre: 'Caja mentolada', precio: 19}
+            ]
         };
 
         function cambiarVista(vistaId, btnElement) {
@@ -360,17 +461,19 @@
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
             document.getElementById('view-categoria').classList.add('active-view');
             document.getElementById('catPanelTitle').textContent = catNombre;
+            document.getElementById('vrTitleLabel').textContent = `⚡ Venta Rápida - ${catNombre}`;
             
-            const listContainer = document.getElementById('catProductList');
-            listContainer.innerHTML = '';
-            
-            const prods = productosPorCategoria[catNombre] || [];
-            prods.forEach(p => {
-                const div = document.createElement('div');
-                div.className = 'item-row';
-                div.innerHTML = `<span>${p.nombre} (Bs. ${p.precio}.00)</span> <button style="background:#00ff96; color:#0b0c10; border:none; padding:8px 14px; border-radius:10px; font-weight:bold; cursor:pointer;" onclick="agregarAlCarrito('${p.nombre}', ${p.precio})">+ Agregar</button>`;
-                listContainer.appendChild(div);
-            });
+            multiplicadorActual = 1;
+            document.getElementById('multValue').textContent = multiplicadorActual;
+
+            const grid = document.getElementById('fastOptionsGrid');
+            const listaOpciones = opcionesPorCat[catNombre] || opcionesPorCat['Cervezas'];
+            grid.innerHTML = listaOpciones.map(opt => `
+                <div class="option-tile" onclick="agregarRapido('${opt.nombre}', ${opt.precio})">
+                    <div class="option-name">${opt.nombre}</div>
+                    <div class="option-price">Bs. ${opt.precio.toFixed(2)}</div>
+                </div>
+            `).join('');
         }
 
         function volverAVender() {
@@ -378,8 +481,19 @@
             document.getElementById('view-vender').classList.add('active-view');
         }
 
-        function agregarAlCarrito(nombre, precio) {
-            carrito.push({nombre, precio});
+        function cambiarMultiplicador(delta) {
+            multiplicadorActual = Math.max(1, multiplicadorActual + delta);
+            document.getElementById('multValue').textContent = multiplicadorActual;
+        }
+
+        function agregarRapido(nombre, precioUnitario) {
+            const precioTotalItem = precioUnitario * multiplicadorActual;
+            const nombreCompleto = multiplicadorActual > 1 ? `${nombre} (x${multiplicadorActual})` : nombre;
+            carrito.push({nombre: nombreCompleto, precio: precioTotalItem});
+            
+            // resetear multi a 1 tras agregar
+            multiplicadorActual = 1;
+            document.getElementById('multValue').textContent = multiplicadorActual;
             actualizarCarritoUI();
         }
 
@@ -399,7 +513,7 @@
                 cartContent.className = 'cart-empty';
             } else {
                 cartContent.className = '';
-                cartContent.innerHTML = carrito.map(i => `<div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:6px;"><span>${i.nombre}</span><span>Bs. ${i.precio}.00</span></div>`).join('');
+                cartContent.innerHTML = carrito.map(i => `<div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:6px;"><span>${i.nombre}</span><span>Bs. ${i.precio.toFixed(2)}</span></div>`).join('');
             }
         }
 
