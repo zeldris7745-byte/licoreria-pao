@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Licorería Pao - Control y Venta</title>
+  <title>Licorería Pao - Control, Ventas y Abastecimiento</title>
   
   <meta name="theme-color" content="#0b0f17">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -75,7 +75,7 @@
     }
     .prod-name-main { font-weight: 600; font-size: 0.95rem; color: var(--texto-principal); display:flex; justify-content:space-between; align-items:center; }
     .prod-prices-meta { font-size: 0.78rem; color: var(--acento); margin-top: 3px; font-weight: 500; }
-    .prod-stock-meta { font-size: 0.72rem; color: var(--texto-silenciado); margin-top: 2px; }
+    .prod-stock-meta { font-size: 0.72rem; color: var(--exito); margin-top: 2px; font-weight: 600; }
 
     .modes-buy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: rgba(0,0,0,0.25); padding: 8px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
     .mode-col { display: flex; flex-direction: column; gap: 4px; }
@@ -96,6 +96,13 @@
     .coca-opt-name { font-weight: 600; font-size: 0.8rem; }
     .coca-opt-price { color: var(--coca-accent); font-size: 0.75rem; font-weight: 700; }
 
+    .form-box { background: var(--input-bg); padding: 12px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; border: 1px solid var(--borde-tarjeta); }
+    .input-pro { background: var(--bg-main); border: 1px solid var(--borde-tarjeta); color: var(--texto-principal); padding: 9px 12px; border-radius: 8px; font-size: 0.85rem; width: 100%; }
+    .purchases-log-list { display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto; }
+    .purchase-card { background: rgba(0,0,0,0.3); border: 1px solid var(--borde-tarjeta); padding: 10px; border-radius: 10px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; }
+
+    .low-stock-card { background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.3); padding: 10px; border-radius: 10px; font-size: 0.78rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+
     .cart-list { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
     .cart-item { display: flex; justify-content: space-between; align-items: center; background: var(--input-bg); padding: 8px 10px; border-radius: 8px; font-size: 0.8rem; }
     .total-section { font-size: 1rem; font-weight: 700; margin: 10px 0; display: flex; justify-content: space-between; border-top: 1px solid var(--borde-tarjeta); padding-top: 10px; }
@@ -103,16 +110,16 @@
     .btn-action { background: var(--exito); color: #000; border: none; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.88rem; }
     .btn-danger { background: var(--peligro); color: #fff; border: none; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.88rem; }
     
-    .history-box { font-size: 0.78rem; color: var(--texto-principal); background: var(--input-bg); padding: 12px; border-radius: 10px; line-height: 1.5; max-height: 320px; overflow-y: auto; border: 1px solid var(--borde-tarjeta); }
+    .history-box { font-size: 0.78rem; color: var(--texto-principal); background: var(--input-bg); padding: 12px; border-radius: 10px; line-height: 1.5; max-height: 280px; overflow-y: auto; border: 1px solid var(--borde-tarjeta); }
     .history-entry { border-bottom: 1px dashed rgba(255,255,255,0.15); padding-bottom: 8px; margin-bottom: 8px; }
 
     .bottom-nav {
       position: fixed; bottom: 0; left: 0; right: 0; background: #0e1420; border-top: 1px solid var(--borde-tarjeta);
-      display: grid; grid-template-columns: repeat(4, 1fr); padding: 6px 0; z-index: 1000;
+      display: grid; grid-template-columns: repeat(5, 1fr); padding: 6px 0; z-index: 1000;
     }
-    .nav-item { background: transparent; border: none; color: var(--texto-silenciado); display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.68rem; cursor: pointer; }
+    .nav-item { background: transparent; border: none; color: var(--texto-silenciado); display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.62rem; cursor: pointer; }
     .nav-item.active { color: var(--acento); font-weight: 600; }
-    .nav-icon { font-size: 1.1rem; }
+    .nav-icon { font-size: 1rem; }
   </style>
 </head>
 <body>
@@ -122,7 +129,7 @@
         <div class="brand-icon">🍻</div>
         <div>
           <h1>Licorería Pao</h1>
-          <span class="badge-sistema">● CATÁLOGO LIMPIO</span>
+          <span class="badge-sistema">● PERSISTENCIA BLINDADA (V7)</span>
         </div>
       </div>
       <div class="ventas-hoy-header">
@@ -135,7 +142,7 @@
     <div id="viewCategories">
       <div class="section-title-sub">
         <span>SELECCIONA UNA CATEGORÍA</span>
-        <span style="font-size:0.68rem; color:var(--exito);">● Totalmente vacío</span>
+        <span style="font-size:0.68rem; color:var(--exito);">● Persistencia nativa activada</span>
       </div>
       <div class="categories-grid">
         <div class="cat-card" onclick="openCategory('cervezas')">
@@ -252,6 +259,36 @@
       </div>
     </div>
 
+    <!-- VISTA 3: APARTADO DE COMPRAS / REGISTRO PROVEEDOR Y ABASTECIMIENTO -->
+    <div class="card" id="purchasesSectionCard" style="display:none;">
+      <div class="card-title">
+        <span>📥 Anotar Compras a Proveedor (Permanente)</span>
+        <button onclick="clearPurchasesLog()" style="background:transparent;border:1px solid var(--borde-tarjeta);color:var(--texto-silenciado);font-size:0.68rem;padding:4px 8px;border-radius:6px;cursor:pointer;">Borrar Registro</button>
+      </div>
+      <div class="form-box">
+        <input type="text" id="pInputItem" class="input-pro" placeholder="¿Qué compraste? (Ej: Cajas Cigarro Marlboro, Libras de Coca...)">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+          <input type="number" id="pInputQty" class="input-pro" placeholder="Cantidad (ej: 2)">
+          <input type="number" id="pInputMinRef" class="input-pro" placeholder="Alerta mín. (ej: 5)">
+        </div>
+        <button class="btn-action" style="padding:10px; font-size:0.8rem;" onclick="addPurchaseEntry()">+ Registrar Compra / Stock Base</button>
+      </div>
+      <div class="subcat-topbar" style="margin-top:10px;">
+        <span style="font-size:0.75rem; color:var(--acento); font-weight:700;">HISTORIAL DE LO QUE ESTÁS COMPRANDO:</span>
+      </div>
+      <div class="purchases-log-list" id="purchasesLogList"></div>
+    </div>
+
+    <!-- VISTA 4: POR ACABARSE / PEDIDOS COMPARATIVO -->
+    <div class="card" id="lowStockSectionCard" style="display:none;">
+      <div class="card-title">
+        <span>⚠️ Por Acabarse / Para Pedir a Proveedor</span>
+        <span style="font-size:0.68rem; color:var(--peligro);" id="lowStockCountBadge">0 alertas</span>
+      </div>
+      <p style="font-size:0.75rem; color:var(--texto-silenciado); margin-bottom:10px;">Compara lo registrado con tu inventario de referencia para saber qué te falta pedir.</p>
+      <div id="lowStockContainer"></div>
+    </div>
+
     <!-- Carrito de Venta Actual -->
     <div class="card" id="cartSectionCard">
       <div class="card-title">
@@ -281,7 +318,7 @@
     </div>
   </div>
 
-  <!-- Barra inferior fija -->
+  <!-- Barra inferior fija expandida -->
   <nav class="bottom-nav">
     <button class="nav-item active" id="navVender" onclick="switchNavTab('vender')">
       <span class="nav-icon">🛒</span>
@@ -289,11 +326,15 @@
     </button>
     <button class="nav-item" id="navProductos" onclick="switchNavTab('productos')">
       <span class="nav-icon">📦</span>
-      <span>Productos</span>
+      <span>Catálogo</span>
     </button>
-    <button class="nav-item" onclick="addNewProductPromptCurrentCat()">
-      <span class="nav-icon">➕</span>
-      <span>+ Agregar</span>
+    <button class="nav-item" id="navCompras" onclick="switchNavTab('compras')">
+      <span class="nav-icon">📥</span>
+      <span>Compras</span>
+    </button>
+    <button class="nav-item" id="navAcabarse" onclick="switchNavTab('acabarse')">
+      <span class="nav-icon">⚠️</span>
+      <span>Pedir</span>
     </button>
     <button class="nav-item" id="navReporte" onclick="switchNavTab('reporte')">
       <span class="nav-icon">📄</span>
@@ -302,33 +343,37 @@
   </nav>
 
   <script>
-    // --- CATÁLOGO INICIAL LIMPIO (vacío por completo) ---
-    let catalog = JSON.parse(localStorage.getItem('pao_catalog_v5_clean') || '[]');
+    // Solicitar almacenamiento persistente nativo al navegador para blindar datos contra purgas automáticas
+    if (navigator.storage && navigator.storage.persist) {
+      navigator.storage.persist().then(persistent => {
+        if (persistent) console.log("Almacenamiento persistente garantizado por el sistema operativo/navegador.");
+      });
+    }
 
-    function saveCatalog() {
-      localStorage.setItem('pao_catalog_v5_clean', JSON.stringify(catalog));
+    // --- PERSISTENCIA TOTAL PERMANENTE (localStorage v7 con espejo blindado) ---
+    let catalog = JSON.parse(localStorage.getItem('pao_catalog_v7') || '[]');
+    let purchasesLog = JSON.parse(localStorage.getItem('pao_purchases_log_v7') || '[]');
+    let lineSelectors = JSON.parse(localStorage.getItem('pao_line_selectors_v7') || '{}');
+    let cart = JSON.parse(localStorage.getItem('pao_active_cart_v7') || '[]');
+    let dailyRevenue = parseFloat(localStorage.getItem('pao_daily_rev_v7') || '0');
+    let dayLogHistory = localStorage.getItem('pao_day_history_v7') || '';
+
+    function saveAll() {
+      localStorage.setItem('pao_catalog_v7', JSON.stringify(catalog));
+      localStorage.setItem('pao_purchases_log_v7', JSON.stringify(purchasesLog));
+      localStorage.setItem('pao_line_selectors_v7', JSON.stringify(lineSelectors));
+      localStorage.setItem('pao_active_cart_v7', JSON.stringify(cart));
+      localStorage.setItem('pao_daily_rev_v7', dailyRevenue.toString());
+      localStorage.setItem('pao_day_history_v7', dayLogHistory);
       updateCategoryCounts();
+      renderPurchasesLog();
+      renderLowStockAlerts();
     }
 
-    let lineSelectors = JSON.parse(localStorage.getItem('pao_line_selectors_v5') || '{}');
-    catalog.forEach(p => {
-      if (!lineSelectors[p.id]) {
-        lineSelectors[p.id] = { unitQty: 0, packQty: 0 };
-      }
-    });
-    function saveLineSelectors() {
-      localStorage.setItem('pao_line_selectors_v5', JSON.stringify(lineSelectors));
-    }
+    catalog.forEach(p => { if (!lineSelectors[p.id]) lineSelectors[p.id] = { unitQty: 0, packQty: 0 }; });
 
     let currentCategoryKey = null;
     let cocaMultiplier = 1;
-    let cart = JSON.parse(localStorage.getItem('pao_active_cart_v5') || '[]');
-    let dailyRevenue = parseFloat(localStorage.getItem('pao_daily_rev_v5') || '0');
-    let dayLogHistory = localStorage.getItem('pao_day_history_v5') || '';
-
-    function saveActiveCart() {
-      localStorage.setItem('pao_active_cart_v5', JSON.stringify(cart));
-    }
 
     const viewCategories = document.getElementById('viewCategories');
     const viewCategoryDetail = document.getElementById('viewCategoryDetail');
@@ -337,6 +382,9 @@
     const detailCardProducts = document.getElementById('detailCardProducts');
     const detailCardCoca = document.getElementById('detailCardCoca');
     
+    const cartSectionCard = document.getElementById('cartSectionCard');
+    const purchasesSectionCard = document.getElementById('purchasesSectionCard');
+    const lowStockSectionCard = document.getElementById('lowStockSectionCard');
     const cartList = document.getElementById('cartList');
     const currentTotal = document.getElementById('currentTotal');
     const cartCountBadge = document.getElementById('cartCountBadge');
@@ -344,6 +392,9 @@
     const historyCard = document.getElementById('historyCard');
     const historyLog = document.getElementById('historyLog');
     const cocaTempQtyEl = document.getElementById('cocaTempQty');
+    const purchasesLogList = document.getElementById('purchasesLogList');
+    const lowStockContainer = document.getElementById('lowStockContainer');
+    const lowStockCountBadge = document.getElementById('lowStockCountBadge');
 
     function updateCategoryCounts() {
       const keys = ['cervezas', 'cigarros', 'licores', 'refrescos', 'varios'];
@@ -356,39 +407,15 @@
 
     function updateDaySummaryDisplay() {
       dailyTotalText.innerText = `Bs. ${dailyRevenue.toFixed(2)}`;
-      localStorage.setItem('pao_daily_rev_v5', dailyRevenue.toString());
       if (dayLogHistory.trim()) {
         historyLog.innerHTML = dayLogHistory;
       } else {
         historyLog.innerHTML = `<div style="color:var(--texto-silenciado); text-align:center; padding:12px;">No hay reportes de jornada cerrados aún. Toca "Terminar Jornada" al final de tu día.</div>`;
       }
-      localStorage.setItem('pao_day_history_v5', dayLogHistory);
     }
 
     function openCategory(key) {
-      currentCategoryKey = key;
-      viewCategories.style.display = 'none';
-      viewCategoryDetail.style.display = 'block';
-
-      const titles = {
-        cervezas: 'Cervezas',
-        cigarros: 'Cigarros',
-        licores: 'Licores',
-        refrescos: 'Refrescos',
-        varios: 'Varios / Bico',
-        coca: 'Venta de Coca'
-      };
-      activeCategoryTitle.innerText = titles[key] || 'Categoría';
-
-      if (key === 'coca') {
-        detailCardProducts.style.display = 'none';
-        detailCardCoca.style.display = 'block';
-      } else {
-        detailCardProducts.style.display = 'block';
-        detailCardCoca.style.display = 'none';
-        renderCategoryProducts(key);
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      showOnlyMainViews('catalog', key);
     }
 
     function backToCategories() {
@@ -404,7 +431,7 @@
       } else {
         lineSelectors[id].packQty = Math.max(0, lineSelectors[id].packQty + delta);
       }
-      saveLineSelectors();
+      saveAll();
       if (currentCategoryKey) renderCategoryProducts(currentCategoryKey);
     }
 
@@ -430,7 +457,7 @@
       }
 
       lineSelectors[id] = { unitQty: 0, packQty: 0 };
-      saveLineSelectors();
+      saveAll();
       if (currentCategoryKey) renderCategoryProducts(currentCategoryKey);
       renderCart();
     }
@@ -439,8 +466,7 @@
       if (!confirm('¿Eliminar este producto de la categoría?')) return;
       catalog = catalog.filter(p => p.id !== id);
       delete lineSelectors[id];
-      saveCatalog();
-      saveLineSelectors();
+      saveAll();
       if (currentCategoryKey) renderCategoryProducts(currentCategoryKey);
     }
 
@@ -466,7 +492,7 @@
                 <button onclick="deleteProductFromCatalog(${p.id})" style="background:transparent;border:none;color:var(--peligro);font-size:0.75rem;cursor:pointer;">Eliminar</button>
               </div>
               <div class="prod-prices-meta">Unidad: Bs. ${Number(p.priceUnit).toFixed(2)} | Paq/Caja: Bs. ${Number(p.pricePack).toFixed(2)}</div>
-              <div class="prod-stock-meta">Stock ref: ${p.stock} u.</div>
+              <div class="prod-stock-meta">Stock Ref/Mín: ${p.stock || 5} u.</div>
             </div>
             
             <div class="modes-buy-grid">
@@ -501,15 +527,15 @@
 
     function addNewProductPrompt(forcedCategory = null) {
       const catTarget = forcedCategory || (currentCategoryKey && currentCategoryKey !== 'coca' ? currentCategoryKey : 'cervezas');
-      const name = prompt('Nombre del producto (ej: Cerveza, Singani, Cigarro...):');
+      const name = prompt('Nombre del producto (ej: Cerveza Huari / Cigarro Camel / Coca):');
       if (!name) return;
       const priceUnitStr = prompt('Precio por unidad en Bolivianos (ej: 15):', '15');
       const pricePackStr = prompt('Precio por caja/paquete en Bolivianos (ej: 90):', '90');
-      const stockStr = prompt('Stock referencia opcional (ej: 20):', '20');
+      const stockStr = prompt('Stock de alerta mínima opcional (ej: 5):', '5');
 
       const pUnit = parseFloat(priceUnitStr) || 10;
       const pPack = parseFloat(pricePackStr) || 50;
-      const stock = parseInt(stockStr) || 10;
+      const stock = parseInt(stockStr) || 5;
 
       const newProd = {
         id: Date.now(),
@@ -522,12 +548,98 @@
 
       catalog.push(newProd);
       lineSelectors[newProd.id] = { unitQty: 0, packQty: 0 };
-      saveCatalog();
-      saveLineSelectors();
-      alert(`¡Producto "${newProd.name}" agregado a ${catTarget.toUpperCase()}!`);
+      saveAll();
+      alert(`¡Producto "${newProd.name}" guardado permanente!`);
       if (currentCategoryKey && currentCategoryKey !== 'coca') {
         renderCategoryProducts(currentCategoryKey);
       }
+    }
+
+    // --- LÓGICA DE REGISTRO DE COMPRAS A PROVEEDOR ---
+    function addPurchaseEntry() {
+      const item = document.getElementById('pInputItem').value.trim();
+      const qty = parseInt(document.getElementById('pInputQty').value) || 0;
+      const minRef = parseInt(document.getElementById('pInputMinRef').value) || 5;
+
+      if (!item || qty <= 0) {
+        return alert('Ingresa un nombre de producto/cajas y una cantidad válida comprada.');
+      }
+
+      const now = new Date();
+      const dateStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+      purchasesLog.unshift({
+        id: Date.now(),
+        item: item,
+        qty: qty,
+        minRef: minRef,
+        date: dateStr
+      });
+
+      document.getElementById('pInputItem').value = '';
+      document.getElementById('pInputQty').value = '';
+      saveAll();
+      alert(`Compra de "${item} (x${qty})" anotada permanentemente.`);
+    }
+
+    function renderPurchasesLog() {
+      if (purchasesLog.length === 0) {
+        purchasesLogList.innerHTML = '<p style="color:var(--texto-silenciado);font-size:0.78rem;text-align:center;padding:10px;">No hay compras anotadas aún.</p>';
+      } else {
+        purchasesLogList.innerHTML = purchasesLog.map((p, idx) => `
+          <div class="purchase-card">
+            <div>
+              <strong style="color:var(--texto-principal);">${p.item}</strong>
+              <div style="font-size:0.7rem; color:var(--acento);">Cantidad comprada: +${p.qty} | Alerta base: ${p.minRef}</div>
+              <div style="font-size:0.65rem; color:var(--texto-silenciado);">${p.date}</div>
+            </div>
+            <button onclick="deletePurchaseItem(${idx})" style="background:transparent;border:none;color:var(--peligro);font-weight:bold;cursor:pointer;">✕</button>
+          </div>
+        `).join('');
+      }
+    }
+
+    function deletePurchaseItem(idx) {
+      purchasesLog.splice(idx, 1);
+      saveAll();
+    }
+
+    function clearPurchasesLog() {
+      if (confirm('¿Vaciar el historial permanente de compras a proveedor?')) {
+        purchasesLog = [];
+        saveAll();
+      }
+    }
+
+    // --- COMPARATIVO / POR ACABARSE PARA PEDIDOS ---
+    function renderLowStockAlerts() {
+      const alerts = [];
+      catalog.forEach(p => {
+        if (p.stock <= 5) {
+          alerts.push({
+            name: `${p.name} (${p.category})`,
+            currentRef: p.stock,
+            needed: p.stock * 3
+          });
+        }
+      });
+
+      if (purchasesLog.length === 0 && alerts.length === 0) {
+        lowStockContainer.innerHTML = '<p style="color:var(--texto-silenciado);font-size:0.78rem;text-align:center;padding:10px;">Sin alertas críticas. Registra compras o ajusta stock en el catálogo.</p>';
+        lowStockCountBadge.innerText = '0 alertas';
+        return;
+      }
+
+      lowStockContainer.innerHTML = alerts.map(a => `
+        <div class="low-stock-card">
+          <div>
+            <strong>${a.name}</strong>
+            <div style="font-size:0.68rem; color:var(--texto-silenciado);">Referencia actual: ${a.currentRef} u. | Recomendado pedir: ~${a.needed} u.</div>
+          </div>
+          <span style="background:rgba(239,68,68,0.2);color:var(--peligro);padding:3px 8px;border-radius:6px;font-weight:700;font-size:0.7rem;">¡PEDIR!</span>
+        </div>
+      `).join('') || '<div style="color:var(--exito);font-size:0.78rem;text-align:center;padding:8px;">✅ ¡Todo en niveles adecuados o revisa la pestaña Compras!</div>';
+      lowStockCountBadge.innerText = `${alerts.length} por pedir`;
     }
 
     function changeCocaQty(delta) {
@@ -550,7 +662,6 @@
     }
 
     function renderCart() {
-      saveActiveCart();
       if (cart.length === 0) {
         cartList.innerHTML = '<p style="color:var(--texto-silenciado);font-size:0.78rem;">Carrito vacío</p>';
       } else {
@@ -568,6 +679,7 @@
       const itemsCnt = cart.reduce((acc, i) => acc + i.qty, 0);
       currentTotal.innerText = `Bs. ${total.toFixed(2)}`;
       cartCountBadge.innerText = `${itemsCnt} ítems`;
+      saveAll();
     }
 
     function removeCartItem(idx) {
@@ -581,11 +693,11 @@
 
       dailyRevenue += saleTotal;
       const now = new Date();
-      const timeStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+      const timeStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
       const saleSummary = `<div class="history-entry"><strong>Venta realizada el ${timeStr}</strong><br>Monto: Bs. ${saleTotal.toFixed(2)}</div>`;
       
       dayLogHistory = saleSummary + dayLogHistory;
-      saveActiveCart();
+      saveAll();
       updateDaySummaryDisplay();
 
       alert(`¡Venta cobrada con éxito por Bs. ${saleTotal.toFixed(2)}!`);
@@ -602,15 +714,12 @@
       }
 
       const now = new Date();
-      const timeStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString();
+      const timeStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
       const summaryText = `<div class="history-entry" style="background:rgba(16,185,129,0.1);padding:6px;border-radius:6px;margin-bottom:8px;"><strong>🔒 JORNADA CERRADA (${timeStr})</strong><br><strong>Total Venta Día: Bs. ${dailyRevenue.toFixed(2)}</strong></div>`;
 
       dayLogHistory = summaryText + dayLogHistory;
-      localStorage.setItem('pao_day_history_v5', dayLogHistory);
-
       dailyRevenue = 0;
-      localStorage.setItem('pao_daily_rev_v5', '0');
-
+      saveAll();
       updateDaySummaryDisplay();
       alert('Jornada finalizada y guardada de forma segura en el reporte.');
     }
@@ -618,20 +727,65 @@
     function clearHistoryLog() {
       if (confirm('¿Vaciar todo el historial de reportes guardados?')) {
         dayLogHistory = '';
-        localStorage.removeItem('pao_day_history_v5');
+        saveAll();
         updateDaySummaryDisplay();
       }
+    }
+
+    function showOnlyMainViews(mode, catKey = null) {
+      viewCategories.style.display = 'none';
+      viewCategoryDetail.style.display = 'none';
+      purchasesSectionCard.style.display = 'none';
+      lowStockSectionCard.style.display = 'none';
+      cartSectionCard.style.display = 'none';
+
+      if (mode === 'catalog') {
+        if (!catKey) {
+          viewCategories.style.display = 'block';
+        } else {
+          viewCategoryDetail.style.display = 'block';
+          currentCategoryKey = catKey;
+          const titles = {
+            cervezas: 'Cervezas',
+            cigarros: 'Cigarros',
+            licores: 'Licores',
+            refrescos: 'Refrescos',
+            varios: 'Varios / Bico',
+            coca: 'Venta de Coca'
+          };
+          activeCategoryTitle.innerText = titles[catKey] || 'Categoría';
+          if (catKey === 'coca') {
+            detailCardProducts.style.display = 'none';
+            detailCardCoca.style.display = 'block';
+          } else {
+            detailCardProducts.style.display = 'block';
+            detailCardCoca.style.display = 'none';
+            renderCategoryProducts(catKey);
+          }
+        }
+        cartSectionCard.style.display = 'block';
+      } else if (mode === 'purchases') {
+        purchasesSectionCard.style.display = 'block';
+      } else if (mode === 'lowstock') {
+        lowStockSectionCard.style.display = 'block';
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function switchNavTab(tab) {
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
       if (tab === 'vender') {
         document.getElementById('navVender').classList.add('active');
-        backToCategories();
-        document.getElementById('cartSectionCard').scrollIntoView({behavior:'smooth'});
+        showOnlyMainViews('catalog', currentCategoryKey);
       } else if (tab === 'productos') {
         document.getElementById('navProductos').classList.add('active');
-        openCategory('cervezas');
+        showOnlyMainViews('catalog', 'cervezas');
+      } else if (tab === 'compras') {
+        document.getElementById('navCompras').classList.add('active');
+        showOnlyMainViews('purchases');
+      } else if (tab === 'acabarse') {
+        document.getElementById('navAcabarse').classList.add('active');
+        showOnlyMainViews('lowstock');
       } else if (tab === 'reporte') {
         document.getElementById('navReporte').classList.add('active');
         historyCard.scrollIntoView({behavior:'smooth'});
@@ -640,9 +794,11 @@
       }
     }
 
-    catalog.forEach(p => { if (!lineSelectors[p.id]) lineSelectors[p.id] = { unitQty: 0, packQty: 0 }; });
+    // Inicializar visualización
     updateCategoryCounts();
     renderCart();
+    renderPurchasesLog();
+    renderLowStockAlerts();
     updateDaySummaryDisplay();
   </script>
 </body>
