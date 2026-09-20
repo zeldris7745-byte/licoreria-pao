@@ -179,6 +179,40 @@
         }
         .inv-text { font-size: 0.8rem; color: #8892b0; margin-bottom: 12px; line-height: 1.4; }
         .btn-register-inv { background: rgba(0,255,150,0.15); color: #00ff96; border: 1px solid rgba(0,255,150,0.3); padding: 10px 16px; border-radius: 10px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
+        
+        .inv-list-container {
+            margin-top: 12px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .inv-item-row {
+            background: rgba(255,255,255,0.04);
+            border-radius: 8px;
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+        }
+
+        /* Modal genérico offline */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+            display: none; align-items: center; justify-content: center; z-index: 500;
+            padding: 16px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-card {
+            background: #141724; border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 16px; width: 100%; max-width: 380px; padding: 20px;
+        }
+        .modal-card h3 { color: #ffb400; font-size: 1.05rem; margin-bottom: 14px; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 0.75rem; color: #8892b0; margin-bottom: 4px; }
+        .form-group input { width: 100%; background: #0b0c10; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #fff; padding: 10px; font-size: 0.85rem; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 
         /* Carrito de Venta */
         .cart-card {
@@ -234,7 +268,7 @@
         <div class="ventas-hoy">VENTAS HOY<br><span>Bs. <strong id="totalVentasText">0.00</strong></span></div>
     </div>
 
-    <!-- VISTA 1: VENDER (Categorías + Carrito) -->
+    <!-- VISTA 1: VENDER -->
     <div id="view-vender" class="view-section active-view">
         <div class="section-header">
             <span>SELECCIONA UNA CATEGORÍA</span>
@@ -243,7 +277,7 @@
 
         <div class="categories-grid">
             <div class="cat-card card-cervezas" onclick="abrirCategoria('Cervezas')">
-                <span class="prod-badge">0 prod.</span>
+                <span class="prod-badge" id="badge-Cervezas">0 prod.</span>
                 <div class="icon-gold-box"><span class="cat-icon-inner">🍾</span></div>
                 <div>
                     <div class="cat-title">Cervezas</div>
@@ -252,7 +286,7 @@
             </div>
 
             <div class="cat-card card-cigarros" onclick="abrirCategoria('Cigarros')">
-                <span class="prod-badge">0 prod.</span>
+                <span class="prod-badge" id="badge-Cigarros">0 prod.</span>
                 <div class="icon-gold-box"><span class="cat-icon-inner">🚬</span></div>
                 <div>
                     <div class="cat-title">Cigarros</div>
@@ -261,7 +295,7 @@
             </div>
 
             <div class="cat-card card-licores" onclick="abrirCategoria('Licores')">
-                <span class="prod-badge">0 prod.</span>
+                <span class="prod-badge" id="badge-Licores">0 prod.</span>
                 <div class="icon-gold-box"><span class="cat-icon-inner">🥃</span></div>
                 <div>
                     <div class="cat-title">Licores</div>
@@ -279,7 +313,7 @@
             </div>
 
             <div class="cat-card card-refrescos" onclick="abrirCategoria('Refrescos')">
-                <span class="prod-badge">0 prod.</span>
+                <span class="prod-badge" id="badge-Refrescos">0 prod.</span>
                 <div class="icon-gold-box"><span class="cat-icon-inner">🥤</span></div>
                 <div>
                     <div class="cat-title">Refrescos</div>
@@ -288,7 +322,7 @@
             </div>
 
             <div class="cat-card" onclick="abrirCategoria('Varios / Bico')">
-                <span class="prod-badge">0 prod.</span>
+                <span class="prod-badge" id="badge-Varios / Bico">0 prod.</span>
                 <div class="icon-gold-box"><span class="snowflake-anim">❄️</span></div>
                 <div>
                     <div class="cat-title">Varios / Bico</div>
@@ -314,19 +348,19 @@
         </div>
     </div>
 
-    <!-- VISTA INTERNA IDÉNTICA A LA IMAGEN DE REFERENCIA PARA TODAS LAS CATEGORÍAS -->
+    <!-- VISTA INTERNA DE CATEGORÍA -->
     <div id="view-categoria" class="view-section">
         <div class="panel-card">
             <div class="top-cat-header">
                 <button class="back-btn" onclick="volverAVender()">← Volver</button>
                 <h2 id="catPanelTitle" style="color:#ffb400; font-size: 1.2rem;">Cervezas</h2>
-                <button class="btn-new-prod" onclick="alert('Función de agregar producto offline')">+ Nuevo Prod.</button>
+                <button class="btn-new-prod" onclick="abrirModalNuevoProducto()">+ Nuevo Prod.</button>
             </div>
 
             <div class="venta-rapida-box">
                 <div class="vr-header">
                     <div class="vr-title" id="vrTitleLabel">⚡ Venta Rápida - Cervezas</div>
-                    <button class="btn-edit-fast" onclick="alert('Editar precios rápidos')">⚙️ Editar Precios Rápidos</button>
+                    <button class="btn-edit-fast" onclick="abrirModalEditarPrecios()">⚙️ Editar Precios Rápidos</button>
                 </div>
                 
                 <div class="multiplicador-row">
@@ -338,58 +372,62 @@
                     </div>
                 </div>
 
-                <div class="options-grid" id="fastOptionsGrid">
-                    <div class="option-tile" onclick="agregarRapido('Botella Individual', 15)">
-                        <div class="option-name">Botella Individual</div>
-                        <div class="option-price">Bs. 15.00</div>
-                    </div>
-                    <div class="option-tile" onclick="agregarRapido('Six-pack / 6 botellas', 85)">
-                        <div class="option-name">Six-pack / 6 botellas</div>
-                        <div class="option-price">Bs. 85.00</div>
-                    </div>
-                    <div class="option-tile" onclick="agregarRapido('Caja 12 botellas', 165)">
-                        <div class="option-name">Caja 12 botellas</div>
-                        <div class="option-price">Bs. 165.00</div>
-                    </div>
-                    <div class="option-tile" onclick="agregarRapido('Vaso de chicha/cerveza', 10)">
-                        <div class="option-name">Vaso de chicha/cerveza</div>
-                        <div class="option-price">Bs. 10.00</div>
-                    </div>
-                </div>
+                <div class="options-grid" id="fastOptionsGrid"></div>
             </div>
 
             <div class="inventario-box">
-                <div class="inv-text">📋 LISTA DETALLADA CON STOCK EN INVENTARIO:<br><span style="color:#6e7996; font-size:0.75rem;">No hay productos registrados con inventario específico en esta categoría aún.</span></div>
-                <button class="btn-register-inv" onclick="alert('Registrar inventario detallado')">+ Registrar inventario detallado</button>
+                <div class="inv-text" id="invHeaderDesc">📋 LISTA DETALLADA CON STOCK EN INVENTARIO:</div>
+                <div class="inv-list-container" id="invListContainer"></div>
+                <button class="btn-register-inv" style="margin-top:14px;" onclick="abrirModalRegistroInventario()">+ Registrar inventario detallado</button>
             </div>
         </div>
     </div>
 
-    <!-- VISTA 2: CATÁLOGO/STOCK -->
+    <!-- MODAL EDITAR PRECIOS RÁPIDOS -->
+    <div id="modalEditarPrecios" class="modal-overlay">
+        <div class="modal-card">
+            <h3>⚙️ Editar Precios Rápidos</h3>
+            <div id="editPricesFields" style="display:flex; flex-direction:column; gap:10px;"></div>
+            <div class="modal-actions">
+                <button class="back-btn" onclick="cerrarModales()">Cancelar</button>
+                <button class="btn-new-prod" onclick="guardarPreciosRapidos()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL NUEVO PRODUCTO / INVENTARIO -->
+    <div id="modalNuevoProd" class="modal-overlay">
+        <div class="modal-card">
+            <h3 id="modalProdTitle">📦 Agregar / Registrar Stock Detallado</h3>
+            <div class="form-group">
+                <label>Nombre del Producto / Ítem:</label>
+                <input type="text" id="inputProdNombre" placeholder="Ej: Paceña 620ml / Stock o unidad">
+            </div>
+            <div class="form-group">
+                <label>Precio Unitario (Bs.):</label>
+                <input type="number" id="inputProdPrecio" step="0.5" placeholder="15.00">
+            </div>
+            <div class="form-group" id="stockGroupField">
+                <label>Cantidad en Stock (unidades/cajas):</label>
+                <input type="number" id="inputProdStock" placeholder="24">
+            </div>
+            <div class="modal-actions">
+                <button class="back-btn" onclick="cerrarModales()">Cancelar</button>
+                <button class="btn-new-prod" onclick="guardarNuevoItemInventario()">Guardar en Stock</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- OTRAS VISTAS (CATÁLOGO, COMPRAS, PEDIR, REPORTE) -->
     <div id="view-catalogo" class="view-section">
-        <div class="panel-card">
-            <h2 style="color:#ffb400; margin-bottom: 14px; font-size: 1.2rem;">📦 Catálogo / Stock Local</h2>
-            <div style="font-size:0.85rem; color:#aaa;">Gestión de inventario offline disponible.</div>
-        </div>
+        <div class="panel-card"><h2 style="color:#ffb400; font-size: 1.2rem;">📦 Catálogo / Stock Local</h2><p style="color:#8892b0; font-size:0.85rem; margin-top:10px;">Sincronizado con inventario offline.</p></div>
     </div>
-
-    <!-- VISTA 3: COMPRAS -->
     <div id="view-compras" class="view-section">
-        <div class="panel-card">
-            <h2 style="color:#ffb400; margin-bottom: 14px; font-size: 1.2rem;">📦 Registro de Compras</h2>
-            <p style="color:#8892b0; font-size: 0.85rem;">No hay compras registradas hoy en modo offline.</p>
-        </div>
+        <div class="panel-card"><h2 style="color:#ffb400; font-size: 1.2rem;">📦 Registro de Compras</h2><p style="color:#8892b0; font-size:0.85rem; margin-top:10px;">Sin compras offline hoy.</p></div>
     </div>
-
-    <!-- VISTA 4: PEDIR -->
     <div id="view-pedir" class="view-section">
-        <div class="panel-card">
-            <h2 style="color:#ffb400; margin-bottom: 14px; font-size: 1.2rem;">⚠️ Lista de Pedidos a Proveedor</h2>
-            <p style="color:#8892b0; font-size: 0.85rem;">Todo en orden por ahora.</p>
-        </div>
+        <div class="panel-card"><h2 style="color:#ffb400; font-size: 1.2rem;">⚠️ Lista de Pedidos a Proveedor</h2><p style="color:#8892b0; font-size:0.85rem; margin-top:10px;">Todo en orden.</p></div>
     </div>
-
-    <!-- VISTA 5: REPORTE -->
     <div id="view-reporte" class="view-section">
         <div class="panel-card">
             <h2 style="color:#ffb400; margin-bottom: 14px; font-size: 1.2rem;">📄 Reporte del Día</h2>
@@ -410,7 +448,11 @@
         let carrito = [];
         let ventasTotales = 0;
         let multiplicadorActual = 1;
-        let opcionesPorCat = {
+        let categoriaActual = 'Cervezas';
+        let modoModalInventario = false;
+
+        // Datos iniciales guardados en memoria o localStorage
+        let opcionesPorCat = JSON.parse(localStorage.getItem('pau_opciones_rapidas')) || {
             'Cervezas': [
                 {nombre: 'Botella Individual', precio: 15},
                 {nombre: 'Six-pack / 6 botellas', precio: 85},
@@ -431,9 +473,9 @@
             ],
             'Varios / Bico': [
                 {nombre: 'Bolsa Bicarbonato', precio: 5},
-                {nombre: 'Bolsa Hielo pequeña', price: 10},
-                {nombre: 'Bolsa Hielo grande', price: 18},
-                {nombre: 'Vaso térmico extra', price: 2}
+                {nombre: 'Bolsa Hielo pequeña', precio: 10},
+                {nombre: 'Bolsa Hielo grande', precio: 18},
+                {nombre: 'Vaso térmico extra', precio: 2}
             ],
             'Refrescos': [
                 {nombre: 'Soda Personal', precio: 7},
@@ -443,21 +485,32 @@
             ],
             'Cigarros': [
                 {nombre: 'Cigarro suelto', precio: 2},
-                {nombre: 'CajETILLA X 10', precio: 10},
+                {nombre: 'Cajetilla x 10', precio: 10},
                 {nombre: 'Caja dura regular', precio: 18},
                 {nombre: 'Caja mentolada', precio: 19}
             ]
         };
 
+        let inventarioDetallado = JSON.parse(localStorage.getItem('pau_inventario_detallado')) || {};
+
+        function actualizarBadgesHome() {
+            Object.keys(opcionesPorCat).forEach(cat => {
+                const el = document.getElementById('badge-' + cat);
+                const invCount = (inventarioDetallado[cat] || []).length;
+                if(el) el.textContent = `${invCount} prod.`;
+            });
+        }
+        actualizarBadgesHome();
+
         function cambiarVista(vistaId, btnElement) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
             document.getElementById('view-' + vistaId).classList.add('active-view');
-            
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             if(btnElement) btnElement.classList.add('active');
         }
 
         function abrirCategoria(catNombre) {
+            categoriaActual = catNombre;
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
             document.getElementById('view-categoria').classList.add('active-view');
             document.getElementById('catPanelTitle').textContent = catNombre;
@@ -465,20 +518,43 @@
             
             multiplicadorActual = 1;
             document.getElementById('multValue').textContent = multiplicadorActual;
+            renderizarOpcionesRapidas();
+            renderizarInventarioDetallado();
+        }
 
+        function renderizarOpcionesRapidas() {
             const grid = document.getElementById('fastOptionsGrid');
-            const listaOpciones = opcionesPorCat[catNombre] || opcionesPorCat['Cervezas'];
+            const listaOpciones = opcionesPorCat[categoriaActual] || [];
             grid.innerHTML = listaOpciones.map(opt => `
-                <div class="option-tile" onclick="agregarRapido('${opt.nombre}', ${opt.precio})">
+                <div class="option-tile" onclick="agregarRapido('${opt.nombre.replace(/'/g, "\\'")}', ${opt.precio})">
                     <div class="option-name">${opt.nombre}</div>
-                    <div class="option-price">Bs. ${opt.precio.toFixed(2)}</div>
+                    <div class="option-price">Bs. ${Number(opt.precio).toFixed(2)}</div>
                 </div>
             `).join('');
+        }
+
+        function renderizarInventarioDetallado() {
+            const container = document.getElementById('invListContainer');
+            const lista = inventarioDetallado[categoriaActual] || [];
+            if(lista.length === 0) {
+                container.innerHTML = `<span style="color:#6e7996; font-size:0.75rem;">No hay productos registrados con inventario específico en esta categoría aún.</span>`;
+            } else {
+                container.innerHTML = lista.map((item, idx) => `
+                    <div class="inv-item-row">
+                        <div><strong>${item.nombre}</strong> (Bs. ${Number(item.precio).toFixed(2)})</div>
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="color:#00ff96;">Stock: ${item.stock} u.</span>
+                            <button style="background:rgba(255,255,255,0.1); border:none; color:#ffb400; padding:4px 8px; border-radius:6px; cursor:pointer;" onclick="venderItemInventario('${categoriaActual.replace(/'/g, "\\'")}', ${idx})">+ Vender</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
         }
 
         function volverAVender() {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
             document.getElementById('view-vender').classList.add('active-view');
+            actualizarBadgesHome();
         }
 
         function cambiarMultiplicador(delta) {
@@ -490,20 +566,97 @@
             const precioTotalItem = precioUnitario * multiplicadorActual;
             const nombreCompleto = multiplicadorActual > 1 ? `${nombre} (x${multiplicadorActual})` : nombre;
             carrito.push({nombre: nombreCompleto, precio: precioTotalItem});
-            
-            // resetear multi a 1 tras agregar
             multiplicadorActual = 1;
             document.getElementById('multValue').textContent = multiplicadorActual;
             actualizarCarritoUI();
+        }
+
+        function venderItemInventario(cat, index) {
+            const item = inventarioDetallado[cat][index];
+            if(item.stock <= 0) {
+                alert('Stock agotado para este producto.');
+                return;
+            }
+            item.stock--;
+            carrito.push({nombre: `${item.nombre} (Detallado)`, precio: item.precio});
+            localStorage.setItem('pau_inventario_detallado', JSON.stringify(inventarioDetallado));
+            renderizarInventarioDetallado();
+            actualizarCarritoUI();
+        }
+
+        // Modales
+        function abrirModalEditarPrecios() {
+            const fields = document.getElementById('editPricesFields');
+            const lista = opcionesPorCat[categoriaActual] || [];
+            fields.innerHTML = lista.map((opt, i) => `
+                <div class="form-group" style="margin-bottom:8px;">
+                    <label>${opt.nombre} (Precio Bs.)</label>
+                    <input type="number" step="0.5" id="fastPriceInput_${i}" value="${opt.precio}">
+                </div>
+            `).join('');
+            document.getElementById('modalEditarPrecios').classList.add('active');
+        }
+
+        function guardarPreciosRapidos() {
+            const lista = opcionesPorCat[categoriaActual] || [];
+            lista.forEach((opt, i) => {
+                const val = parseFloat(document.getElementById(`fastPriceInput_${i}`).value);
+                if(!isNaN(val)) opt.precio = val;
+            });
+            localStorage.setItem('pau_opciones_rapidas', JSON.stringify(opcionesPorCat));
+            renderizarOpcionesRapidas();
+            cerrarModales();
+        }
+
+        function abrirModalNuevoProducto() {
+            modoModalInventario = false;
+            document.getElementById('modalProdTitle').textContent = `+ Nuevo Producto (${categoriaActual})`;
+            document.getElementById('stockGroupField').style.display = 'block';
+            document.getElementById('inputProdNombre').value = '';
+            document.getElementById('inputProdPrecio').value = '';
+            document.getElementById('inputProdStock').value = '10';
+            document.getElementById('modalNuevoProd').classList.add('active');
+        }
+
+        function abrirModalRegistroInventario() {
+            modoModalInventario = true;
+            document.getElementById('modalProdTitle').textContent = `+ Registrar Inventario Detallado`;
+            document.getElementById('stockGroupField').style.display = 'block';
+            document.getElementById('inputProdNombre').value = '';
+            document.getElementById('inputProdPrecio').value = '';
+            document.getElementById('inputProdStock').value = '';
+            document.getElementById('modalNuevoProd').classList.add('active');
+        }
+
+        function guardarNuevoItemInventario() {
+            const nombre = document.getElementById('inputProdNombre').value.trim();
+            const precio = parseFloat(document.getElementById('inputProdPrecio').value);
+            const stock = parseInt(document.getElementById('inputProdStock').value);
+
+            if(!nombre || isNaN(precio)) {
+                alert('Por favor ingresa nombre y precio válido.');
+                return;
+            }
+
+            if(!inventarioDetallado[categoriaActual]) {
+                inventarioDetallado[categoriaActual] = [];
+            }
+            inventarioDetallado[categoriaActual].push({ nombre, precio, stock: isNaN(stock) ? 0 : stock });
+            localStorage.setItem('pau_inventario_detallado', JSON.stringify(inventarioDetallado));
+            renderizarInventarioDetallado();
+            actualizarBadgesHome();
+            cerrarModales();
+        }
+
+        function cerrarModales() {
+            document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
         }
 
         function actualizarCarritoUI() {
             const countItems = document.getElementById('countItems');
             const cartContent = document.getElementById('cartContent');
             const totalCartText = document.getElementById('totalCartText');
-            
             countItems.textContent = carrito.length;
-            
             let total = carrito.reduce((sum, item) => sum + item.precio, 0);
             totalCartText.textContent = total.toFixed(2);
             document.getElementById('reportTotal').textContent = (ventasTotales + total).toFixed(2);
@@ -513,7 +666,7 @@
                 cartContent.className = 'cart-empty';
             } else {
                 cartContent.className = '';
-                cartContent.innerHTML = carrito.map(i => `<div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:6px;"><span>${i.nombre}</span><span>Bs. ${i.precio.toFixed(2)}</span></div>`).join('');
+                cartContent.innerHTML = carrito.map(i => `<div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:6px;"><span>${i.nombre}</span><span>Bs. ${Number(i.precio).toFixed(2)}</span></div>`).join('');
             }
         }
 
