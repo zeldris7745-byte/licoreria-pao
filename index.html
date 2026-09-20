@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Licorería Pao - Control, Ventas y Abastecimiento</title>
+  <title>Licorería Pao - App Local Offline</title>
   
   <meta name="theme-color" content="#0b0f17">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -129,7 +129,7 @@
         <div class="brand-icon">🍻</div>
         <div>
           <h1>Licorería Pao</h1>
-          <span class="badge-sistema">● STOCK Y VENTAS PERSISTENTE</span>
+          <span class="badge-sistema">● MODO LOCAL 100% OFFLINE</span>
         </div>
       </div>
       <div class="ventas-hoy-header">
@@ -142,7 +142,7 @@
     <div id="viewCategories">
       <div class="section-title-sub">
         <span>SELECCIONA UNA CATEGORÍA</span>
-        <span style="font-size:0.68rem; color:var(--exito);">● Stock permanente</span>
+        <span style="font-size:0.68rem; color:var(--exito);">● Cero internet requerido</span>
       </div>
       <div class="categories-grid">
         <div class="cat-card" onclick="openCategory('cervezas')">
@@ -343,27 +343,21 @@
   </nav>
 
   <script>
-    if (navigator.storage && navigator.storage.persist) {
-      navigator.storage.persist().then(persistent => {
-        if (persistent) console.log("Almacenamiento persistente activado.");
-      });
-    }
-
-    // --- PERSISTENCIA TOTAL PERMANENTE (v8) ---
-    let catalog = JSON.parse(localStorage.getItem('pao_catalog_v8') || '[]');
-    let purchasesLog = JSON.parse(localStorage.getItem('pao_purchases_log_v8') || '[]');
-    let lineSelectors = JSON.parse(localStorage.getItem('pao_line_selectors_v8') || '{}');
-    let cart = JSON.parse(localStorage.getItem('pao_active_cart_v8') || '[]');
-    let dailyRevenue = parseFloat(localStorage.getItem('pao_daily_rev_v8') || '0');
-    let dayLogHistory = localStorage.getItem('pao_day_history_v8') || '';
+    // --- PERSISTENCIA LOCAL OFFLINE PURO (v9) ---
+    let catalog = JSON.parse(localStorage.getItem('pao_catalog_local_v9') || '[]');
+    let purchasesLog = JSON.parse(localStorage.getItem('pao_purchases_local_v9') || '[]');
+    let lineSelectors = JSON.parse(localStorage.getItem('pao_selectors_local_v9') || '{}');
+    let cart = JSON.parse(localStorage.getItem('pao_cart_local_v9') || '[]');
+    let dailyRevenue = parseFloat(localStorage.getItem('pao_daily_rev_local_v9') || '0');
+    let dayLogHistory = localStorage.getItem('pao_history_local_v9') || '';
 
     function saveAll() {
-      localStorage.setItem('pao_catalog_v8', JSON.stringify(catalog));
-      localStorage.setItem('pao_purchases_log_v8', JSON.stringify(purchasesLog));
-      localStorage.setItem('pao_line_selectors_v8', JSON.stringify(lineSelectors));
-      localStorage.setItem('pao_active_cart_v8', JSON.stringify(cart));
-      localStorage.setItem('pao_daily_rev_v8', dailyRevenue.toString());
-      localStorage.setItem('pao_day_history_v8', dayLogHistory);
+      localStorage.setItem('pao_catalog_local_v9', JSON.stringify(catalog));
+      localStorage.setItem('pao_purchases_local_v9', JSON.stringify(purchasesLog));
+      localStorage.setItem('pao_selectors_local_v9', JSON.stringify(lineSelectors));
+      localStorage.setItem('pao_cart_local_v9', JSON.stringify(cart));
+      localStorage.setItem('pao_daily_rev_local_v9', dailyRevenue.toString());
+      localStorage.setItem('pao_history_local_v9', dayLogHistory);
       updateCategoryCounts();
       renderPurchasesLog();
       renderLowStockAlerts();
@@ -557,7 +551,6 @@
       }
     }
 
-    // --- REGISTRO DE COMPRAS / SUMAR AL STOCK FIJO ---
     function addPurchaseEntry() {
       const item = document.getElementById('pInputItem').value.trim();
       const qty = parseInt(document.getElementById('pInputQty').value) || 0;
@@ -567,7 +560,6 @@
         return alert('Ingresa un nombre de producto y cantidad comprada válida.');
       }
 
-      // Buscar si coincide con un producto del catálogo para sumarle stock de verdad
       const foundProd = catalog.find(p => p.name.toLowerCase() === item.toLowerCase());
       if (foundProd) {
         foundProd.stock = (foundProd.stock || 0) + qty;
@@ -630,7 +622,6 @@
       }
     }
 
-    // --- COMPARATIVO / POR ACABARSE REAL ---
     function renderLowStockAlerts() {
       const alerts = [];
       catalog.forEach(p => {
@@ -711,12 +702,10 @@
       if (cart.length === 0) return alert('El carrito está vacío');
       const saleTotal = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
 
-      // Descontar stock real de los productos vinculados
       cart.forEach(item => {
         if (item.catalogId) {
           const prod = catalog.find(p => p.id === item.catalogId);
           if (prod) {
-            const deduct = item.mode === 'pack' ? (item.qty * 6) : item.qty; // Factor o resta directa
             prod.stock = Math.max(0, (prod.stock || 0) - item.qty);
           }
         }
@@ -833,6 +822,7 @@
     renderPurchasesLog();
     renderLowStockAlerts();
     updateDaySummaryDisplay();
+    showOnlyMainViews('catalog', null);
   </script>
 </body>
 </html>
