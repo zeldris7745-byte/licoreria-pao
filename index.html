@@ -130,7 +130,7 @@
         .view-section { display: none; }
         .view-section.active-view { display: block; }
 
-        /* Panel interno para categoría seleccionada, catálogo, etc. */
+        /* Panel interno para categoría seleccionada */
         .panel-card {
             background: #141724;
             border: 1px solid rgba(255,255,255,0.08);
@@ -138,8 +138,10 @@
             padding: 16px;
             margin-bottom: 20px;
         }
-        .back-btn { background: rgba(255,255,255,0.08); color: #fff; border: none; padding: 8px 14px; border-radius: 10px; cursor: pointer; margin-bottom: 14px; font-size: 0.8rem; }
-        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .top-cat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
+        .back-btn { background: rgba(255,255,255,0.08); color: #fff; border: none; padding: 8px 14px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; }
+        .btn-new-prod { background: #ffb400; color: #0b0c10; border: none; padding: 8px 14px; border-radius: 10px; font-weight: bold; font-size: 0.8rem; cursor: pointer; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
         /* Carrito de Venta */
         .cart-card {
@@ -162,7 +164,7 @@
         .btn-primary { background: #00ff96; color: #0b0c10; }
         .btn-danger { background: #ff4757; color: #fff; }
 
-        /* Barra de Navegación inferior */
+        /* Barra de Navegación inferior (Tamaño original restaurado) */
         .nav-bar {
             position: fixed; bottom: 0; left: 0; right: 0; background: #12141f;
             border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-around;
@@ -174,7 +176,7 @@
 </head>
 <body>
 
-    <!-- CABECERA PRINCIPAL -->
+    <!-- CABECERA PRINCIPAL ORIGINAL -->
     <div class="header-card">
         <div class="header-bg-drinks">
             <span>🍷</span><span>🍺</span><span>🥂</span><span>🥃</span><span>🍷</span><span>🍺</span><span>🥂</span><span>🥃</span>
@@ -204,7 +206,7 @@
 
         <div class="categories-grid">
             <div class="cat-card card-cervezas" onclick="abrirCategoria('Cervezas')">
-                <span class="prod-badge">Paceña, etc.</span>
+                <span class="prod-badge">0 prod.</span>
                 <div class="icon-gold-box"><span class="cat-icon-inner">🍾</span></div>
                 <div>
                     <div class="cat-title">Cervezas</div>
@@ -213,7 +215,7 @@
             </div>
 
             <div class="cat-card card-cigarros" onclick="abrirCategoria('Cigarros')">
-                <span class="prod-badge">Marlboro</span>
+                <span class="prod-badge">0 prod.</span>
                 <div class="icon-gold-box"><span class="cat-icon-inner">🚬</span></div>
                 <div>
                     <div class="cat-title">Cigarros</div>
@@ -222,7 +224,7 @@
             </div>
 
             <div class="cat-card card-licores" onclick="abrirCategoria('Licores')">
-                <span class="prod-badge">Fernet</span>
+                <span class="prod-badge">0 prod.</span>
                 <div class="icon-gold-box"><span class="cat-icon-inner">🥃</span></div>
                 <div>
                     <div class="cat-title">Licores</div>
@@ -240,7 +242,7 @@
             </div>
 
             <div class="cat-card card-refrescos" onclick="abrirCategoria('Refrescos')">
-                <span class="prod-badge">Sodas</span>
+                <span class="prod-badge">0 prod.</span>
                 <div class="icon-gold-box"><span class="cat-icon-inner">🥤</span></div>
                 <div>
                     <div class="cat-title">Refrescos</div>
@@ -249,7 +251,7 @@
             </div>
 
             <div class="cat-card" onclick="abrirCategoria('Varios / Bico')">
-                <span class="prod-badge">Hielo</span>
+                <span class="prod-badge">0 prod.</span>
                 <div class="icon-gold-box"><span class="snowflake-anim">❄️</span></div>
                 <div>
                     <div class="cat-title">Varios / Bico</div>
@@ -275,11 +277,14 @@
         </div>
     </div>
 
-    <!-- VISTA INTERNA DE CATEGORÍA SELECCIONADA -->
+    <!-- VISTA INTERNA CLÁSICA DE CATEGORÍA SELECCIONADA -->
     <div id="view-categoria" class="view-section">
         <div class="panel-card">
-            <button class="back-btn" onclick="volverAVender()">← Volver a categorías</button>
-            <h2 id="catPanelTitle" style="color:#ffb400; margin-bottom: 14px; font-size: 1.2rem;">Productos</h2>
+            <div class="top-cat-header">
+                <button class="back-btn" onclick="volverAVender()">← Volver</button>
+                <h2 id="catPanelTitle" style="color:#ffb400; font-size: 1.2rem;">Cervezas</h2>
+                <button class="btn-new-prod" onclick="alert('Función de agregar producto offline')">+ Nuevo Prod.</button>
+            </div>
             <div id="catProductList"></div>
         </div>
     </div>
@@ -321,7 +326,7 @@
         </div>
     </div>
 
-    <!-- BARRA DE NAVEGACIÓN INFERIOR -->
+    <!-- BARRA DE NAVEGACIÓN INFERIOR (Tamaño original) -->
     <div class="nav-bar">
         <button class="nav-item active" onclick="cambiarVista('vender', this)"><span style="font-size:1.1rem;">🛒</span> Vender</button>
         <button class="nav-item" onclick="cambiarVista('catalogo', this)"><span style="font-size:1.1rem;">📦</span> Catálogo/Stock</button>
@@ -354,7 +359,7 @@
         function abrirCategoria(catNombre) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
             document.getElementById('view-categoria').classList.add('active-view');
-            document.getElementById('catPanelTitle').textContent = 'Categoría: ' + catNombre;
+            document.getElementById('catPanelTitle').textContent = catNombre;
             
             const listContainer = document.getElementById('catProductList');
             listContainer.innerHTML = '';
@@ -363,7 +368,7 @@
             prods.forEach(p => {
                 const div = document.createElement('div');
                 div.className = 'item-row';
-                div.innerHTML = `<span>${p.nombre} (Bs. ${p.precio})</span> <button style="background:#00ff96; color:#0b0c10; border:none; padding:6px 12px; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="agregarAlCarrito('${p.nombre}', ${p.precio})">+ Agregar</button>`;
+                div.innerHTML = `<span>${p.nombre} (Bs. ${p.precio}.00)</span> <button style="background:#00ff96; color:#0b0c10; border:none; padding:8px 14px; border-radius:10px; font-weight:bold; cursor:pointer;" onclick="agregarAlCarrito('${p.nombre}', ${p.precio})">+ Agregar</button>`;
                 listContainer.appendChild(div);
             });
         }
@@ -387,14 +392,14 @@
             
             let total = carrito.reduce((sum, item) => sum + item.precio, 0);
             totalCartText.textContent = total.toFixed(2);
-            reportTotal.textContent = (ventasTotales + total).toFixed(2);
+            document.getElementById('reportTotal').textContent = (ventasTotales + total).toFixed(2);
 
             if(carrito.length === 0) {
                 cartContent.innerHTML = 'Carrito vacío';
                 cartContent.className = 'cart-empty';
             } else {
                 cartContent.className = '';
-                cartContent.innerHTML = carrito.map(i => `<div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px;"><span>${i.nombre}</span><span>Bs. ${i.precio}</span></div>`).join('');
+                cartContent.innerHTML = carrito.map(i => `<div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:6px;"><span>${i.nombre}</span><span>Bs. ${i.precio}.00</span></div>`).join('');
             }
         }
 
