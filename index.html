@@ -218,16 +218,19 @@
       <div class="subcat-topbar">
         <button class="btn-volver" onclick="backToCategories()">← Volver</button>
         <span class="subcat-title" id="activeCategoryTitle">Categoría</span>
-        <button class="btn-nuevo-mini" onclick="addNewProductPromptCurrentCat()">+ Nuevo</button>
+        <button class="btn-nuevo-mini" id="btnNuevoProdCat" onclick="addNewProductPromptCurrentCat()">+ Nuevo</button>
       </div>
 
       <div class="card" id="detailCardProducts" style="margin-top:10px;">
         <div class="prods-list" id="categoryProductsContainer"></div>
       </div>
 
-      <!-- Si es categoría coca, mostramos caja coca rápida -->
+      <!-- Si es categoría coca, mostramos caja coca rápida editable -->
       <div id="detailCardCoca" class="card" style="display:none; margin-top:10px;">
-        <div class="card-title"><span>🌿 Venta de Coca Rápida</span></div>
+        <div class="card-title">
+          <span>🌿 Venta de Coca Rápida</span>
+          <button onclick="editCocaPrices()" style="background:var(--input-bg);border:1px solid var(--borde-tarjeta);color:var(--acento);font-size:0.7rem;padding:5px 10px;border-radius:8px;cursor:pointer;font-weight:600;">⚙️ Editar Precios</button>
+        </div>
         <div class="coca-special-box">
           <div style="display:flex; align-items:center; justify-content:space-between; font-size:0.8rem;">
             <span style="color:var(--coca-accent); font-weight:600;">Multiplicador porciones:</span>
@@ -237,24 +240,7 @@
               <button class="qty-btn-sm" style="background:var(--input-bg);border-radius:6px;" onclick="changeCocaQty(1)">+</button>
             </div>
           </div>
-          <div class="coca-options">
-            <button class="coca-opt-btn" onclick="addCocaCustom('Coca de 5 Bs', 5)">
-              <span class="coca-opt-name">Porción 5 Bs</span>
-              <span class="coca-opt-price">Bs. 5.00</span>
-            </button>
-            <button class="coca-opt-btn" onclick="addCocaCustom('Coca Machucada (10 Bs)', 10)">
-              <span class="coca-opt-name">Machucada / 10 Bs</span>
-              <span class="coca-opt-price">Bs. 10.00</span>
-            </button>
-            <button class="coca-opt-btn" onclick="addCocaCustom('Porción 15 Bs', 15)">
-              <span class="coca-opt-name">Porción 15 Bs</span>
-              <span class="coca-opt-price">Bs. 15.00</span>
-            </button>
-            <button class="coca-opt-btn" onclick="addCocaCustom('1 Libra de Coca', 40)">
-              <span class="coca-opt-name">1 Libra</span>
-              <span class="coca-opt-price">Bs. 40.00</span>
-            </button>
-          </div>
+          <div class="coca-options" id="cocaOptionsContainer"></div>
         </div>
       </div>
     </div>
@@ -343,13 +329,20 @@
   </nav>
 
   <script>
-    // --- PERSISTENCIA LOCAL OFFLINE PURO (v9) ---
+    // --- PERSISTENCIA LOCAL OFFLINE PURO (v10) ---
     let catalog = JSON.parse(localStorage.getItem('pao_catalog_local_v9') || '[]');
     let purchasesLog = JSON.parse(localStorage.getItem('pao_purchases_local_v9') || '[]');
     let lineSelectors = JSON.parse(localStorage.getItem('pao_selectors_local_v9') || '{}');
     let cart = JSON.parse(localStorage.getItem('pao_cart_local_v9') || '[]');
     let dailyRevenue = parseFloat(localStorage.getItem('pao_daily_rev_local_v9') || '0');
     let dayLogHistory = localStorage.getItem('pao_history_local_v9') || '';
+    
+    let cocaItems = JSON.parse(localStorage.getItem('pao_coca_items_v10') || JSON.stringify([
+      { name: 'Porción 5 Bs', price: 5 },
+      { name: 'Machucada / 10 Bs', price: 10 },
+      { name: 'Porción 15 Bs', price: 15 },
+      { name: '1 Libra', price: 40 }
+    ]));
 
     function saveAll() {
       localStorage.setItem('pao_catalog_local_v9', JSON.stringify(catalog));
@@ -358,6 +351,7 @@
       localStorage.setItem('pao_cart_local_v9', JSON.stringify(cart));
       localStorage.setItem('pao_daily_rev_local_v9', dailyRevenue.toString());
       localStorage.setItem('pao_history_local_v9', dayLogHistory);
+      localStorage.setItem('pao_coca_items_v10', JSON.stringify(cocaItems));
       updateCategoryCounts();
       renderPurchasesLog();
       renderLowStockAlerts();
@@ -371,9 +365,11 @@
     const viewCategories = document.getElementById('viewCategories');
     const viewCategoryDetail = document.getElementById('viewCategoryDetail');
     const activeCategoryTitle = document.getElementById('activeCategoryTitle');
+    const btnNuevoProdCat = document.getElementById('btnNuevoProdCat');
     const categoryProductsContainer = document.getElementById('categoryProductsContainer');
     const detailCardProducts = document.getElementById('detailCardProducts');
     const detailCardCoca = document.getElementById('detailCardCoca');
+    const cocaOptionsContainer = document.getElementById('cocaOptionsContainer');
     
     const cartSectionCard = document.getElementById('cartSectionCard');
     const purchasesSectionCard = document.getElementById('purchasesSectionCard');
@@ -415,6 +411,33 @@
       currentCategoryKey = null;
       viewCategoryDetail.style.display = 'none';
       viewCategories.style.display = 'block';
+    }
+
+    function renderCocaOptions() {
+      cocaOptionsContainer.innerHTML = cocaItems.map((item, idx) => `
+        <button class="coca-opt-btn" onclick="addCocaCustom('${item.name.replace(/'/g, "\\'")}', ${item.price})">
+          <span class="coca-opt-name">${item.name}</span>
+          <span class="coca-opt-price">Bs. ${Number(item.price).toFixed(2)}</span>
+        </button>
+      `).join('');
+    }
+
+    function editCocaPrices() {
+      let msg = 'Edita los precios de la coca (formato: Nombre:Precio separados por coma):\nEjemplo:\nPorción 5 Bs:5,Machucada / 10 Bs:10,Porción 15 Bs:15,1 Libra:40';
+      const actualStr = cocaItems.map(i => `${i.name}:${i.price}`).join(',');
+      const input = prompt(msg, actualStr);
+      if (input === null) return;
+      const parts = input.split(',').map(p => p.trim()).filter(Boolean);
+      if (parts.length === 0) return alert('No ingresaste valores válidos.');
+      cocaItems = parts.map(p => {
+        const sub = p.split(':');
+        const priceVal = parseFloat(sub.pop()) || 0;
+        const nameVal = sub.join(':').trim() || 'Porción';
+        return { name: nameVal, price: priceVal };
+      });
+      saveAll();
+      renderCocaOptions();
+      alert('¡Precios de coca actualizados!');
     }
 
     function changeLineQty(id, type, delta) {
@@ -520,7 +543,7 @@
 
     function addNewProductPrompt(forcedCategory = null) {
       const catTarget = forcedCategory || (currentCategoryKey && currentCategoryKey !== 'coca' ? currentCategoryKey : 'cervezas');
-      const name = prompt('Nombre del producto (ej: Cerveza Huari / Cigarro Camel / Coca):');
+      const name = prompt('Nombre del producto (ej: Cerveza Huari / Cigarro Camel):');
       if (!name) return;
       const priceUnitStr = prompt('Precio por unidad en Bolivianos (ej: 15):', '15');
       const pricePackStr = prompt('Precio por caja/paquete en Bolivianos (ej: 90):', '90');
@@ -780,9 +803,12 @@
           if (catKey === 'coca') {
             detailCardProducts.style.display = 'none';
             detailCardCoca.style.display = 'block';
+            btnNuevoProdCat.style.display = 'none';
+            renderCocaOptions();
           } else {
             detailCardProducts.style.display = 'block';
             detailCardCoca.style.display = 'none';
+            btnNuevoProdCat.style.display = 'block';
             renderCategoryProducts(catKey);
           }
         }
@@ -822,6 +848,7 @@
     renderPurchasesLog();
     renderLowStockAlerts();
     updateDaySummaryDisplay();
+    renderCocaOptions();
     showOnlyMainViews('catalog', null);
   </script>
 </body>
