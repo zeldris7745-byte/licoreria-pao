@@ -1,1071 +1,227 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Licorería Pau - App Local Offline</title>
-  
-  <meta name="theme-color" content="#0b0f17">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Licorería Pau">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Licorería Pau</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #0b0c10; color: #fff; min-height: 100vh; padding: 12px; padding-bottom: 90px; }
+        
+        .header-card {
+            background: linear-gradient(135deg, #1a1c29, #12141f);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px; }
+        .title-area { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        h1 { font-size: 1.5rem; color: #ff5e9c; font-style: italic; }
+        
+        /* Brindis container replacing old button */
+        .brindis-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px dashed rgba(255, 94, 156, 0.4);
+            animation: brillarBordes 3s infinite alternate;
+        }
+        .copa { font-size: 1.25rem; display: inline-block; animation: chocarCopas 1.5s ease-in-out infinite; }
+        .copa-left { transform-origin: bottom right; }
+        .copa-right { transform-origin: bottom left; transform: scaleX(-1); }
+        @keyframes chocarCopas { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(18deg) translateX(2px); } }
+        @keyframes brillarBordes { 0% { border-color: rgba(255,94,156,0.3); } 100% { border-color: rgba(0,255,200,0.6); } }
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,900;1,900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-main: #0b0f17;
-      --card-bg: rgba(20, 26, 38, 0.95);
-      --borde-tarjeta: rgba(255, 255, 255, 0.1);
-      --input-bg: #161f30;
-      --acento: #f59e0b;
-      --acento-secundario: #ec4899;
-      --exito: #10b981;
-      --peligro: #ef4444;
-      --texto-principal: #f3f4f6;
-      --texto-silenciado: #9ca3af;
-      --radio: 16px;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-    body { background-color: var(--bg-main); color: var(--texto-principal); min-height: 100vh; padding: 14px; padding-bottom: 95px; }
-    
-    /* Encabezado estilo letrero de licorería con siluetas y fondo LED tenue */
-    header { 
-      position: relative;
-      background: linear-gradient(180deg, rgba(30, 18, 10, 0.9) 0%, rgba(11, 15, 23, 0.95) 100%),
-                  radial-gradient(circle at top right, rgba(245, 158, 11, 0.15), transparent 60%);
-      border: 1px solid rgba(245, 158, 11, 0.25);
-      border-radius: 20px;
-      padding: 16px;
-      margin-bottom: 14px; 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-      flex-wrap: wrap; 
-      gap: 12px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1);
-    }
-    /* Silueta decorativa de fondo imitando botellas en estante */
-    header::before {
-      content: "🍾 🍷 🥃 🍺 🍸 🍾 🍷 🥃 🍺 🍸";
-      position: absolute;
-      top: 4px;
-      right: 10px;
-      font-size: 0.85rem;
-      opacity: 0.12;
-      letter-spacing: 6px;
-      pointer-events: none;
-      white-space: nowrap;
-    }
+        .offline-badge { background: rgba(0,255,150,0.15); color: #00ff96; font-size: 0.75rem; padding: 4px 10px; border-radius: 12px; display: inline-block; }
+        .ventas-hoy { margin-top: 8px; font-size: 0.85rem; color: #aaa; }
+        .ventas-hoy span { color: #00ff96; font-weight: bold; font-size: 1.1rem; }
 
-    .brand-area { display: flex; align-items: center; gap: 12px; position: relative; z-index: 2; }
-    
-    /* Chapa/Corcholata interactiva animada */
-    .brand-icon { 
-      background: radial-gradient(circle at 30% 30%, #374151, #111827); 
-      border: 2px dashed var(--acento); 
-      width: 48px; height: 48px; border-radius: 50%; 
-      display: flex; align-items: center; justify-content: center; font-size: 1.4rem;
-      animation: pulseGlow 3s infinite ease-in-out;
-      cursor: pointer;
-      position: relative;
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    }
-    .brand-icon::after {
-      content: "";
-      position: absolute;
-      inset: -4px;
-      border-radius: 50%;
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      animation: spinSlow 12s linear infinite;
-    }
-    @keyframes spinSlow { to { transform: rotate(360deg); } }
-    .brand-icon:hover { transform: scale(1.15) rotate(15deg); }
+        .section-header { font-size: 0.85rem; color: #8892b0; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+        
+        .categories-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .cat-card {
+            background: #141724;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 14px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 115px;
+        }
+        .prod-badge { position: absolute; top: 12px; right: 12px; background: rgba(255,180,0,0.15); color: #ffb400; font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; }
+        .rapida-badge { position: absolute; top: 12px; right: 12px; background: rgba(0,255,150,0.15); color: #00ff96; font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; }
+        .cat-icon { font-size: 1.8rem; margin-bottom: 10px; position: relative; width: fit-content; }
+        .cat-title { font-size: 1rem; font-weight: bold; margin-bottom: 2px; }
+        .cat-sub { font-size: 0.75rem; color: #6e7996; }
 
-    @keyframes pulseGlow {
-      0%, 100% { box-shadow: 0 0 12px rgba(245, 158, 11, 0.25), inset 0 0 8px rgba(245,158,11,0.2); border-color: var(--acento); }
-      50% { box-shadow: 0 0 20px rgba(236, 72, 153, 0.4), inset 0 0 12px rgba(236,72,153,0.3); border-color: var(--acento-secundario); }
-    }
+        /* --- Animaciones de Categorías --- */
+        /* Cervezas: destape / líquido saliendo */
+        .card-cervezas .cat-icon::after {
+            content: '💦'; position: absolute; top: -6px; right: -10px; font-size: 0.7rem;
+            animation: destapeChampan 0.8s ease-out infinite;
+        }
+        @keyframes destapeChampan { 0% { transform: translateY(0) scale(0.5); opacity: 1; } 100% { transform: translateY(-14px) scale(1.3); opacity: 0; } }
 
-    /* Título estilo Montserrat Italic 900 con degradado dinámico y goteo de botellas */
-    .title-wrapper { position: relative; display: flex; flex-direction: column; }
-    h1 { 
-      font-family: 'Montserrat', sans-serif;
-      font-weight: 900;
-      font-style: italic;
-      font-size: 1.6rem; 
-      letter-spacing: -0.5px;
-      background: linear-gradient(90deg, #fffbeb, #f59e0b, #f472b6);
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: gradientShift 6s ease infinite;
-      filter: drop-shadow(0 2px 8px rgba(245,158,11,0.35));
-      position: relative;
-    }
-    /* Detalle visual de botellita asomándose detrás del título */
-    .title-wrapper::after {
-      content: "🍺";
-      position: absolute;
-      right: -24px;
-      top: -8px;
-      font-size: 1rem;
-      transform: rotate(25deg);
-      opacity: 0.85;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-    }
+        /* Cigarros: brillo rojo tipo aspirar */
+        .card-cigarros .cat-icon {
+            filter: drop-shadow(0 0 4px rgba(255, 30, 30, 0.4));
+            animation: aspirarCigarro 2s ease-in-out infinite;
+        }
+        @keyframes aspirarCigarro { 0%, 100% { filter: drop-shadow(0 0 2px rgba(255, 0, 0, 0.3)); transform: scale(1); } 50% { filter: drop-shadow(0 0 10px rgba(255, 30, 30, 0.9)); transform: scale(1.05); } }
 
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+        /* Licores: oleaje de vaso */
+        .card-licores .cat-icon { animation: moverLiquido 2s ease-in-out infinite; }
+        @keyframes moverLiquido { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
 
-    .badge-sistema { 
-      background: rgba(16, 185, 129, 0.15); color: var(--exito); 
-      font-size: 0.62rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; 
-      letter-spacing: 0.5px; display: inline-block; margin-top: 3px; width: fit-content;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
+        /* Refrescos: sirviendo sodita */
+        .card-refrescos .cat-icon::before {
+            content: ''; position: absolute; top: -10px; left: 40%; width: 4px; height: 12px;
+            background: #ff7b00; border-radius: 2px;
+            animation: servirSoda 1s linear infinite;
+        }
+        @keyframes servirSoda { 0% { height: 0; opacity: 1; top: -10px; } 50% { height: 14px; opacity: 1; } 100% { height: 0; opacity: 0; top: 4px; } }
 
-    .ventas-hoy-header { text-align: right; position: relative; z-index: 2; }
-    .ventas-hoy-label { font-size: 0.62rem; color: var(--texto-silenciado); text-transform: uppercase; letter-spacing: 0.5px; }
-    .ventas-hoy-val { font-size: 1.15rem; font-weight: 700; color: var(--exito); font-family: 'Montserrat', sans-serif; font-style: italic; }
+        /* Varios / Bico: copo de nieve girando */
+        .snowflake-anim { display: inline-block; animation: girarCopo 4s linear infinite; }
+        @keyframes girarCopo { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-    .container { display: grid; gap: 14px; max-width: 1000px; margin: 0 auto; position: relative; }
-    
-    .container::after {
-      content: "🍾 🍻 🥃 🥤 🌿 📦";
-      display: block;
-      text-align: center;
-      font-size: 0.85rem;
-      opacity: 0.25;
-      letter-spacing: 12px;
-      margin-top: 5px;
-      user-select: none;
-    }
+        /* --- Carrito de Venta --- */
+        .cart-card {
+            background: #141724;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .cart-title { font-size: 1rem; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+        .cart-items-count { font-size: 0.75rem; color: #8892b0; }
+        .cart-empty { font-size: 0.85rem; color: #6e7996; margin-bottom: 16px; }
+        .total-row { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-bottom: 16px; }
+        .total-label { font-size: 0.9rem; font-weight: bold; }
+        .total-value { font-size: 1.1rem; color: #ffb400; font-weight: bold; }
 
-    .section-title-sub { font-size: 0.75rem; color: var(--texto-silenciado); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px; display:flex; justify-content:space-between; align-items:center; }
-    
-    .categories-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .cat-card {
-      background: var(--card-bg); border: 1px solid var(--borde-tarjeta); border-radius: 16px; padding: 14px;
-      display: flex; flex-direction: column; justify-content: space-between; gap: 10px; cursor: pointer; transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      position: relative;
-      overflow: hidden;
-    }
-    .cat-card::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0; height: 3px;
-      background: linear-gradient(90deg, transparent, var(--acento), transparent);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .cat-card:hover { border-color: var(--acento); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
-    .cat-card:hover::before { opacity: 1; }
-    .cat-header { display: flex; justify-content: space-between; align-items: flex-start; }
-    
-    .cat-icon-box { 
-      font-size: 1.4rem; 
-      background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(255,255,255,0.03)); 
-      border: 1px solid rgba(245, 158, 11, 0.25);
-      width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; transition: 0.3s; 
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
-    }
-    .cat-card:hover .cat-icon-box { transform: scale(1.12) rotate(-5deg); background: rgba(245, 158, 11, 0.25); border-color: var(--acento); }
-    .cat-badge-cnt { font-size: 0.68rem; color: var(--acento); background: rgba(245, 158, 11, 0.12); padding: 3px 8px; border-radius: 20px; font-weight: 600; border: 1px solid rgba(245,158,11,0.2); }
-    .cat-info h3 { font-size: 0.98rem; font-weight: 700; color: var(--texto-principal); font-family: 'Montserrat', sans-serif; display: flex; align-items: center; gap: 6px; }
-    .cat-info p { font-size: 0.72rem; color: var(--texto-silenciado); margin-top: 2px; }
+        .action-buttons { display: grid; grid-template-columns: 1.2fr 1fr; gap: 10px; }
+        .btn { padding: 14px; border-radius: 12px; border: none; font-weight: bold; font-size: 0.85rem; text-align: center; cursor: pointer; }
+        .btn-primary { background: #00ff96; color: #0b0c10; }
+        .btn-danger { background: #ff4757; color: #fff; }
 
-    .subcat-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
-    .btn-volver {
-      background: var(--input-bg); border: 1px solid var(--borde-tarjeta); color: var(--texto-principal);
-      padding: 7px 14px; border-radius: 10px; font-size: 0.78rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s;
-    }
-    .btn-volver:hover { border-color: var(--acento); background: rgba(245,158,11,0.1); }
-    .subcat-title { font-size: 1.1rem; font-weight: 700; color: var(--acento); font-family: 'Montserrat', sans-serif; font-style: italic; }
-    .btn-nuevo-mini {
-      background: var(--acento); color: #000; border: none; padding: 7px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; cursor: pointer;
-    }
-
-    .card { background: var(--card-bg); border: 1px solid var(--borde-tarjeta); border-radius: var(--radio); padding: 14px; position: relative; }
-    .card-title { font-size: 0.98rem; font-weight: 700; color: var(--texto-principal); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; font-family: 'Montserrat', sans-serif; }
-
-    .prods-list { display: flex; flex-direction: column; gap: 10px; }
-    .prod-row-card {
-      background: var(--input-bg); border: 1px solid var(--borde-tarjeta); border-radius: 12px; padding: 12px;
-      display: flex; flex-direction: column; gap: 10px;
-    }
-    .prod-name-main { font-weight: 600; font-size: 0.95rem; color: var(--texto-principal); display:flex; justify-content:space-between; align-items:center; }
-    .prod-prices-meta { font-size: 0.78rem; color: var(--acento); margin-top: 3px; font-weight: 500; }
-    .prod-stock-meta { font-size: 0.72rem; color: var(--exito); margin-top: 2px; font-weight: 600; }
-
-    .modes-buy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: rgba(0,0,0,0.25); padding: 8px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
-    .mode-col { display: flex; flex-direction: column; gap: 4px; }
-    .mode-label { font-size: 0.68rem; color: var(--texto-silenciado); display: flex; justify-content: space-between; }
-    .qty-control-inline { display: flex; align-items: center; justify-content: space-between; background: var(--bg-main); border-radius: 8px; padding: 2px; border: 1px solid var(--borde-tarjeta); height: 32px; }
-    .qty-btn-sm { background: transparent; border: none; color: var(--texto-principal); width: 26px; height: 100%; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
-    .qty-num-sm { font-size: 0.8rem; font-weight: 600; text-align: center; }
-    
-    .btn-add-line {
-      background: var(--acento); color: #000; border: none; padding: 9px; border-radius: 10px;
-      font-weight: 700; font-size: 0.8rem; cursor: pointer; text-align: center;
-      transition: transform 0.15s;
-    }
-    .btn-add-line:active { transform: scale(0.97); }
-
-    .fast-special-box { background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
-    .fast-brand-selector { margin-bottom: 4px; }
-    .fast-brand-selector label { font-size: 0.72rem; color: var(--acento); font-weight: 600; display: block; margin-bottom: 4px; }
-    .fast-brand-selector select { width: 100%; background: var(--bg-main); border: 1px solid var(--borde-tarjeta); color: var(--texto-principal); padding: 8px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; }
-    
-    .fast-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .fast-opt-btn { background: var(--input-bg); border: 1px solid var(--borde-tarjeta); color: var(--texto-principal); padding: 9px; border-radius: 10px; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 2px; transition: 0.2s; }
-    .fast-opt-btn:hover { border-color: var(--acento); background: rgba(245, 158, 11, 0.15); transform: translateY(-1px); }
-    .fast-opt-name { font-weight: 600; font-size: 0.8rem; }
-    .fast-opt-price { color: var(--acento); font-size: 0.75rem; font-weight: 700; }
-
-    .form-box { background: var(--input-bg); padding: 12px; border-radius: 12px; display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; border: 1px solid var(--borde-tarjeta); }
-    .input-pro { background: var(--bg-main); border: 1px solid var(--borde-tarjeta); color: var(--texto-principal); padding: 9px 12px; border-radius: 8px; font-size: 0.85rem; width: 100%; }
-    .purchases-log-list { display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto; }
-    .purchase-card { background: rgba(0,0,0,0.3); border: 1px solid var(--borde-tarjeta); padding: 10px; border-radius: 10px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; }
-
-    .low-stock-card { background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.3); padding: 10px; border-radius: 10px; font-size: 0.78rem; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-
-    .cart-list { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
-    .cart-item { display: flex; justify-content: space-between; align-items: center; background: var(--input-bg); padding: 8px 10px; border-radius: 8px; font-size: 0.8rem; animation: fadeInCart 0.2s ease-out; }
-    @keyframes fadeInCart { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-    .total-section { font-size: 1.05rem; font-weight: 700; margin: 10px 0; display: flex; justify-content: space-between; border-top: 1px solid var(--borde-tarjeta); padding-top: 10px; font-family: 'Montserrat', sans-serif; font-style: italic; }
-    .actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .btn-action { background: var(--exito); color: #000; border: none; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.88rem; transition: transform 0.15s; }
-    .btn-action:active { transform: scale(0.97); }
-    .btn-danger { background: var(--peligro); color: #fff; border: none; padding: 12px; border-radius: 12px; font-weight: 700; cursor: pointer; font-size: 0.88rem; transition: transform 0.15s; }
-    .btn-danger:active { transform: scale(0.97); }
-    
-    .history-box { font-size: 0.78rem; color: var(--texto-principal); background: var(--input-bg); padding: 12px; border-radius: 10px; line-height: 1.5; max-height: 280px; overflow-y: auto; border: 1px solid var(--borde-tarjeta); }
-    .history-entry { border-bottom: 1px dashed rgba(255,255,255,0.15); padding-bottom: 8px; margin-bottom: 8px; }
-
-    .bottom-nav {
-      position: fixed; bottom: 0; left: 0; right: 0; background: rgba(14, 20, 32, 0.94); backdrop-filter: blur(10px); border-top: 1px solid var(--borde-tarjeta);
-      display: grid; grid-template-columns: repeat(5, 1fr); padding: 6px 0; z-index: 1000;
-    }
-    .nav-item { background: transparent; border: none; color: var(--texto-silenciado); display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.62rem; cursor: pointer; transition: 0.2s; }
-    .nav-item.active { color: var(--acento); font-weight: 600; transform: translateY(-2px); }
-    .nav-icon { font-size: 1.1rem; }
-  </style>
+        /* --- Barra de Navegación inferior --- */
+        .nav-bar {
+            position: fixed; bottom: 0; left: 0; right: 0; background: #12141f;
+            border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-around;
+            padding: 10px 0; z-index: 100;
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; color: #6e7996; gap: 4px; text-decoration: none; }
+        .nav-item.active { color: #ffb400; }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="brand-area">
-        <div class="brand-icon" title="¡Salud! 🍻" onclick="triggerPartyEffect()">🔘</div>
-        <div class="title-wrapper">
-          <h1>Licorería Pau</h1>
-          <span class="badge-sistema">● MODO LOCAL 100% OFFLINE</span>
-        </div>
-      </div>
-      <div class="ventas-hoy-header">
-        <div class="ventas-hoy-label">Ventas hoy</div>
-        <div class="ventas-hoy-val" id="dailyTotalText">Bs. 0.00</div>
-      </div>
-    </header>
 
-    <!-- VISTA 1: MENÚ DE CATEGORÍAS -->
-    <div id="viewCategories">
-      <div class="section-title-sub">
+    <div class="header-card">
+        <div class="header-top">
+            <div class="title-area">
+                <h1>Licorería Pau</h1>
+                <div class="brindis-container" title="¡Salud!">
+                    <span class="copa copa-left">🥂</span>
+                    <span class="copa copa-right">🥂</span>
+                </div>
+            </div>
+            <div class="offline-badge">● MODO LOCAL 100% OFFLINE</div>
+        </div>
+        <div class="ventas-hoy">VENTAS HOY<br><span>Bs. 0.00</span></div>
+    </div>
+
+    <div class="section-header">
         <span>SELECCIONA UNA CATEGORÍA</span>
-        <span style="font-size:0.68rem; color:var(--exito);">● Cero internet requerido</span>
-      </div>
-      <div class="categories-grid">
-        <div class="cat-card" onclick="openCategory('cervezas')">
-          <div class="cat-header">
-            <div class="cat-icon-box">🍾</div>
-            <span class="cat-badge-cnt" id="cnt-cervezas">0 prod.</span>
-          </div>
-          <div class="cat-info">
-            <h3><span>🍻</span> Cervezas</h3>
-            <p>Paceña, Huari y más</p>
-          </div>
-        </div>
-
-        <div class="cat-card" onclick="openCategory('cigarros')">
-          <div class="cat-header">
-            <div class="cat-icon-box">🚬</div>
-            <span class="cat-badge-cnt" id="cnt-cigarros">0 prod.</span>
-          </div>
-          <div class="cat-info">
-            <h3><span>🏷️</span> Cigarros</h3>
-            <p>Marlboro, Camel, etc.</p>
-          </div>
-        </div>
-
-        <div class="cat-card" onclick="openCategory('licores')">
-          <div class="cat-header">
-            <div class="cat-icon-box">🥃</div>
-            <span class="cat-badge-cnt" id="cnt-licores">0 prod.</span>
-          </div>
-          <div class="cat-info">
-            <h3><span>🧊</span> Licores</h3>
-            <p>Fernet, Singani, Ron</p>
-          </div>
-        </div>
-
-        <div class="cat-card" onclick="openCategory('coca')">
-          <div class="cat-header">
-            <div class="cat-icon-box">🌿</div>
-            <span class="cat-badge-cnt">Rápida</span>
-          </div>
-          <div class="cat-info">
-            <h3><span>🍃</span> Coca</h3>
-            <p>Seleccionada, machucada</p>
-          </div>
-        </div>
-
-        <div class="cat-card" onclick="openCategory('refrescos')">
-          <div class="cat-header">
-            <div class="cat-icon-box">🥤</div>
-            <span class="cat-badge-cnt" id="cnt-refrescos">0 prod.</span>
-          </div>
-          <div class="cat-info">
-            <h3><span>🧊</span> Refrescos</h3>
-            <p>Coca-Cola, aguas frías</p>
-          </div>
-        </div>
-
-        <div class="cat-card" onclick="openCategory('varios')">
-          <div class="cat-header">
-            <div class="cat-icon-box">❄️</div>
-            <span class="cat-badge-cnt" id="cnt-varios">0 prod.</span>
-          </div>
-          <div class="cat-info">
-            <h3><span>🧊</span> Varios / Hielo</h3>
-            <p>Bicarbonato, hielo</p>
-          </div>
-        </div>
-      </div>
+        <span style="color:#00ff96;">● CERO INTERNET REQUERIDO</span>
     </div>
 
-    <!-- VISTA 2: DENTRO DE UNA CATEGORÍA -->
-    <div id="viewCategoryDetail" style="display:none;">
-      <div class="subcat-topbar">
-        <button class="btn-volver" onclick="backToCategories()">← Volver</button>
-        <span class="subcat-title" id="activeCategoryTitle">Categoría</span>
-        <button class="btn-nuevo-mini" onclick="addNewProductPromptCurrentCat()">+ Nuevo Prod.</button>
-      </div>
-
-      <div class="card" style="margin-top:10px;">
-        <div class="card-title">
-          <span id="fastSaleTitleLabel">⚡ Venta Rápida con Marca</span>
-          <button onclick="editCategoryFastPrices()" style="background:var(--input-bg);border:1px solid var(--borde-tarjeta);color:var(--acento);font-size:0.7rem;padding:5px 10px;border-radius:8px;cursor:pointer;font-weight:600;">⚙️ Editar Precios Rápidos</button>
-        </div>
-        <div class="fast-special-box">
-          <div class="fast-brand-selector">
-            <label for="activeFastBrandSelect">📍 Asignar esta venta rápida a la marca/producto:</label>
-            <select id="activeFastBrandSelect" onchange="onFastBrandChange()">
-              <option value="GENERICO">[ Sin marca específica / Genérico ]</option>
-            </select>
-          </div>
-
-          <div style="display:flex; align-items:center; justify-content:space-between; font-size:0.8rem;">
-            <span style="color:var(--acento); font-weight:600;">Multiplicador / Cantidad:</span>
-            <div style="display:flex; align-items:center; gap:6px;">
-              <button class="qty-btn-sm" style="background:var(--input-bg);border-radius:6px;" onclick="changeFastQty(-1)">-</button>
-              <span id="fastTempQty" style="font-size:0.85rem;font-weight:700;min-width:20px;text-align:center;">1</span>
-              <button class="qty-btn-sm" style="background:var(--input-bg);border-radius:6px;" onclick="changeFastQty(1)">+</button>
-            </div>
-          </div>
-          <div class="fast-options" id="fastOptionsContainer"></div>
-        </div>
-      </div>
-
-      <div class="card" id="detailCardProducts" style="margin-top:10px;">
-        <div style="font-size:0.75rem; color:var(--texto-silenciado); text-transform:uppercase; margin-bottom:8px; font-weight:600;">O Lista Detallada con Stock en Inventario:</div>
-        <div class="prods-list" id="categoryProductsContainer"></div>
-      </div>
-    </div>
-
-    <!-- VISTA 3: APARTADO DE COMPRAS / REGISTRO PROVEEDOR Y SUMAR STOCK -->
-    <div class="card" id="purchasesSectionCard" style="display:none;">
-      <div class="card-title">
-        <span>📥 Anotar Compras / Sumar Stock Permanente</span>
-        <button onclick="clearPurchasesLog()" style="background:transparent;border:1px solid var(--borde-tarjeta);color:var(--texto-silenciado);font-size:0.68rem;padding:4px 8px;border-radius:6px;cursor:pointer;">Borrar Registro</button>
-      </div>
-      <div class="form-box">
-        <input type="text" id="pInputItem" class="input-pro" placeholder="¿Qué compraste? (Ej: Cajas Cerveza Huari, Cigarro Marlboro...)">
-        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
-          <input type="number" id="pInputQty" class="input-pro" placeholder="Cantidad comprada (ej: 4)">
-          <input type="number" id="pInputMinRef" class="input-pro" placeholder="Alerta mín. (ej: 3)">
-        </div>
-        <button class="btn-action" style="padding:10px; font-size:0.8rem;" onclick="addPurchaseEntry()">+ Registrar Compra / Stock Fijo</button>
-      </div>
-      <div class="subcat-topbar" style="margin-top:10px;">
-        <span style="font-size:0.75rem; color:var(--acento); font-weight:700;">HISTORIAL DE COMPRAS REGISTRADAS:</span>
-      </div>
-      <div class="purchases-log-list" id="purchasesLogList"></div>
-    </div>
-
-    <!-- VISTA 4: POR ACABARSE / PEDIDOS COMPARATIVO REAL CON STOCK RESTANTE -->
-    <div class="card" id="lowStockSectionCard" style="display:none;">
-      <div class="card-title">
-        <span>⚠️ Por Acabarse / Para Pedir a Proveedor</span>
-        <span style="font-size:0.68rem; color:var(--peligro);" id="lowStockCountBadge">0 alertas</span>
-      </div>
-      <p style="font-size:0.75rem; color:var(--texto-silenciado); margin-bottom:10px;">Compara lo que te queda en stock real contra tu mínimo de alerta.</p>
-      <div id="lowStockContainer"></div>
-    </div>
-
-    <!-- Carrito de Venta Actual -->
-    <div class="card" id="cartSectionCard">
-      <div class="card-title">
-        <span>🛒 Carrito de Venta Actual</span>
-        <span style="font-size:0.75rem; color:var(--texto-silenciado);" id="cartCountBadge">0 ítems</span>
-      </div>
-      <div class="cart-list" id="cartList"></div>
-      <div class="total-section">
-        <span>Total Venta:</span>
-        <span id="currentTotal" style="color:var(--acento);">Bs. 0.00</span>
-      </div>
-      <div class="actions-grid">
-        <button class="btn-action" onclick="completeSale()">Cobrar / Vender (Descuenta Stock)</button>
-        <button class="btn-danger" onclick="endDayAndReset()">Terminar Jornada</button>
-      </div>
-    </div>
-
-    <!-- Tarjeta de Reporte / Historial -->
-    <div class="card" id="historyCard">
-      <div class="card-title">
-        <span>📋 Reporte y Cierres de Jornada</span>
-        <button onclick="clearHistoryLog()" style="background:transparent;border:1px solid var(--borde-tarjeta);color:var(--texto-silenciado);font-size:0.68rem;padding:4px 8px;border-radius:6px;cursor:pointer;">Limpiar Historial</button>
-      </div>
-      <div class="history-box" id="historyLog">
-        <div style="color:var(--texto-silenciado); text-align:center; padding:12px;">No hay reportes de jornada cerrados aún. Toca "Terminar Jornada" al final de tu día.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Barra inferior fija expandida -->
-  <nav class="bottom-nav">
-    <button class="nav-item active" id="navVender" onclick="switchNavTab('vender')">
-      <span class="nav-icon">🛒</span>
-      <span>Vender</span>
-    </button>
-    <button class="nav-item" id="navProductos" onclick="switchNavTab('productos')">
-      <span class="nav-icon">📦</span>
-      <span>Catálogo/Stock</span>
-    </button>
-    <button class="nav-item" id="navCompras" onclick="switchNavTab('compras')">
-      <span class="nav-icon">📥</span>
-      <span>Compras</span>
-    </button>
-    <button class="nav-item" id="navAcabarse" onclick="switchNavTab('acabarse')">
-      <span class="nav-icon">⚠️</span>
-      <span>Pedir</span>
-    </button>
-    <button class="nav-item" id="navReporte" onclick="switchNavTab('reporte')">
-      <span class="nav-icon">📄</span>
-      <span>Reporte</span>
-    </button>
-  </nav>
-
-  <script>
-    let catalog = JSON.parse(localStorage.getItem('pao_catalog_local_v14') || '[]');
-    let purchasesLog = JSON.parse(localStorage.getItem('pao_purchases_local_v14') || '[]');
-    let lineSelectors = JSON.parse(localStorage.getItem('pao_selectors_local_v14') || '{}');
-    let cart = JSON.parse(localStorage.getItem('pao_cart_local_v14') || '[]');
-    let dailyRevenue = parseFloat(localStorage.getItem('pao_daily_rev_local_v14') || '0');
-    let dayLogHistory = localStorage.getItem('pao_history_local_v14') || '';
-    let selectedBrandForCategory = JSON.parse(localStorage.getItem('pao_selected_brands_v14') || '{}');
-
-    const defaultFastConfigs = {
-      cervezas: [
-        { name: 'Botella Individual', price: 15 },
-        { name: 'Six-pack / 6 botellas', price: 85 },
-        { name: 'Caja 12 botellas', price: 165 },
-        { name: 'Vaso de chicha/cerveza', price: 10 }
-      ],
-      cigarros: [
-        { name: 'Cajetilla normal', price: 20 },
-        { name: 'Un suelto / cigarrito', price: 2 },
-        { name: 'Cartón x10 cajetillas', price: 190 },
-        { name: 'Promoción 2x35', price: 35 }
-      ],
-      licores: [
-        { name: 'Botella de Fernet/Ron', price: 75 },
-        { name: 'Botella de Singani', price: 55 },
-        { name: 'Shot / Trago medido', price: 15 },
-        { name: 'Mixer o lata mezcladora', price: 12 }
-      ],
-      coca: [
-        { name: 'Porción 5 Bs', price: 5 },
-        { name: 'Machucada / 10 Bs', price: 10 },
-        { name: 'Porción 15 Bs', price: 15 },
-        { name: '1 Libra', price: 40 }
-      ],
-      refrescos: [
-        { name: 'Refresco personal 500ml', price: 8 },
-        { name: 'Soda 2 litros', price: 18 },
-        { name: 'Agua personal', price: 5 },
-        { name: 'Energizante', price: 15 }
-      ],
-      varios: [
-        { name: 'Bicarbonato (Bico) sobre', price: 5 },
-        { name: 'Hielo bolsa grande', price: 15 },
-        { name: 'Vaso desechable x10', price: 4 },
-        { name: 'Fosforera / Encendedor', price: 5 }
-      ]
-    };
-
-    let fastConfigs = JSON.parse(localStorage.getItem('pao_fast_configs_v14') || JSON.stringify(defaultFastConfigs));
-
-    function saveAll() {
-      localStorage.setItem('pao_catalog_local_v14', JSON.stringify(catalog));
-      localStorage.setItem('pao_purchases_local_v14', JSON.stringify(purchasesLog));
-      localStorage.setItem('pao_selectors_local_v14', JSON.stringify(lineSelectors));
-      localStorage.setItem('pao_cart_local_v14', JSON.stringify(cart));
-      localStorage.setItem('pao_daily_rev_local_v14', dailyRevenue.toString());
-      localStorage.setItem('pao_history_local_v14', dayLogHistory);
-      localStorage.setItem('pao_fast_configs_v14', JSON.stringify(fastConfigs));
-      localStorage.setItem('pao_selected_brands_v14', JSON.stringify(selectedBrandForCategory));
-      updateCategoryCounts();
-      renderPurchasesLog();
-      renderLowStockAlerts();
-    }
-
-    catalog.forEach(p => { if (!lineSelectors[p.id]) lineSelectors[p.id] = { unitQty: 0, packQty: 0 }; });
-
-    let currentCategoryKey = null;
-    let fastMultiplier = 1;
-
-    const viewCategories = document.getElementById('viewCategories');
-    const viewCategoryDetail = document.getElementById('viewCategoryDetail');
-    const activeCategoryTitle = document.getElementById('activeCategoryTitle');
-    const fastSaleTitleLabel = document.getElementById('fastSaleTitleLabel');
-    const categoryProductsContainer = document.getElementById('categoryProductsContainer');
-    const fastOptionsContainer = document.getElementById('fastOptionsContainer');
-    const fastTempQtyEl = document.getElementById('fastTempQty');
-    const activeFastBrandSelect = document.getElementById('activeFastBrandSelect');
-    
-    const cartSectionCard = document.getElementById('cartSectionCard');
-    const purchasesSectionCard = document.getElementById('purchasesSectionCard');
-    const lowStockSectionCard = document.getElementById('lowStockSectionCard');
-    const cartList = document.getElementById('cartList');
-    const currentTotal = document.getElementById('currentTotal');
-    const cartCountBadge = document.getElementById('cartCountBadge');
-    const dailyTotalText = document.getElementById('dailyTotalText');
-    const historyCard = document.getElementById('historyCard');
-    const historyLog = document.getElementById('historyLog');
-    const purchasesLogList = document.getElementById('purchasesLogList');
-    const lowStockContainer = document.getElementById('lowStockContainer');
-    const lowStockCountBadge = document.getElementById('lowStockCountBadge');
-
-    function triggerPartyEffect() {
-      const icon = document.querySelector('.brand-icon');
-      icon.style.transform = 'scale(1.35) rotate(360deg)';
-      setTimeout(() => { icon.style.transform = ''; }, 400);
-    }
-
-    function updateCategoryCounts() {
-      const keys = ['cervezas', 'cigarros', 'licores', 'refrescos', 'varios', 'coca'];
-      keys.forEach(k => {
-        const count = catalog.filter(p => p.category === k).length;
-        const el = document.getElementById(`cnt-${k}`);
-        if (el) el.innerText = `${count} prod.`;
-      });
-    }
-
-    function updateDaySummaryDisplay() {
-      dailyTotalText.innerText = `Bs. ${dailyRevenue.toFixed(2)}`;
-      if (dayLogHistory.trim()) {
-        historyLog.innerHTML = dayLogHistory;
-      } else {
-        historyLog.innerHTML = `<div style="color:var(--texto-silenciado); text-align:center; padding:12px;">No hay reportes de jornada cerrados aún. Toca "Terminar Jornada" al final de tu día.</div>`;
-      }
-    }
-
-    function openCategory(key) {
-      showOnlyMainViews('catalog', key);
-    }
-
-    function backToCategories() {
-      currentCategoryKey = null;
-      viewCategoryDetail.style.display = 'none';
-      viewCategories.style.display = 'block';
-    }
-
-    function updateBrandSelectorForCategory(catKey) {
-      const prods = catalog.filter(p => p.category === catKey);
-      let opts = `<option value="GENERICO">[ Sin marca específica / Genérico ]</option>`;
-      prods.forEach(p => {
-        opts += `<option value="${p.id}">${p.name} (Stock: ${p.stock ?? 0})</option>`;
-      });
-      activeFastBrandSelect.innerHTML = opts;
-      const savedSel = selectedBrandForCategory[catKey] || 'GENERICO';
-      activeFastBrandSelect.value = savedSel;
-    }
-
-    function onFastBrandChange() {
-      if (!currentCategoryKey) return;
-      selectedBrandForCategory[currentCategoryKey] = activeFastBrandSelect.value;
-      saveAll();
-    }
-
-    function renderFastOptions(catKey) {
-      const items = fastConfigs[catKey] || fastConfigs['varios'];
-      fastOptionsContainer.innerHTML = items.map((item) => `
-        <button class="fast-opt-btn" onclick="addFastCustom('${item.name.replace(/'/g, "\\'")}', ${item.price})">
-          <span class="fast-opt-name">${item.name}</span>
-          <span class="fast-opt-price">Bs. ${Number(item.price).toFixed(2)}</span>
-        </button>
-      `).join('');
-    }
-
-    function editCategoryFastPrices() {
-      if (!currentCategoryKey) return;
-      const currentList = fastConfigs[currentCategoryKey] || [];
-      let msg = `Edita los precios rápidos para "${currentCategoryKey.toUpperCase()}" (formato: Nombre:Precio separados por coma):\nEjemplo:\nBotella:15,Sixpack:85`;
-      const actualStr = currentList.map(i => `${i.name}:${i.price}`).join(',');
-      const input = prompt(msg, actualStr);
-      if (input === null) return;
-      const parts = input.split(',').map(p => p.trim()).filter(Boolean);
-      if (parts.length === 0) return alert('No ingresaste valores válidos.');
-      fastConfigs[currentCategoryKey] = parts.map(p => {
-        const sub = p.split(':');
-        const priceVal = parseFloat(sub.pop()) || 0;
-        const nameVal = sub.join(':').trim() || 'Ítem rápido';
-        return { name: nameVal, price: priceVal };
-      });
-      saveAll();
-      renderFastOptions(currentCategoryKey);
-      alert('¡Precios rápidos de esta categoría actualizados!');
-    }
-
-    function changeFastQty(delta) {
-      fastMultiplier = Math.max(1, fastMultiplier + delta);
-      fastTempQtyEl.innerText = fastMultiplier;
-    }
-
-    function addFastCustom(name, unitPrice) {
-      const selectedBrandId = selectedBrandForCategory[currentCategoryKey] || 'GENERICO';
-      let brandPrefix = '';
-      let targetCatalogId = null;
-
-      if (selectedBrandId && selectedBrandId !== 'GENERICO') {
-        const prod = catalog.find(p => String(p.id) === String(selectedBrandId));
-        if (prod) {
-          brandPrefix = `[${prod.name}] `;
-          targetCatalogId = prod.id;
-        }
-      }
-
-      const multStr = fastMultiplier > 1 ? ` x${fastMultiplier}` : '';
-      const cleanName = `${brandPrefix}${name}${multStr}`;
-      const finalPrice = unitPrice * fastMultiplier;
-
-      const found = cart.find(c => c.name === cleanName && c.price === finalPrice);
-      if (found) {
-        found.qty += 1;
-      } else {
-        cart.push({ catalogId: targetCatalogId, id: 'fast_' + Date.now() + Math.random(), name: cleanName, price: finalPrice, qty: 1 });
-      }
-      fastMultiplier = 1;
-      fastTempQtyEl.innerText = fastMultiplier;
-      renderCart();
-    }
-
-    function changeLineQty(id, type, delta) {
-      if (!lineSelectors[id]) lineSelectors[id] = { unitQty: 0, packQty: 0 };
-      if (type === 'unit') {
-        lineSelectors[id].unitQty = Math.max(0, lineSelectors[id].unitQty + delta);
-      } else {
-        lineSelectors[id].packQty = Math.max(0, lineSelectors[id].packQty + delta);
-      }
-      saveAll();
-      if (currentCategoryKey) renderCategoryProducts(currentCategoryKey);
-    }
-
-    function addLineToCart(id) {
-      const p = catalog.find(x => x.id === id);
-      const sel = lineSelectors[id];
-      if (!sel || (sel.unitQty === 0 && sel.packQty === 0)) {
-        return alert('Selecciona unidad(es) suelta(s) o paquete/caja con los botones + / -');
-      }
-
-      if (sel.unitQty > 0) {
-        const nameUnit = `${p.name} (Unidad)`;
-        const foundU = cart.find(c => c.name === nameUnit && c.catalogId === id);
-        if (foundU) foundU.qty += sel.unitQty;
-        else cart.push({ catalogId: id, id: id + '_u', name: nameUnit, price: p.priceUnit, qty: sel.unitQty, mode: 'unit' });
-      }
-
-      if (sel.packQty > 0) {
-        const namePack = `${p.name} (Paquete/Caja completo)`;
-        const foundP = cart.find(c => c.name === namePack && c.catalogId === id);
-        if (foundP) foundP.qty += sel.packQty;
-        else cart.push({ catalogId: id, id: id + '_p', name: namePack, price: p.pricePack, qty: sel.packQty, mode: 'pack' });
-      }
-
-      lineSelectors[id] = { unitQty: 0, packQty: 0 };
-      saveAll();
-      if (currentCategoryKey) renderCategoryProducts(currentCategoryKey);
-      renderCart();
-    }
-
-    function deleteProductFromCatalog(id) {
-      if (!confirm('¿Eliminar este producto de la categoría?')) return;
-      catalog = catalog.filter(p => p.id !== id);
-      delete lineSelectors[id];
-      saveAll();
-      if (currentCategoryKey) {
-        updateBrandSelectorForCategory(currentCategoryKey);
-        renderCategoryProducts(currentCategoryKey);
-      }
-    }
-
-    function renderCategoryProducts(key) {
-      const prods = catalog.filter(p => p.category === key);
-      if (prods.length === 0) {
-        categoryProductsContainer.innerHTML = `
-          <div style="text-align:center; padding:14px; color:var(--texto-silenciado); font-size:0.8rem;">
-            No hay productos registrados con inventario específico en esta categoría aún.<br>
-            <button onclick="addNewProductPrompt('${key}')" class="btn-action" style="margin-top:8px; padding:6px 12px; font-size:0.72rem;">+ Registrar inventario detallado</button>
-          </div>
-        `;
-        return;
-      }
-
-      categoryProductsContainer.innerHTML = prods.map(p => {
-        const sel = lineSelectors[p.id] || { unitQty: 0, packQty: 0 };
-        return `
-          <div class="prod-row-card">
+    <div class="categories-grid">
+        <div class="cat-card card-cervezas">
+            <span class="prod-badge">0 prod.</span>
+            <div class="cat-icon">🍾</div>
             <div>
-              <div class="prod-name-main">
-                <span>${p.name}</span>
-                <button onclick="deleteProductFromCatalog(${p.id})" style="background:transparent;border:none;color:var(--peligro);font-size:0.75rem;cursor:pointer;">Eliminar</button>
-              </div>
-              <div class="prod-prices-meta">Unidad: Bs. ${Number(p.priceUnit).toFixed(2)} | Paq/Caja: Bs. ${Number(p.pricePack).toFixed(2)}</div>
-              <div class="prod-stock-meta">Stock disponible real: ${p.stock ?? 10} u. (Mín alerta: ${p.minStock ?? 3})</div>
+                <div class="cat-title">Cervezas</div>
+                <div class="cat-sub">Paceña, Huari y más</div>
             </div>
-            
-            <div class="modes-buy-grid">
-              <div class="mode-col">
-                <span class="mode-label"><span>Suelta (u.)</span></span>
-                <div class="qty-control-inline">
-                  <button class="qty-btn-sm" onclick="changeLineQty(${p.id}, 'unit', -1)">-</button>
-                  <span class="qty-num-sm">${sel.unitQty}</span>
-                  <button class="qty-btn-sm" onclick="changeLineQty(${p.id}, 'unit', 1)">+</button>
-                </div>
-              </div>
-              <div class="mode-col">
-                <span class="mode-label"><span>Caja/Paq.</span></span>
-                <div class="qty-control-inline">
-                  <button class="qty-btn-sm" onclick="changeLineQty(${p.id}, 'pack', -1)">-</button>
-                  <span class="qty-num-sm">${sel.packQty}</span>
-                  <button class="qty-btn-sm" onclick="changeLineQty(${p.id}, 'pack', 1)">+</button>
-                </div>
-              </div>
-            </div>
-
-            <button class="btn-add-line" onclick="addLineToCart(${p.id})">+ Agregar al Carrito</button>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function addNewProductPromptCurrentCat() {
-      if (!currentCategoryKey) return;
-      addNewProductPrompt(currentCategoryKey);
-    }
-
-    function addNewProductPrompt(forcedCategory = null) {
-      const catTarget = forcedCategory || currentCategoryKey || 'cervezas';
-      const name = prompt('Nombre detallado de la marca/producto (ej: Cerveza Huari 620ml / Coca-Cola 2L):');
-      if (!name) return;
-      const priceUnitStr = prompt('Precio por unidad en Bolivianos (ej: 15):', '15');
-      const pricePackStr = prompt('Precio por caja/paquete en Bolivianos (ej: 90):', '90');
-      const stockStr = prompt('Stock inicial/disponible (ej: 20):', '20');
-      const minStockStr = prompt('Alerta de stock mínimo para pedir (ej: 3):', '3');
-
-      const pUnit = parseFloat(priceUnitStr) || 10;
-      const pPack = parseFloat(pricePackStr) || 50;
-      const stock = parseInt(stockStr) || 10;
-      const minStock = parseInt(minStockStr) || 3;
-
-      const newProd = {
-        id: Date.now(),
-        category: catTarget,
-        name: name.trim(),
-        priceUnit: pUnit,
-        pricePack: pPack,
-        stock: stock,
-        minStock: minStock
-      };
-
-      catalog.push(newProd);
-      lineSelectors[newProd.id] = { unitQty: 0, packQty: 0 };
-      saveAll();
-      alert(`¡Marca/Producto "${newProd.name}" guardado con stock ${stock} y disponible en venta rápida!`);
-      if (currentCategoryKey) {
-        updateBrandSelectorForCategory(currentCategoryKey);
-        renderCategoryProducts(currentCategoryKey);
-      }
-    }
-
-    function addPurchaseEntry() {
-      const item = document.getElementById('pInputItem').value.trim();
-      const qty = parseInt(document.getElementById('pInputQty').value) || 0;
-      const minRef = parseInt(document.getElementById('pInputMinRef').value) || 3;
-
-      if (!item || qty <= 0) {
-        return alert('Ingresa un nombre de producto y cantidad comprada válida.');
-      }
-
-      const foundProd = catalog.find(p => p.name.toLowerCase() === item.toLowerCase());
-      if (foundProd) {
-        foundProd.stock = (foundProd.stock || 0) + qty;
-        foundProd.minStock = minRef;
-      } else {
-        catalog.push({
-          id: Date.now(),
-          category: 'varios',
-          name: item,
-          priceUnit: 10,
-          pricePack: 50,
-          stock: qty,
-          minStock: minRef
-        });
-      }
-
-      const now = new Date();
-      const dateStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-
-      purchasesLog.unshift({
-        id: Date.now(),
-        item: item,
-        qty: qty,
-        minRef: minRef,
-        date: dateStr
-      });
-
-      document.getElementById('pInputItem').value = '';
-      document.getElementById('pInputQty').value = '';
-      saveAll();
-      alert(`Compra sumada permanente: +${qty} a "${item}". Stock actualizado.`);
-    }
-
-    function renderPurchasesLog() {
-      if (purchasesLog.length === 0) {
-        purchasesLogList.innerHTML = '<p style="color:var(--texto-silenciado);font-size:0.78rem;text-align:center;padding:10px;">No hay compras anotadas aún.</p>';
-      } else {
-        purchasesLogList.innerHTML = purchasesLog.map((p, idx) => `
-          <div class="purchase-card">
-            <div>
-              <strong style="color:var(--texto-principal);">${p.item}</strong>
-              <div style="font-size:0.7rem; color:var(--acento);">Cantidad comprada: +${p.qty} | Alerta mín: ${p.minRef}</div>
-              <div style="font-size:0.65rem; color:var(--texto-silenciado);">${p.date}</div>
-            </div>
-            <button onclick="deletePurchaseItem(${idx})" style="background:transparent;border:none;color:var(--peligro);font-weight:bold;cursor:pointer;">✕</button>
-          </div>
-        `).join('');
-      }
-    }
-
-    function deletePurchaseItem(idx) {
-      purchasesLog.splice(idx, 1);
-      saveAll();
-    }
-
-    function clearPurchasesLog() {
-      if (confirm('¿Vaciar el historial permanente de compras a proveedor?')) {
-        purchasesLog = [];
-        saveAll();
-      }
-    }
-
-    function renderLowStockAlerts() {
-      const alerts = [];
-      catalog.forEach(p => {
-        const threshold = p.minStock !== undefined ? p.minStock : 3;
-        if ((p.stock || 0) <= threshold) {
-          alerts.push({
-            name: `${p.name} (${p.category})`,
-            currentStock: p.stock || 0,
-            needed: threshold * 3
-          });
-        }
-      });
-
-      if (alerts.length === 0) {
-        lowStockContainer.innerHTML = '<div style="color:var(--exito);font-size:0.78rem;text-align:center;padding:12px;">✅ Todo el inventario detallado está por encima del nivel mínimo.</div>';
-        lowStockCountBadge.innerText = '0 alertas';
-        return;
-      }
-
-      lowStockContainer.innerHTML = alerts.map(a => `
-        <div class="low-stock-card">
-          <div>
-            <strong>${a.name}</strong>
-            <div style="font-size:0.68rem; color:var(--texto-silenciado);">Stock restante real: <strong>${a.currentStock} u.</strong> | Pedir sugerido: ~${a.needed} u.</div>
-          </div>
-          <span style="background:rgba(239,68,68,0.2);color:var(--peligro);padding:3px 8px;border-radius:6px;font-weight:700;font-size:0.7rem;">¡PEDIR!</span>
         </div>
-      `).join('');
-      lowStockCountBadge.innerText = `${alerts.length} por pedir`;
-    }
 
-    function renderCart() {
-      if (cart.length === 0) {
-        cartList.innerHTML = '<p style="color:var(--texto-silenciado);font-size:0.78rem;">Carrito vacío</p>';
-      } else {
-        cartList.innerHTML = cart.map((item, idx) => `
-          <div class="cart-item">
-            <span><strong>${item.name}</strong> x${item.qty}</span>
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span>Bs. ${(item.price * item.qty).toFixed(2)}</span>
-              <button onclick="removeCartItem(${idx})" style="background:transparent;border:none;color:var(--peligro);font-weight:bold;cursor:pointer;">✕</button>
+        <div class="cat-card card-cigarros">
+            <span class="prod-badge">0 prod.</span>
+            <div class="cat-icon">🚬</div>
+            <div>
+                <div class="cat-title">Cigarros</div>
+                <div class="cat-sub">Marlboro, Camel, etc.</div>
             </div>
-          </div>
-        `).join('');
-      }
-      const total = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
-      const itemsCnt = cart.reduce((acc, i) => acc + i.qty, 0);
-      currentTotal.innerText = `Bs. ${total.toFixed(2)}`;
-      cartCountBadge.innerText = `${itemsCnt} ítems`;
-      saveAll();
-    }
+        </div>
 
-    function removeCartItem(idx) {
-      cart.splice(idx, 1);
-      renderCart();
-    }
+        <div class="cat-card card-licores">
+            <span class="prod-badge">0 prod.</span>
+            <div class="cat-icon">🥃</div>
+            <div>
+                <div class="cat-title">Licores</div>
+                <div class="cat-sub">Fernet, Singani, Ron</div>
+            </div>
+        </div>
 
-    function completeSale() {
-      if (cart.length === 0) return alert('El carrito está vacío');
-      const saleTotal = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+        <div class="cat-card">
+            <span class="rapida-badge">Rápida</span>
+            <div class="cat-icon">🌿</div>
+            <div>
+                <div class="cat-title">Coca</div>
+                <div class="cat-sub">Seleccionada, machucada</div>
+            </div>
+        </div>
 
-      cart.forEach(item => {
-        if (item.catalogId) {
-          const prod = catalog.find(p => String(p.id) === String(item.catalogId));
-          if (prod) {
-            prod.stock = Math.max(0, (prod.stock || 0) - item.qty);
-          }
-        }
-      });
+        <div class="cat-card card-refrescos">
+            <span class="prod-badge">0 prod.</span>
+            <div class="cat-icon">🥤</div>
+            <div>
+                <div class="cat-title">Refrescos</div>
+                <div class="cat-sub">Coca-Cola, aguas frías</div>
+            </div>
+        </div>
 
-      dailyRevenue += saleTotal;
-      const now = new Date();
-      const timeStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-      const saleSummary = `<div class="history-entry"><strong>Venta realizada el ${timeStr}</strong><br>Monto: Bs. ${saleTotal.toFixed(2)}</div>`;
-      
-      dayLogHistory = saleSummary + dayLogHistory;
-      saveAll();
-      updateDaySummaryDisplay();
+        <div class="cat-card">
+            <span class="prod-badge">0 prod.</span>
+            <div class="cat-icon"><span class="snowflake-anim">❄️</span></div>
+            <div>
+                <div class="cat-title">Varios / Bico</div>
+                <div class="cat-sub">Bicarbonato, hielo</div>
+            </div>
+        </div>
+    </div>
 
-      alert(`¡Venta cobrada por Bs. ${saleTotal.toFixed(2)}!`);
-      cart = [];
-      renderCart();
-      if (currentCategoryKey) {
-        updateBrandSelectorForCategory(currentCategoryKey);
-        renderCategoryProducts(currentCategoryKey);
-      }
-    }
+    <div class="cart-card">
+        <div class="cart-header">
+            <div class="cart-title">🛒 Carrito de Venta Actual</div>
+            <div class="cart-items-count">0 items</div>
+        </div>
+        <div class="cart-empty">Carrito vacío</div>
+        <div class="total-row">
+            <span class="total-label">Total Venta:</span>
+            <span class="total-value">Bs. 0.00</span>
+        </div>
+        <div class="action-buttons">
+            <button class="btn btn-primary">Cobrar / Vender<br><span style="font-size:0.65rem; font-weight:normal;">(Descuenta Stock)</span></button>
+            <button class="btn btn-danger">Terminar Jornada</button>
+        </div>
+    </div>
 
-    function endDayAndReset() {
-      if (dailyRevenue === 0 && cart.length === 0) {
-        return alert('No hay ventas registradas ni acumulación en esta jornada.');
-      }
-      if (!confirm(`¿Estás segura de TERMINAR LA JORNADA?\nTotal acumulado de hoy: Bs. ${dailyRevenue.toFixed(2)}.\nEsto guardará el reporte de ingresos y reiniciará las ventas del día a 0 (¡el stock de mercancía NO se borra!).`)) {
-        return;
-      }
+    <div class="nav-bar">
+        <a href="#" class="nav-item active">🛒 Vender</a>
+        <a href="#" class="nav-item">📦 Catálogo/Stock</a>
+        <a href="#" class="nav-item">📦 Compras</a>
+        <a href="#" class="nav-item">⚠️ Pedir</a>
+        <a href="#" class="nav-item">📄 Reporte</a>
+    </div>
 
-      const now = new Date();
-      const timeStr = now.toLocaleDateString() + ' ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-      const summaryText = `<div class="history-entry" style="background:rgba(16,185,129,0.1);padding:6px;border-radius:6px;margin-bottom:8px;"><strong>🔒 JORNADA CERRADA (${timeStr})</strong><br><strong>Total Venta Día: Bs. ${dailyRevenue.toFixed(2)}</strong></div>`;
-
-      dayLogHistory = summaryText + dayLogHistory;
-      dailyRevenue = 0;
-      saveAll();
-      updateDaySummaryDisplay();
-      alert('Jornada finalizada y guardada. El stock físico remanente se mantiene intacto.');
-    }
-
-    function clearHistoryLog() {
-      if (confirm('¿Vaciar todo el historial de reportes guardados?')) {
-        dayLogHistory = '';
-        saveAll();
-        updateDaySummaryDisplay();
-      }
-    }
-
-    function showOnlyMainViews(mode, catKey = null) {
-      viewCategories.style.display = 'none';
-      viewCategoryDetail.style.display = 'none';
-      purchasesSectionCard.style.display = 'none';
-      lowStockSectionCard.style.display = 'none';
-      cartSectionCard.style.display = 'none';
-
-      if (mode === 'catalog') {
-        if (!catKey) {
-          viewCategories.style.display = 'block';
-        } else {
-          viewCategoryDetail.style.display = 'block';
-          currentCategoryKey = catKey;
-          const titles = {
-            cervezas: 'Cervezas',
-            cigarros: 'Cigarros',
-            licores: 'Licores',
-            refrescos: 'Refrescos',
-            varios: 'Varios / Bico',
-            coca: 'Venta de Coca'
-          };
-          activeCategoryTitle.innerText = titles[catKey] || 'Categoría';
-          fastSaleTitleLabel.innerText = `⚡ Venta Rápida - ${titles[catKey] || 'Categoría'}`;
-          fastMultiplier = 1;
-          fastTempQtyEl.innerText = fastMultiplier;
-          updateBrandSelectorForCategory(catKey);
-          renderFastOptions(catKey);
-          renderCategoryProducts(catKey);
-        }
-        cartSectionCard.style.display = 'block';
-      } else if (mode === 'purchases') {
-        purchasesSectionCard.style.display = 'block';
-      } else if (mode === 'lowstock') {
-        lowStockSectionCard.style.display = 'block';
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function switchNavTab(tab) {
-      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-      if (tab === 'vender') {
-        document.getElementById('navVender').classList.add('active');
-        showOnlyMainViews('catalog', currentCategoryKey || 'cervezas');
-      } else if (tab === 'productos') {
-        document.getElementById('navProductos').classList.add('active');
-        showOnlyMainViews('catalog', 'cervezas');
-      } else if (tab === 'compras') {
-        document.getElementById('navCompras').classList.add('active');
-        showOnlyMainViews('purchases');
-      } else if (tab === 'acabarse') {
-        document.getElementById('navAcabarse').classList.add('active');
-        showOnlyMainViews('lowstock');
-      } else if (tab === 'reporte') {
-        document.getElementById('navReporte').classList.add('active');
-        historyCard.scrollIntoView({behavior:'smooth'});
-        historyCard.style.borderColor = 'var(--acento)';
-        setTimeout(() => historyCard.style.borderColor = 'var(--borde-tarjeta)', 1500);
-      }
-    }
-
-    updateCategoryCounts();
-    renderCart();
-    renderPurchasesLog();
-    renderLowStockAlerts();
-    updateDaySummaryDisplay();
-    showOnlyMainViews('catalog', null);
-  </script>
 </body>
 </html>
