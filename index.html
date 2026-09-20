@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Licorería Pau</title>
+    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Licorer%C3%eda%20Pau%22,%22short_name%22%3A%22Pau%22,%22start_url%22%3A%22.%22,%22display%22%3A%22standalone%22,%22background_color%22%3A%22%230b0c10%22,%22theme_color%22%3A%22%230b0c10%22,%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2svg%2Bxml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20100%20100'%3E%3Ctext%20y%3D'.9em'%20font-size%3D'90'%3E%F0%9F%8D%BE%3C%2Ftext%3E%3C%2Fsvg%3E%22,%22sizes%22%3A%22192x192%22,%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { 
@@ -405,6 +406,13 @@
     </div>
 
     <script>
+        // Registro de Service Worker para habilitar prompt de PWA instalable
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('data:text/javascript,self.addEventListener("fetch",e=>{});').catch(err => {});
+            });
+        }
+
         let carrito = JSON.parse(localStorage.getItem('pau_carrito_actual')) || [];
         let ventasTotales = parseFloat(localStorage.getItem('pau_ventas_hoy')) || 0;
         let multiplicadorActual = 1;
@@ -417,7 +425,6 @@
             return [...categoriasBase, ...categoriasAdicionales];
         }
 
-        // Estructura actualizada con Varios/Bico incluido de nuevo
         let opcionesPorCat = JSON.parse(localStorage.getItem('pau_opciones_rapidas')) || {
             'Cervezas': [
                 {nombre: 'Botella individual', precio: 15},
