@@ -3,43 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Licorería Pau - Offline Completo</title>
+    <title>Licorería Pau - Original Completo</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { background-color: #0b0c10; color: #fff; min-height: 100vh; padding: 12px; padding-bottom: 95px; }
         
         .header-card {
             background: linear-gradient(135deg, rgba(26,28,41,0.95), rgba(18,20,31,0.95));
-            border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px; margin-bottom: 16px;
+            border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px; margin-bottom: 16px;
         }
         .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px; }
-        .gold-circle-badge { width: 40px; height: 40px; border-radius: 50%; background: #2a2215; border: 1.5px dashed rgba(255, 180, 0, 0.6); display: flex; align-items: center; justify-content: center; }
-        .inner-dot { width: 12px; height: 12px; border-radius: 50%; background: #ffb400; }
-        h1.titulo-animado { font-size: 1.35rem; color: #ff5e9c; font-style: italic; }
-        .offline-badge { background: rgba(0,255,150,0.15); color: #00ff96; font-size: 0.75rem; padding: 4px 10px; border-radius: 12px; font-weight: bold; }
-        .header-info-row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; flex-wrap: wrap; gap: 8px; }
-        .ventas-hoy { font-size: 0.85rem; color: #aaa; }
-        .ventas-hoy span { color: #00ff96; font-weight: bold; font-size: 1.1rem; }
-        .btn-cambio-inicial { background: rgba(255,180,0,0.15); color: #ffb400; border: 1px solid rgba(255,180,0,0.4); padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; font-weight: bold; }
+        .gold-circle-badge { width: 44px; height: 44px; border-radius: 50%; background: #2a2215; border: 1.5px dashed rgba(255, 180, 0, 0.6); display: flex; align-items: center; justify-content: center; }
+        .inner-dot { width: 14px; height: 14px; border-radius: 50%; background: #ffb400; }
+        h1.titulo-animado { font-size: 1.5rem; color: #ff5e9c; font-style: italic; font-weight: 800; }
+        .offline-badge { background: rgba(0,255,150,0.15); color: #00ff96; font-size: 0.75rem; padding: 6px 12px; border-radius: 14px; font-weight: bold; }
+        .header-info-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; flex-wrap: wrap; gap: 8px; }
+        .ventas-hoy { font-size: 0.85rem; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; }
+        .ventas-hoy span { color: #00ff96; font-weight: bold; font-size: 1.3rem; }
+        .btn-cambio-inicial { background: rgba(255,180,0,0.15); color: #ffb400; border: 1px solid rgba(255,180,0,0.4); padding: 6px 12px; border-radius: 10px; font-size: 0.8rem; cursor: pointer; font-weight: bold; }
 
         .section-header { font-size: 0.85rem; color: #00ff96; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: bold; }
-        .categories-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .categories-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
         .cat-card {
-            background: rgba(20, 23, 36, 0.9); border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 16px; padding: 14px; position: relative; display: flex; flex-direction: column;
-            justify-content: space-between; min-height: 105px; cursor: pointer;
+            background: linear-gradient(145deg, rgba(22, 26, 40, 0.95), rgba(15, 18, 29, 0.95));
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 18px; padding: 18px 14px; position: relative; display: flex; flex-direction: column;
+            justify-content: space-between; min-height: 120px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
-        .prod-badge { position: absolute; top: 12px; right: 12px; background: rgba(255,180,0,0.15); color: #ffb400; font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; }
-        .icon-gold-box { width: 38px; height: 38px; border-radius: 12px; background: rgba(255, 180, 0, 0.08); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 8px; }
-        .cat-title { font-size: 0.95rem; font-weight: bold; }
-        .cat-sub { font-size: 0.7rem; color: #6e7996; }
+        .prod-badge { position: absolute; top: 12px; right: 12px; background: rgba(255,180,0,0.15); color: #ffb400; font-size: 0.72rem; padding: 3px 9px; border-radius: 10px; font-weight: bold; }
+        .icon-gold-box { width: 44px; height: 44px; border-radius: 14px; background: rgba(255, 180, 0, 0.1); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 10px; }
+        .cat-title { font-size: 1.05rem; font-weight: bold; color: #fff; margin-bottom: 3px; }
+        .cat-sub { font-size: 0.72rem; color: #8892b0; line-height: 1.2; }
 
         .view-section { display: none; }
         .view-section.active-view { display: block; }
         .panel-card { background: rgba(20, 23, 36, 0.92); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
         .top-cat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
         .back-btn { background: rgba(255,255,255,0.08); color: #fff; border: none; padding: 8px 14px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; }
-        .btn-new-prod { background: #ffb400; color: #0b0c10; border: none; padding: 8px 14px; border-radius: 10px; font-weight: bold; font-size: 0.8rem; cursor: pointer; }
 
         .venta-rapida-box { background: rgba(18, 21, 32, 0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 14px; margin-bottom: 16px; }
         .multiplicador-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 10px; font-size: 0.8rem; color: #ffa726; font-weight: bold; }
@@ -47,19 +47,25 @@
         .mult-btn { background: rgba(255,255,255,0.1); color: #fff; border: none; width: 28px; height: 28px; border-radius: 6px; font-weight: bold; cursor: pointer; }
         .mult-val { font-size: 0.95rem; font-weight: bold; min-width: 16px; text-align: center; }
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .option-tile { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px; cursor: pointer; }
-        .option-name { font-size: 0.8rem; color: #fff; margin-bottom: 4px; }
-        .option-price { font-size: 0.8rem; color: #ffb400; font-weight: bold; }
+        .option-tile { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; cursor: pointer; }
+        .option-name { font-size: 0.85rem; color: #fff; margin-bottom: 4px; font-weight: 500; }
+        .option-price { font-size: 0.85rem; color: #ffb400; font-weight: bold; }
 
-        .cart-card { background: rgba(20, 23, 36, 0.92); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
-        .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .cart-card { background: rgba(20, 23, 36, 0.92); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 0.95rem; }
         .cart-empty { font-size: 0.85rem; color: #6e7996; margin-bottom: 16px; }
-        .total-row { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-bottom: 16px; }
-        .total-value { font-size: 1.1rem; color: #ffb400; font-weight: bold; }
+        .total-row { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px; margin-bottom: 16px; }
+        .total-value { font-size: 1.2rem; color: #ffb400; font-weight: bold; }
         .action-buttons { display: grid; grid-template-columns: 1.2fr 1fr; gap: 10px; }
         .btn { padding: 14px; border-radius: 12px; border: none; font-weight: bold; font-size: 0.85rem; text-align: center; cursor: pointer; }
         .btn-primary { background: #00ff96; color: #0b0c10; }
         .btn-danger { background: #ff4757; color: #fff; }
+
+        /* Reportes Estilo Original */
+        .report-card { background: rgba(18, 21, 32, 0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 14px; margin-bottom: 12px; }
+        .report-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 8px; color: #aaa; }
+        .report-row strong { color: #fff; }
+        .report-neto { border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 10px; margin-top: 10px; display: flex; justify-content: space-between; font-size: 0.95rem; font-weight: bold; color: #00ff96; }
 
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; z-index: 500; padding: 16px; }
         .modal-overlay.active { display: flex; }
@@ -68,9 +74,10 @@
         .form-group label { display: block; font-size: 0.75rem; color: #8892b0; margin-bottom: 4px; }
         .form-group input { width: 100%; background: #0b0c10; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #fff; padding: 10px; font-size: 0.85rem; }
         .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+        .btn-modal-save { background: #ffb400; color: #0b0c10; border: none; padding: 8px 14px; border-radius: 10px; font-weight: bold; font-size: 0.8rem; cursor: pointer; }
 
         .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(18, 20, 31, 0.98); border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-around; padding: 10px 4px; z-index: 100; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; color: #6e7996; gap: 4px; background: transparent; border: none; cursor: pointer; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.72rem; color: #6e7996; gap: 4px; background: transparent; border: none; cursor: pointer; }
         .nav-item.active { color: #ffb400; font-weight: bold; }
         .placeholder-content { text-align: center; color: #8892b0; padding: 30px 10px; font-size: 0.9rem; }
     </style>
@@ -86,7 +93,7 @@
             <div class="offline-badge">⚡ CERO INTERNET REQUERIDO</div>
         </div>
         <div class="header-info-row">
-            <div class="ventas-hoy">VENTAS HOY<br><span>Bs. <strong id="totalVentasText">0.00</strong></span></div>
+            <div class="ventas-hoy">Ventas Hoy<br><span>Bs. <strong id="totalVentasText">0.00</strong></span></div>
             <button class="btn-cambio-inicial" onclick="abrirModalCambioInicial()">🪙 Cambio: Bs. <span id="cambioInicialText">30.00</span></button>
         </div>
     </div>
@@ -137,40 +144,38 @@
     <!-- VISTA CATÁLOGO / STOCK -->
     <div id="view-catalogo" class="view-section">
         <div class="panel-card">
-            <div class="top-cat-header">
-                <h2 style="color:#ffb400; font-size: 1.1rem;">📦 Catálogo / Stock</h2>
-            </div>
-            <div class="placeholder-content">Inventario local sincronizado offline. Todos los rubros activos con stock rápido.</div>
+            <div class="top-cat-header"><h2 style="color:#ffb400; font-size: 1.1rem;">📦 Catálogo / Stock</h2></div>
+            <div class="placeholder-content">Inventario local activo y sincronizado offline.</div>
         </div>
     </div>
 
     <!-- VISTA COMPRAS -->
     <div id="view-compras" class="view-section">
         <div class="panel-card">
-            <div class="top-cat-header">
-                <h2 style="color:#ffb400; font-size: 1.1rem;">📦 Compras a Proveedores</h2>
-            </div>
-            <div class="placeholder-content">Registro de reabastecimiento y facturas locales.</div>
+            <div class="top-cat-header"><h2 style="color:#ffb400; font-size: 1.1rem;">📦 Compras a Proveedores</h2></div>
+            <div class="placeholder-content">Registro de facturas y reabastecimiento local.</div>
         </div>
     </div>
 
     <!-- VISTA PEDIR -->
     <div id="view-pedir" class="view-section">
         <div class="panel-card">
-            <div class="top-cat-header">
-                <h2 style="color:#ffb400; font-size: 1.1rem;">⚠️ Pedir / Reposición</h2>
-            </div>
-            <div class="placeholder-content">Lista sugerida de productos bajos en stock para encargar.</div>
+            <div class="top-cat-header"><h2 style="color:#ffb400; font-size: 1.1rem;">⚠️ Pedir / Reposición</h2></div>
+            <div class="placeholder-content">Sugerencias de reposición por stock bajo.</div>
         </div>
     </div>
 
-    <!-- VISTA REPORTE -->
+    <!-- VISTA REPORTE (RESTAURADA COMPLETA) -->
     <div id="view-reporte" class="view-section">
         <div class="panel-card">
-            <div class="top-cat-header">
-                <h2 style="color:#ffb400; font-size: 1.1rem;">📄 Reporte de Caja</h2>
+            <div class="top-cat-header"><h2 style="color:#ffb400; font-size: 1.1rem;">📄 Reporte de Ganancias y Caja</h2></div>
+            <div class="report-card">
+                <div class="report-row"><span>Ventas Acumuladas Hoy:</span><strong id="repVentasHoy">Bs. 0.00</strong></div>
+                <div class="report-row"><span>Cambio Inicial Apartado:</span><strong id="repCambioIni">Bs. 30.00</strong></div>
+                <div class="report-row"><span>Efectivo Total en Caja:</span><strong id="repEfectivoCaja">Bs. 30.00</strong></div>
+                <div class="report-neto"><span>Ganancia / Neto del Mes (Estimado):</span><strong id="repGananciaMes">Bs. 0.00</strong></div>
             </div>
-            <div class="placeholder-content">Resumen operativo del día guardado en tu memoria local.</div>
+            <div class="placeholder-content" style="padding-top:10px; font-size:0.78rem;">Datos calculados localmente desde tu historial de jornadas guardadas.</div>
         </div>
     </div>
 
@@ -184,7 +189,7 @@
             </div>
             <div class="modal-actions">
                 <button class="back-btn" onclick="cerrarModal()">Cancelar</button>
-                <button class="btn-new-prod" onclick="guardarCambioInicial()">Guardar</button>
+                <button class="btn-modal-save" onclick="guardarCambioInicial()">Guardar</button>
             </div>
         </div>
     </div>
@@ -201,6 +206,7 @@
     <script>
         let carrito = JSON.parse(localStorage.getItem('pau_c_v')) || [];
         let ventasTotales = parseFloat(localStorage.getItem('pau_v_tot')) || 0;
+        let gananciaAcumuladaMes = parseFloat(localStorage.getItem('pau_gan_mes')) || 0;
         let cambioInicial = parseFloat(localStorage.getItem('pau_camb_ini')) || 30.00;
         let multiplicadorActual = 1;
 
@@ -222,8 +228,7 @@
             'Cigarros': [{nombre: 'Cigarro suelto', precio: 2}, {nombre: 'Cajetilla x 10', precio: 10}]
         };
 
-        document.getElementById('totalVentasText').textContent = ventasTotales.toFixed(2);
-        document.getElementById('cambioInicialText').textContent = cambioInicial.toFixed(2);
+        actualizarUIPrincipal();
 
         function renderizarGridHome() {
             document.getElementById('homeCategoriesGrid').innerHTML = categoriasBase.map(c => `
@@ -240,6 +245,15 @@
         renderizarGridHome();
         actualizarCarritoUI();
 
+        function actualizarUIPrincipal() {
+            document.getElementById('totalVentasText').textContent = ventasTotales.toFixed(2);
+            document.getElementById('cambioInicialText').textContent = cambioInicial.toFixed(2);
+            document.getElementById('repVentasHoy').textContent = `Bs. ${ventasTotales.toFixed(2)}`;
+            document.getElementById('repCambioIni').textContent = `Bs. ${cambioInicial.toFixed(2)}`;
+            document.getElementById('repEfectivoCaja').textContent = `Bs. ${(cambioInicial + ventasTotales).toFixed(2)}`;
+            document.getElementById('repGananciaMes').textContent = `Bs. ${gananciaAcumuladaMes.toFixed(2)}`;
+        }
+
         function cambiarVista(vista) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -248,6 +262,7 @@
             const targetNav = document.getElementById('nav-' + vista);
             if (targetView) targetView.classList.add('active-view');
             if (targetNav) targetNav.classList.add('active');
+            actualizarUIPrincipal();
         }
 
         function abrirCategoria(cat) {
@@ -302,20 +317,22 @@
             if(carrito.length === 0) return alert('Carrito vacío.');
             const total = carrito.reduce((s, i) => s + i.precio, 0);
             ventasTotales += total;
-            document.getElementById('totalVentasText').textContent = ventasTotales.toFixed(2);
+            gananciaAcumuladaMes += total * 0.35; // Estimado de margen comercial operativo
             localStorage.setItem('pau_v_tot', ventasTotales);
+            localStorage.setItem('pau_gan_mes', gananciaAcumuladaMes);
             carrito = [];
             actualizarCarritoUI();
+            actualizarUIPrincipal();
             alert('¡Venta cobrada con éxito!');
         }
 
         function terminarJornada() {
             const efectivoTotal = cambioInicial + ventasTotales;
-            if(confirm(`=== CIERRE DE JORNADA ===\n🪙 Cambio inicial apartado: Bs. ${cambioInicial.toFixed(2)}\n📈 Ventas netas: Bs. ${ventasTotales.toFixed(2)}\n-----------------------------------------\n💵 Efectivo total en caja: Bs. ${efectivoTotal.toFixed(2)}\n\n¿Cerrar el día y resetear ventas a 0?`)) {
+            if(confirm(`=== CIERRE DE JORNADA ===\n🪙 Cambio inicial apartado: Bs. ${cambioInicial.toFixed(2)}\n📈 Ventas netas: Bs. ${ventasTotales.toFixed(2)}\n-----------------------------------------\n💵 Efectivo total en caja: Bs. ${efectivoTotal.toFixed(2)}\n\n¿Cerrar el día y resetear ventas de hoy a 0?`)) {
                 ventasTotales = 0;
                 localStorage.setItem('pau_v_tot', 0);
-                document.getElementById('totalVentasText').textContent = '0.00';
-                alert('Jornada cerrada. Separa tus Bs. ' + cambioInicial.toFixed(2) + ' de cambio inicial y guarda tu ganancia.');
+                actualizarUIPrincipal();
+                alert('Jornada cerrada. Separa tus Bs. ' + cambioInicial.toFixed(2) + ' de cambio inicial y guarda tu efectivo.');
             }
         }
 
@@ -328,7 +345,7 @@
             if(!isNaN(val)) {
                 cambioInicial = val;
                 localStorage.setItem('pau_camb_ini', cambioInicial);
-                document.getElementById('cambioInicialText').textContent = cambioInicial.toFixed(2);
+                actualizarUIPrincipal();
             }
             cerrarModal();
         }
