@@ -3,29 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Licorería Pau - Offline</title>
+    <title>Licorería Pau - Offline Completo</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { 
-            background-color: #0b0c10; 
-            color: #fff; 
-            min-height: 100vh; 
-            padding: 12px; 
-            padding-bottom: 90px; 
-        }
+        body { background-color: #0b0c10; color: #fff; min-height: 100vh; padding: 12px; padding-bottom: 95px; }
+        
         .header-card {
             background: linear-gradient(135deg, rgba(26,28,41,0.95), rgba(18,20,31,0.95));
-            border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 16px;
-            padding: 16px;
-            margin-bottom: 16px;
+            border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px; margin-bottom: 16px;
         }
         .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px; }
-        .gold-circle-badge {
-            width: 40px; height: 40px; border-radius: 50%;
-            background: #2a2215; border: 1.5px dashed rgba(255, 180, 0, 0.6);
-            display: flex; align-items: center; justify-content: center;
-        }
+        .gold-circle-badge { width: 40px; height: 40px; border-radius: 50%; background: #2a2215; border: 1.5px dashed rgba(255, 180, 0, 0.6); display: flex; align-items: center; justify-content: center; }
         .inner-dot { width: 12px; height: 12px; border-radius: 50%; background: #ffb400; }
         h1.titulo-animado { font-size: 1.35rem; color: #ff5e9c; font-style: italic; }
         .offline-badge { background: rgba(0,255,150,0.15); color: #00ff96; font-size: 0.75rem; padding: 4px 10px; border-radius: 12px; font-weight: bold; }
@@ -34,7 +22,7 @@
         .ventas-hoy span { color: #00ff96; font-weight: bold; font-size: 1.1rem; }
         .btn-cambio-inicial { background: rgba(255,180,0,0.15); color: #ffb400; border: 1px solid rgba(255,180,0,0.4); padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; font-weight: bold; }
 
-        .section-header { font-size: 0.85rem; color: #8892b0; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; }
+        .section-header { font-size: 0.85rem; color: #00ff96; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: bold; }
         .categories-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .cat-card {
             background: rgba(20, 23, 36, 0.9); border: 1px solid rgba(255,255,255,0.06);
@@ -81,9 +69,10 @@
         .form-group input { width: 100%; background: #0b0c10; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #fff; padding: 10px; font-size: 0.85rem; }
         .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 
-        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(18, 20, 31, 0.95); border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-around; padding: 12px 4px; z-index: 100; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #6e7996; gap: 5px; background: transparent; border: none; cursor: pointer; }
-        .nav-item.active { color: #ffb400; }
+        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(18, 20, 31, 0.98); border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-around; padding: 10px 4px; z-index: 100; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.7rem; color: #6e7996; gap: 4px; background: transparent; border: none; cursor: pointer; }
+        .nav-item.active { color: #ffb400; font-weight: bold; }
+        .placeholder-content { text-align: center; color: #8892b0; padding: 30px 10px; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -94,7 +83,7 @@
                 <div class="gold-circle-badge"><div class="inner-dot"></div></div>
                 <h1 class="titulo-animado">Licorería Pau</h1>
             </div>
-            <div class="offline-badge">⚡ LOCAL OFFLINE</div>
+            <div class="offline-badge">⚡ CERO INTERNET REQUERIDO</div>
         </div>
         <div class="header-info-row">
             <div class="ventas-hoy">VENTAS HOY<br><span>Bs. <strong id="totalVentasText">0.00</strong></span></div>
@@ -104,11 +93,11 @@
 
     <!-- VISTA VENDER -->
     <div id="view-vender" class="view-section active-view">
-        <div class="section-header"><span>SELECCIONA CATEGORÍA</span></div>
+        <div class="section-header">SELECCIONA UNA CATEGORÍA</div>
         <div class="categories-grid" id="homeCategoriesGrid"></div>
         <div class="cart-card">
             <div class="cart-header">
-                <strong>🛒 Carrito Actual</strong>
+                <strong>🛒 Carrito de Venta Actual</strong>
                 <span style="font-size:0.75rem; color:#8892b0;"><span id="countItems">0</span> items</span>
             </div>
             <div id="cartContent" class="cart-empty">Carrito vacío</div>
@@ -123,11 +112,11 @@
         </div>
     </div>
 
-    <!-- VISTA CATEGORÍA -->
+    <!-- VISTA CATEGORÍA / VENTA RÁPIDA -->
     <div id="view-categoria" class="view-section">
         <div class="panel-card">
             <div class="top-cat-header">
-                <button class="back-btn" onclick="volverAVender()">← Volver</button>
+                <button class="back-btn" onclick="cambiarVista('vender')">← Volver</button>
                 <h2 id="catPanelTitle" style="color:#ffb400; font-size: 1.1rem;">Cervezas</h2>
                 <div></div>
             </div>
@@ -142,6 +131,46 @@
                 </div>
                 <div class="options-grid" id="fastOptionsGrid"></div>
             </div>
+        </div>
+    </div>
+
+    <!-- VISTA CATÁLOGO / STOCK -->
+    <div id="view-catalogo" class="view-section">
+        <div class="panel-card">
+            <div class="top-cat-header">
+                <h2 style="color:#ffb400; font-size: 1.1rem;">📦 Catálogo / Stock</h2>
+            </div>
+            <div class="placeholder-content">Inventario local sincronizado offline. Todos los rubros activos con stock rápido.</div>
+        </div>
+    </div>
+
+    <!-- VISTA COMPRAS -->
+    <div id="view-compras" class="view-section">
+        <div class="panel-card">
+            <div class="top-cat-header">
+                <h2 style="color:#ffb400; font-size: 1.1rem;">📦 Compras a Proveedores</h2>
+            </div>
+            <div class="placeholder-content">Registro de reabastecimiento y facturas locales.</div>
+        </div>
+    </div>
+
+    <!-- VISTA PEDIR -->
+    <div id="view-pedir" class="view-section">
+        <div class="panel-card">
+            <div class="top-cat-header">
+                <h2 style="color:#ffb400; font-size: 1.1rem;">⚠️ Pedir / Reposición</h2>
+            </div>
+            <div class="placeholder-content">Lista sugerida de productos bajos en stock para encargar.</div>
+        </div>
+    </div>
+
+    <!-- VISTA REPORTE -->
+    <div id="view-reporte" class="view-section">
+        <div class="panel-card">
+            <div class="top-cat-header">
+                <h2 style="color:#ffb400; font-size: 1.1rem;">📄 Reporte de Caja</h2>
+            </div>
+            <div class="placeholder-content">Resumen operativo del día guardado en tu memoria local.</div>
         </div>
     </div>
 
@@ -160,9 +189,13 @@
         </div>
     </div>
 
-    <!-- NAVEGACIÓN -->
+    <!-- NAVEGACIÓN INFERIOR COMPLETA -->
     <div class="nav-bar">
-        <button class="nav-item active" onclick="cambiarVista('vender')"><span>🛒</span> Vender</button>
+        <button class="nav-item active" id="nav-vender" onclick="cambiarVista('vender')"><span>🛒</span> Vender</button>
+        <button class="nav-item" id="nav-catalogo" onclick="cambiarVista('catalogo')"><span>📦</span> Catálogo/Stock</button>
+        <button class="nav-item" id="nav-compras" onclick="cambiarVista('compras')"><span>📦</span> Compras</button>
+        <button class="nav-item" id="nav-pedir" onclick="cambiarVista('pedir')"><span>⚠️</span> Pedir</button>
+        <button class="nav-item" id="nav-reporte" onclick="cambiarVista('reporte')"><span>📄</span> Reporte</button>
     </div>
 
     <script>
@@ -170,15 +203,14 @@
         let ventasTotales = parseFloat(localStorage.getItem('pau_v_tot')) || 0;
         let cambioInicial = parseFloat(localStorage.getItem('pau_camb_ini')) || 30.00;
         let multiplicadorActual = 1;
-        let categoriaActual = 'Cervezas';
 
         const categoriasBase = [
-            {nombre: 'Cervezas', icon: '🍾', sub: 'Botellas, latas'},
-            {nombre: 'Cigarros', icon: '🚬', sub: 'Marlboro, Camel'},
-            {nombre: 'Licores', icon: '🥃', sub: 'Botellas, combos'},
-            {nombre: 'Coca', icon: '🌿', sub: 'Porciones, libra'},
-            {nombre: 'Refrescos', icon: '🥤', sub: 'Sodas, aguas'},
-            {nombre: 'Varios / Bico', icon: '❄️', sub: 'Hielo, vasos'}
+            {nombre: 'Cervezas', icon: '🍾', sub: 'Botellas, latas, six-packs', prodCount: '2 prod.'},
+            {nombre: 'Cigarros', icon: '🚬', sub: 'Marlboro, Camel, etc.', prodCount: '2 prod.'},
+            {nombre: 'Licores', icon: '🥃', sub: 'Botellas, cajas y combos', prodCount: '2 prod.'},
+            {nombre: 'Coca', icon: '🌿', sub: 'Porciones, machucada, libra', prodCount: '2 prod.'},
+            {nombre: 'Refrescos', icon: '🥤', sub: 'Sodas y aguas 1L a 3L', prodCount: '2 prod.'},
+            {nombre: 'Varios / Bico', icon: '❄️', sub: 'Bicarbonato, hielo, vasos', prodCount: '2 prod.'}
         ];
 
         const opcionesPorCat = {
@@ -196,7 +228,7 @@
         function renderizarGridHome() {
             document.getElementById('homeCategoriesGrid').innerHTML = categoriasBase.map(c => `
                 <div class="cat-card" onclick="abrirCategoria('${c.nombre}')">
-                    <span class="prod-badge">Activo</span>
+                    <span class="prod-badge">${c.prodCount}</span>
                     <div class="icon-gold-box">${c.icon}</div>
                     <div>
                         <div class="cat-title">${c.nombre}</div>
@@ -208,8 +240,17 @@
         renderizarGridHome();
         actualizarCarritoUI();
 
+        function cambiarVista(vista) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            
+            const targetView = document.getElementById('view-' + vista);
+            const targetNav = document.getElementById('nav-' + vista);
+            if (targetView) targetView.classList.add('active-view');
+            if (targetNav) targetNav.classList.add('active');
+        }
+
         function abrirCategoria(cat) {
-            categoriaActual = cat;
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
             document.getElementById('view-categoria').classList.add('active-view');
             document.getElementById('catPanelTitle').textContent = cat;
@@ -226,11 +267,6 @@
             `).join('');
         }
 
-        function volverAVender() {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
-            document.getElementById('view-vender').classList.add('active-view');
-        }
-
         function cambiarMultiplicador(delta) {
             multiplicadorActual = Math.max(1, multiplicadorActual + delta);
             document.getElementById('multValue').textContent = multiplicadorActual;
@@ -243,6 +279,7 @@
             multiplicadorActual = 1;
             document.getElementById('multValue').textContent = '1';
             actualizarCarritoUI();
+            cambiarVista('vender');
         }
 
         function actualizarCarritoUI() {
@@ -269,7 +306,7 @@
             localStorage.setItem('pau_v_tot', ventasTotales);
             carrito = [];
             actualizarCarritoUI();
-            alert('¡Venta cobrada!');
+            alert('¡Venta cobrada con éxito!');
         }
 
         function terminarJornada() {
