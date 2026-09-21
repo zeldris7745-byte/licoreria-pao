@@ -3,706 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Licorería Pau</title>
+    <title>Licorería Pau - Offline</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body { 
             background-color: #0b0c10; 
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.04' fill-rule='evenodd'%3E%3Ctext x='10' y='25' font-size='14'%3E🍷%3C/text%3E%3Ctext x='65' y='20' font-size='14'%3E🍺%3C/text%3E%3Ctext x='35' y='55' font-size='14'%3E🥂%3C/text%3E%3Ctext x='80' y='65' font-size='14'%3E🥃%3C/text%3E%3Ctext x='15' y='85' font-size='14'%3E🍾%3C/text%3E%3C/g%3E%3C/svg%3E");
             color: #fff; 
             min-height: 100vh; 
             padding: 12px; 
             padding-bottom: 90px; 
         }
-        
         .header-card {
-            background: linear-gradient(135deg, rgba(26,28,41,0.92), rgba(18,20,31,0.92));
-            backdrop-filter: blur(4px);
+            background: linear-gradient(135deg, rgba(26,28,41,0.95), rgba(18,20,31,0.95));
             border: 1px solid rgba(255,255,255,0.08);
             border-radius: 16px;
             padding: 16px;
             margin-bottom: 16px;
-            position: relative;
-            overflow: hidden;
         }
-
-        .header-bg-drinks {
-            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            opacity: 0.15; pointer-events: none;
-            display: flex; justify-content: space-around; align-items: center;
-            font-size: 1.3rem; filter: drop-shadow(0 0 3px rgba(255,180,0,0.6));
-            animation: flotarFondo 6s ease-in-out infinite alternate;
-        }
-        @keyframes flotarFondo {
-            0% { transform: translateY(-3px) scale(0.98); }
-            100% { transform: translateY(3px) scale(1.02); }
-        }
-
-        .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px; position: relative; z-index: 2; }
-        
-        .title-container-wrapper { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px; }
         .gold-circle-badge {
-            width: 44px; height: 44px; border-radius: 50%;
-            background: radial-gradient(circle, #2a2215 0%, #151419 100%);
-            border: 1.5px dashed rgba(255, 180, 0, 0.6);
+            width: 40px; height: 40px; border-radius: 50%;
+            background: #2a2215; border: 1.5px dashed rgba(255, 180, 0, 0.6);
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 10px rgba(255, 180, 0, 0.2);
-            position: relative;
         }
-        .gold-circle-badge::after {
-            content: ''; position: absolute; inset: -3px; border-radius: 50%;
-            border: 1px dotted rgba(255, 180, 0, 0.3);
-        }
-        .inner-dot { width: 14px; height: 14px; border-radius: 50%; background: #6e7996; border: 2px solid #ffb400; animation: pulsoPunto 2s infinite; }
-        @keyframes pulsoPunto { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); box-shadow: 0 0 8px #ffb400; } }
-        
-        h1.titulo-animado {
-            font-size: 1.5rem;
-            color: #ff5e9c;
-            font-style: italic;
-            animation: brilloNeonTitulo 3s ease-in-out infinite;
-        }
-        @keyframes brilloNeonTitulo {
-            0% { opacity: 0.85; text-shadow: 0 0 5px rgba(255,94,156,0.4), 0 0 10px rgba(255,180,0,0.2); transform: translateY(0px); }
-            50% { opacity: 1; text-shadow: 0 0 12px rgba(255,94,156,0.9), 0 0 25px rgba(255,215,0,0.7); transform: translateY(-2px); }
-            100% { opacity: 0.85; text-shadow: 0 0 5px rgba(255,94,156,0.4), 0 0 10px rgba(255,180,0,0.2); transform: translateY(0px); }
-        }
-        
-        .brindis-container {
-            display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 20px;
-            background: rgba(255, 255, 255, 0.05); border: 1px dashed rgba(255, 94, 156, 0.4); animation: brillarBordes 3s infinite alternate;
-        }
-        .copa { font-size: 1.25rem; display: inline-block; animation: chocarCopas 1.5s ease-in-out infinite; }
-        .copa-left { transform-origin: bottom right; }
-        .copa-right { transform-origin: bottom left; transform: scaleX(-1); }
-        @keyframes chocarCopas { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(18deg) translateX(2px); } }
-        @keyframes brillarBordes { 0% { border-color: rgba(255,94,156,0.3); } 100% { border-color: rgba(0,255,200,0.6); } }
-
-        .offline-badge { background: rgba(0,255,150,0.15); color: #00ff96; font-size: 0.75rem; padding: 4px 10px; border-radius: 12px; display: inline-block; position: relative; z-index: 2; font-weight: bold; }
-        .ventas-hoy { margin-top: 8px; font-size: 0.85rem; color: #aaa; position: relative; z-index: 2; }
+        .inner-dot { width: 12px; height: 12px; border-radius: 50%; background: #ffb400; }
+        h1.titulo-animado { font-size: 1.35rem; color: #ff5e9c; font-style: italic; }
+        .offline-badge { background: rgba(0,255,150,0.15); color: #00ff96; font-size: 0.75rem; padding: 4px 10px; border-radius: 12px; font-weight: bold; }
+        .header-info-row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; flex-wrap: wrap; gap: 8px; }
+        .ventas-hoy { font-size: 0.85rem; color: #aaa; }
         .ventas-hoy span { color: #00ff96; font-weight: bold; font-size: 1.1rem; }
+        .btn-cambio-inicial { background: rgba(255,180,0,0.15); color: #ffb400; border: 1px solid rgba(255,180,0,0.4); padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; font-weight: bold; }
 
-        .section-header { font-size: 0.85rem; color: #8892b0; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
-        
+        .section-header { font-size: 0.85rem; color: #8892b0; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; }
         .categories-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
         .cat-card {
-            background: rgba(20, 23, 36, 0.9); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(20, 23, 36, 0.9); border: 1px solid rgba(255,255,255,0.06);
             border-radius: 16px; padding: 14px; position: relative; display: flex; flex-direction: column;
-            justify-content: space-between; min-height: 115px; cursor: pointer; transition: transform 0.15s, border-color 0.15s;
+            justify-content: space-between; min-height: 105px; cursor: pointer;
         }
-        .cat-card:active { transform: scale(0.97); border-color: rgba(255,180,0,0.5); }
-        
-        .icon-gold-box {
-            width: 42px; height: 42px; border-radius: 12px; background: rgba(255, 180, 0, 0.08);
-            border: 1px solid rgba(255, 180, 0, 0.25); display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
-        }
-        .icon-animated { font-size: 1.4rem; display: inline-block; animation: bounceIcon 2.5s ease-in-out infinite; }
-        @keyframes bounceIcon { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-4px) rotate(4deg); } }
-
         .prod-badge { position: absolute; top: 12px; right: 12px; background: rgba(255,180,0,0.15); color: #ffb400; font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; }
-        .cat-title { font-size: 1rem; font-weight: bold; margin-bottom: 2px; }
-        .cat-sub { font-size: 0.75rem; color: #6e7996; }
+        .icon-gold-box { width: 38px; height: 38px; border-radius: 12px; background: rgba(255, 180, 0, 0.08); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 8px; }
+        .cat-title { font-size: 0.95rem; font-weight: bold; }
+        .cat-sub { font-size: 0.7rem; color: #6e7996; }
 
         .view-section { display: none; }
         .view-section.active-view { display: block; }
-
-        .panel-card { background: rgba(20, 23, 36, 0.92); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
-        .top-cat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
+        .panel-card { background: rgba(20, 23, 36, 0.92); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
+        .top-cat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
         .back-btn { background: rgba(255,255,255,0.08); color: #fff; border: none; padding: 8px 14px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; }
         .btn-new-prod { background: #ffb400; color: #0b0c10; border: none; padding: 8px 14px; border-radius: 10px; font-weight: bold; font-size: 0.8rem; cursor: pointer; }
 
         .venta-rapida-box { background: rgba(18, 21, 32, 0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 14px; margin-bottom: 16px; }
-        .vr-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
-        .vr-title { font-size: 0.95rem; font-weight: bold; color: #fff; }
-        .btn-edit-fast { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #ffb400; padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; }
-        
-        .multiplicador-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 10px; }
-        .multiplicador-row span { font-size: 0.8rem; color: #ffa726; font-weight: bold; }
+        .multiplicador-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 10px; font-size: 0.8rem; color: #ffa726; font-weight: bold; }
         .mult-controls { display: flex; align-items: center; gap: 12px; }
-        .mult-btn { background: rgba(255,255,255,0.1); color: #fff; border: none; width: 28px; height: 28px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
+        .mult-btn { background: rgba(255,255,255,0.1); color: #fff; border: none; width: 28px; height: 28px; border-radius: 6px; font-weight: bold; cursor: pointer; }
         .mult-val { font-size: 0.95rem; font-weight: bold; min-width: 16px; text-align: center; }
-
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .option-tile { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px; cursor: pointer; transition: border-color 0.15s; }
-        .option-tile:active { border-color: #ffb400; background: rgba(255,180,0,0.08); }
-        .option-name { font-size: 0.8rem; color: #fff; margin-bottom: 4px; font-weight: 500; }
+        .option-tile { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px; cursor: pointer; }
+        .option-name { font-size: 0.8rem; color: #fff; margin-bottom: 4px; }
         .option-price { font-size: 0.8rem; color: #ffb400; font-weight: bold; }
 
-        .inventario-box { text-align: center; padding: 20px 10px; border-top: 1px dashed rgba(255,255,255,0.1); }
-        .inv-text { font-size: 0.8rem; color: #8892b0; margin-bottom: 12px; line-height: 1.4; }
-        .btn-register-inv { background: rgba(0,255,150,0.15); color: #00ff96; border: 1px solid rgba(0,255,150,0.3); padding: 10px 16px; border-radius: 10px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
-        .inv-list-container { margin-top: 12px; text-align: left; display: flex; flex-direction: column; gap: 6px; }
-        .inv-item-row { background: rgba(255,255,255,0.04); border-radius: 8px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
-
-        .compra-item-row { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.85rem; border-left: 3px solid #ffb400; }
-
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; z-index: 500; padding: 16px; }
-        .modal-overlay.active { display: flex; }
-        .modal-card { background: #141724; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; width: 100%; max-width: 380px; padding: 20px; max-height: 90vh; overflow-y: auto; }
-        .modal-card h3 { color: #ffb400; font-size: 1.05rem; margin-bottom: 14px; }
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 0.75rem; color: #8892b0; margin-bottom: 4px; }
-        .form-group input, .form-group select { width: 100%; background: #0b0c10; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #fff; padding: 10px; font-size: 0.85rem; }
-        .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
-
-        .cart-card { background: rgba(20, 23, 36, 0.92); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
+        .cart-card { background: rgba(20, 23, 36, 0.92); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
         .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .cart-title { font-size: 1rem; font-weight: bold; display: flex; align-items: center; gap: 8px; }
-        .cart-items-count { font-size: 0.75rem; color: #8892b0; }
         .cart-empty { font-size: 0.85rem; color: #6e7996; margin-bottom: 16px; }
         .total-row { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-bottom: 16px; }
-        .total-label { font-size: 0.9rem; font-weight: bold; }
         .total-value { font-size: 1.1rem; color: #ffb400; font-weight: bold; }
-
         .action-buttons { display: grid; grid-template-columns: 1.2fr 1fr; gap: 10px; }
         .btn { padding: 14px; border-radius: 12px; border: none; font-weight: bold; font-size: 0.85rem; text-align: center; cursor: pointer; }
         .btn-primary { background: #00ff96; color: #0b0c10; }
         .btn-danger { background: #ff4757; color: #fff; }
 
-        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(18, 20, 31, 0.95); backdrop-filter: blur(6px); border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-around; padding: 12px 4px; z-index: 100; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #6e7996; gap: 5px; text-decoration: none; cursor: pointer; border: none; background: transparent; }
-        .nav-item.active { color: #ffb400; font-weight: 500; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; z-index: 500; padding: 16px; }
+        .modal-overlay.active { display: flex; }
+        .modal-card { background: #141724; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; width: 100%; max-width: 380px; padding: 20px; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 0.75rem; color: #8892b0; margin-bottom: 4px; }
+        .form-group input { width: 100%; background: #0b0c10; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #fff; padding: 10px; font-size: 0.85rem; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+
+        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(18, 20, 31, 0.95); border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-around; padding: 12px 4px; z-index: 100; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #6e7996; gap: 5px; background: transparent; border: none; cursor: pointer; }
+        .nav-item.active { color: #ffb400; }
     </style>
 </head>
 <body>
 
     <div class="header-card">
-        <div class="header-bg-drinks">
-            <span>🍷</span><span>🍺</span><span>🥂</span><span>🥃</span><span>🍷</span><span>🍺</span><span>🥂</span><span>🥃</span>
-        </div>
         <div class="header-top">
-            <div class="title-container-wrapper">
-                <div class="gold-circle-badge">
-                    <div class="inner-dot"></div>
-                </div>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div class="gold-circle-badge"><div class="inner-dot"></div></div>
                 <h1 class="titulo-animado">Licorería Pau</h1>
-                <div class="brindis-container" title="¡Salud!">
-                    <span class="copa copa-left">🥂</span>
-                    <span class="copa copa-right">🥂</span>
-                </div>
             </div>
-            <div class="offline-badge">⚡ MODO OFFLINE PURO 100%</div>
+            <div class="offline-badge">⚡ LOCAL OFFLINE</div>
         </div>
-        <div class="ventas-hoy">VENTAS HOY<br><span>Bs. <strong id="totalVentasText">0.00</strong></span></div>
+        <div class="header-info-row">
+            <div class="ventas-hoy">VENTAS HOY<br><span>Bs. <strong id="totalVentasText">0.00</strong></span></div>
+            <button class="btn-cambio-inicial" onclick="abrirModalCambioInicial()">🪙 Cambio: Bs. <span id="cambioInicialText">30.00</span></button>
+        </div>
     </div>
 
-    <!-- VISTA 1: VENDER -->
+    <!-- VISTA VENDER -->
     <div id="view-vender" class="view-section active-view">
-        <div class="section-header">
-            <span>SELECCIONA UNA CATEGORÍA</span>
-            <span style="color:#00ff96;">● SIN INTERNET / LOCAL</span>
-        </div>
+        <div class="section-header"><span>SELECCIONA CATEGORÍA</span></div>
         <div class="categories-grid" id="homeCategoriesGrid"></div>
         <div class="cart-card">
             <div class="cart-header">
-                <div class="cart-title">🛒 Carrito de Venta Actual</div>
-                <div class="cart-items-count"><span id="countItems">0</span> items</div>
+                <strong>🛒 Carrito Actual</strong>
+                <span style="font-size:0.75rem; color:#8892b0;"><span id="countItems">0</span> items</span>
             </div>
             <div id="cartContent" class="cart-empty">Carrito vacío</div>
             <div class="total-row">
-                <span class="total-label">Total Venta:</span>
+                <span>Total Venta:</span>
                 <span class="total-value">Bs. <strong id="totalCartText">0.00</strong></span>
             </div>
             <div class="action-buttons">
-                <button class="btn btn-primary" onclick="cobrarVenta()">Cobrar / Vender<br><span style="font-size:0.65rem; font-weight:normal;">(Descuenta Stock)</span></button>
+                <button class="btn btn-primary" onclick="cobrarVenta()">Cobrar / Vender</button>
                 <button class="btn btn-danger" onclick="terminarJornada()">Terminar Jornada</button>
             </div>
         </div>
     </div>
 
-    <!-- VISTA INTERNA DE CATEGORÍA -->
+    <!-- VISTA CATEGORÍA -->
     <div id="view-categoria" class="view-section">
         <div class="panel-card">
             <div class="top-cat-header">
                 <button class="back-btn" onclick="volverAVender()">← Volver</button>
-                <h2 id="catPanelTitle" style="color:#ffb400; font-size: 1.2rem;">Cervezas</h2>
-                <button class="btn-new-prod" onclick="abrirModalNuevoProducto()">+ Nuevo Prod.</button>
+                <h2 id="catPanelTitle" style="color:#ffb400; font-size: 1.1rem;">Cervezas</h2>
+                <div></div>
             </div>
-
             <div class="venta-rapida-box">
-                <div class="vr-header">
-                    <div class="vr-title" id="vrTitleLabel">⚡ Venta Rápida</div>
-                    <div style="display:flex; gap:6px;">
-                        <button class="btn-edit-fast" onclick="abrirModalAgregarOpcionRapida()">+ Agregar Ítem</button>
-                        <button class="btn-edit-fast" onclick="abrirModalEditarPrecios()">⚙️ Editar</button>
-                    </div>
-                </div>
-                
                 <div class="multiplicador-row">
-                    <span>Multiplicador / Cantidad:</span>
+                    <span>Multiplicador:</span>
                     <div class="mult-controls">
                         <button class="mult-btn" onclick="cambiarMultiplicador(-1)">-</button>
                         <span class="mult-val" id="multValue">1</span>
                         <button class="mult-btn" onclick="cambiarMultiplicador(1)">+</button>
                     </div>
                 </div>
-
                 <div class="options-grid" id="fastOptionsGrid"></div>
             </div>
-
-            <div class="inventario-box">
-                <div class="inv-text" id="invHeaderDesc">📋 LISTA DETALLADA CON STOCK EN INVENTARIO:</div>
-                <div class="inv-list-container" id="invListContainer"></div>
-                <button class="btn-register-inv" style="margin-top:14px;" onclick="abrirModalRegistroInventario()">+ Registrar inventario detallado</button>
-            </div>
         </div>
     </div>
 
-    <!-- VISTA COMPRAS -->
-    <div id="view-compras" class="view-section">
-        <div class="panel-card">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
-                <h2 style="color:#ffb400; font-size: 1.2rem;">📦 Registro de Compras</h2>
-                <button class="btn-new-prod" onclick="abrirModalNuevaCompra()">+ Registrar Compra</button>
-            </div>
-            <p style="color:#8892b0; font-size:0.8rem; margin-bottom:14px;">Registra abastecimiento o mercadería:</p>
-            <div id="comprasListaContainer"></div>
-        </div>
-    </div>
-
-    <!-- MODAL EDITAR PRECIOS RÁPIDOS -->
-    <div id="modalEditarPrecios" class="modal-overlay">
+    <!-- MODAL CAMBIO INICIAL -->
+    <div id="modalCambioInicial" class="modal-overlay">
         <div class="modal-card">
-            <h3>⚙️ Editar Precios Rápidos</h3>
-            <div id="editPricesFields" style="display:flex; flex-direction:column; gap:10px;"></div>
-            <div class="modal-actions">
-                <button class="back-btn" onclick="cerrarModales()">Cancelar</button>
-                <button class="btn-new-prod" onclick="guardarPreciosRapidos()">Guardar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL AGREGAR ÍTEM RÁPIDO CUSTOM -->
-    <div id="modalAgregarOpcionRapida" class="modal-overlay">
-        <div class="modal-card">
-            <h3>➕ Agregar Opción Rápida</h3>
+            <h3 style="color:#ffb400; margin-bottom:12px;">🪙 Cambio Inicial del Día</h3>
             <div class="form-group">
-                <label>Nombre del ítem / Presentación (ej. Cuartilla, 1.5 L, etc.):</label>
-                <input type="text" id="inputCustomFastNombre" placeholder="Ej: Soda 1.5L / Cuartilla">
-            </div>
-            <div class="form-group">
-                <label>Precio (Bs.):</label>
-                <input type="number" id="inputCustomFastPrecio" step="0.5" placeholder="15.00">
+                <label>Monto de cambio con el que inicias (Bs.):</label>
+                <input type="number" id="inputCambioInicial" step="0.5" value="30.00">
             </div>
             <div class="modal-actions">
-                <button class="back-btn" onclick="cerrarModales()">Cancelar</button>
-                <button class="btn-new-prod" onclick="guardarOpcionRapidaCustom()">Agregar</button>
+                <button class="back-btn" onclick="cerrarModal()">Cancelar</button>
+                <button class="btn-new-prod" onclick="guardarCambioInicial()">Guardar</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL NUEVO PRODUCTO / INVENTARIO -->
-    <div id="modalNuevoProd" class="modal-overlay">
-        <div class="modal-card">
-            <h3 id="modalProdTitle">📦 Agregar / Registrar Stock Detallado</h3>
-            <div class="form-group">
-                <label>Nombre del Producto / Ítem:</label>
-                <input type="text" id="inputProdNombre" placeholder="Ej: Coca x libra, Paceña 620ml">
-            </div>
-            <div class="form-group">
-                <label>Precio Unitario de Venta (Bs.):</label>
-                <input type="number" id="inputProdPrecio" step="0.5" placeholder="15.00">
-            </div>
-            <div class="form-group">
-                <label>Costo de Adquisición Unitario Estimado (Bs., opcional):</label>
-                <input type="number" id="inputProdCostoUnit" step="0.5" placeholder="10.00">
-            </div>
-            <div class="form-group">
-                <label>Cantidad en Stock (unidades/medida):</label>
-                <input type="number" id="inputProdStock" placeholder="24">
-            </div>
-            <div class="modal-actions">
-                <button class="back-btn" onclick="cerrarModales()">Cancelar</button>
-                <button class="btn-new-prod" onclick="guardarNuevoItemInventario()">Guardar en Stock</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL NUEVA COMPRA -->
-    <div id="modalNuevaCompra" class="modal-overlay">
-        <div class="modal-card">
-            <h3>🛒 Registrar Compra / Mercadería</h3>
-            <div class="form-group">
-                <label>Categoría (Elige o escribe nueva):</label>
-                <select id="inputCompraCatSelect" onchange="toggleNuevaCategoriaCompra(this.value)">
-                    <option value="Cervezas">Cervezas</option>
-                    <option value="Licores">Licores</option>
-                    <option value="Coca">Coca</option>
-                    <option value="Refrescos">Refrescos</option>
-                    <option value="Varios / Bico">Varios / Bico</option>
-                    <option value="Cigarros">Cigarros</option>
-                    <option value="__nueva__">+ [ Escribir nueva categoría... ]</option>
-                </select>
-                <input type="text" id="inputCompraCatNueva" placeholder="Ej: Dulces o Frutas" style="display:none; margin-top:6px;">
-            </div>
-
-            <div class="form-group">
-                <label>Producto (nombre exacto):</label>
-                <input type="text" id="inputCompraNombre" placeholder="Ej: Coca machucada o Bicarbonato">
-            </div>
-
-            <div class="form-group">
-                <label>Tipo de Presentación / Unidad de Medida:</label>
-                <select id="inputCompraPresentacion" onchange="togglePresentacionPersonalizada(this.value)">
-                    <option value="Unidad(es) suelta(s)">Unidad(es) suelta(s)</option>
-                    <option value="Paquete">Paquete</option>
-                    <option value="Medio paquete">Medio paquete</option>
-                    <option value="Caja">Caja</option>
-                    <option value="Media caja">Media caja</option>
-                    <option value="Six-pack botellas">Six-pack botellas</option>
-                    <option value="Six-pack latas">Six-pack latas</option>
-                    <option value="2 unidades">2 unidades</option>
-                    <option value="3 unidades">3 unidades</option>
-                    <option value="1 Litro (1L)">1 Litro (1L)</option>
-                    <option value="1.5 Litros (1.5L)">1.5 Litros (1.5L)</option>
-                    <option value="2 Litros (2L)">2 Litros (2L)</option>
-                    <option value="2.5 Litros (2.5L)">2.5 Litros (2.5L)</option>
-                    <option value="3 Litros (3L)">3 Litros (3L)</option>
-                    <option value="__custom_pres__">✏️ Escribir otra unidad personalizada...</option>
-                </select>
-                <input type="text" id="inputCompraPresPersonalizada" placeholder="Ej: Cuartilla, bico..." style="display:none; margin-top:6px;">
-            </div>
-
-            <div class="form-group">
-                <label>Cantidad (número):</label>
-                <input type="number" id="inputCompraCantidad" placeholder="Ej: 1, 5, 10..." value="1" min="1" step="any">
-            </div>
-
-            <div class="form-group">
-                <label>Gasto total pagado al proveedor (Bs.):</label>
-                <input type="number" id="inputCompraCosto" step="0.5" placeholder="Ej: 50.00">
-            </div>
-
-            <div class="form-group">
-                <label>Precio a cuánto lo vas a VENDER (Unitario/Sugerido Bs., opcional):</label>
-                <input type="number" id="inputCompraPrecioVenta" step="0.5" placeholder="Ej: 10.00">
-            </div>
-
-            <div class="modal-actions">
-                <button class="back-btn" onclick="cerrarModales()">Cancelar</button>
-                <button class="btn-new-prod" onclick="guardarNuevaCompra()">Guardar Compra</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- OTRAS VISTAS -->
-    <div id="view-catalogo" class="view-section">
-        <div class="panel-card"><h2 style="color:#ffb400; font-size: 1.2rem;">📦 Catálogo / Stock Local</h2><p style="color:#8892b0; font-size:0.85rem; margin-top:10px;">Sincronizado con inventario offline.</p></div>
-    </div>
-    <div id="view-pedir" class="view-section">
-        <div class="panel-card"><h2 style="color:#ffb400; font-size: 1.2rem;">⚠️ Lista de Pedidos a Proveedor</h2><p style="color:#8892b0; font-size:0.85rem; margin-top:10px;">Todo en orden.</p></div>
-    </div>
-    <div id="view-reporte" class="view-section">
-        <div class="panel-card" id="reporteCardContainer">
-            <h2 style="color:#ffb400; margin-bottom: 14px; font-size: 1.2rem;">📄 Reporte del Día y Balance Mensual</h2>
-            <p style="font-size: 0.9rem; color:#aaa; margin-bottom: 14px;">Total acumulado hoy: <span style="color:#00ff96; font-weight:bold;">Bs. <span id="reportTotal">0.00</span></span></p>
-            <div id="reporteMensualBody"></div>
-            
-            <div style="margin-top:20px; padding-top:14px; border-top:1px dashed rgba(255,255,255,0.15); display:flex; gap:10px; flex-wrap:wrap;">
-                <button class="btn-new-prod" style="flex:1; background:rgba(0,255,150,0.15); color:#00ff96; border:1px solid rgba(0,255,150,0.4);" onclick="exportarRespaldoJSON()">📤 Exportar Respaldo</button>
-                <label class="btn-new-prod" style="flex:1; background:rgba(255,180,0,0.15); color:#ffb400; border:1px solid rgba(255,180,0,0.4); text-align:center; display:flex; align-items:center; justify-content:center; cursor:pointer;">
-                    📥 Importar Respaldo
-                    <input type="file" id="inputImportarJson" accept=".json" style="display:none;" onchange="importarRespaldoJSON(event)">
-                </label>
-            </div>
-        </div>
-    </div>
-
-    <!-- BARRA DE NAVEGACIÓN INFERIOR -->
+    <!-- NAVEGACIÓN -->
     <div class="nav-bar">
-        <button class="nav-item active" onclick="cambiarVista('vender', this)"><span style="font-size:1.1rem;">🛒</span> Vender</button>
-        <button class="nav-item" onclick="cambiarVista('catalogo', this)"><span style="font-size:1.1rem;">📦</span> Catálogo/Stock</button>
-        <button class="nav-item" onclick="cambiarVista('compras', this)"><span style="font-size:1.1rem;">📦</span> Compras</button>
-        <button class="nav-item" onclick="cambiarVista('pedir', this)"><span style="font-size:1.1rem;">⚠️</span> Pedir</button>
-        <button class="nav-item" onclick="cambiarVista('reporte', this)"><span style="font-size:1.1rem;">📄</span> Reporte</button>
+        <button class="nav-item active" onclick="cambiarVista('vender')"><span>🛒</span> Vender</button>
     </div>
 
     <script>
-        // Eliminado cualquier enlace externo que exija red o manifiesto externo problemático.
-        let carrito = JSON.parse(localStorage.getItem('pau_carrito_actual')) || [];
-        let ventasTotales = parseFloat(localStorage.getItem('pau_ventas_hoy')) || 0;
+        let carrito = JSON.parse(localStorage.getItem('pau_c_v')) || [];
+        let ventasTotales = parseFloat(localStorage.getItem('pau_v_tot')) || 0;
+        let cambioInicial = parseFloat(localStorage.getItem('pau_camb_ini')) || 30.00;
         let multiplicadorActual = 1;
         let categoriaActual = 'Cervezas';
 
-        let categoriasBase = ['Cervezas', 'Cigarros', 'Licores', 'Coca', 'Refrescos', 'Varios / Bico'];
-        let categoriasAdicionales = JSON.parse(localStorage.getItem('pau_categorias_extra')) || [];
+        const categoriasBase = [
+            {nombre: 'Cervezas', icon: '🍾', sub: 'Botellas, latas'},
+            {nombre: 'Cigarros', icon: '🚬', sub: 'Marlboro, Camel'},
+            {nombre: 'Licores', icon: '🥃', sub: 'Botellas, combos'},
+            {nombre: 'Coca', icon: '🌿', sub: 'Porciones, libra'},
+            {nombre: 'Refrescos', icon: '🥤', sub: 'Sodas, aguas'},
+            {nombre: 'Varios / Bico', icon: '❄️', sub: 'Hielo, vasos'}
+        ];
 
-        function obtenerTodasCategorias() {
-            return [...categoriasBase, ...categoriasAdicionales];
-        }
-
-        let opcionesPorCat = JSON.parse(localStorage.getItem('pau_opciones_rapidas')) || {
-            'Cervezas': [
-                {nombre: 'Botella individual', precio: 15, costo: 10},
-                {nombre: 'Six-pack botellas', precio: 85, costo: 60},
-                {nombre: 'Six-pack latas', precio: 75, costo: 52},
-                {nombre: 'Caja 12 botellas', precio: 165, costo: 120}
-            ],
-            'Licores': [
-                {nombre: 'Media botella', precio: 45, costo: 30},
-                {nombre: 'Botella entera', precio: 90, costo: 65},
-                {nombre: 'Medio paquete / combo', precio: 55, costo: 40},
-                {nombre: 'Combo Fernet/Coca', precio: 110, costo: 80}
-            ],
-            'Coca': [
-                {nombre: 'Porción 5 Bs', precio: 5, costo: 3},
-                {nombre: 'Machucada / 10 Bs', precio: 10, costo: 6},
-                {nombre: 'Porción 15 Bs', precio: 15, costo: 10},
-                {nombre: '1 Libra', precio: 40, costo: 28},
-                {nombre: 'Cuartilla (medida)', precio: 20, costo: 14}
-            ],
-            'Refrescos': [
-                {nombre: 'Soda personal (350ml)', precio: 7, costo: 4.5},
-                {nombre: 'Soda personal (400ml)', precio: 8, costo: 5},
-                {nombre: 'Soda de 1 L', precio: 10, costo: 6.5},
-                {nombre: 'Soda de 1.5 L', precio: 13, costo: 8.5},
-                {nombre: 'Soda de 2 L', precio: 15, costo: 10},
-                {nombre: 'Soda de 2.5 L', precio: 18, costo: 12},
-                {nombre: 'Soda de 3 L', precio: 22, costo: 15},
-                {nombre: 'Agua de 600 ml', precio: 5, costo: 3},
-                {nombre: 'Agua de 1 L', precio: 8, costo: 5},
-                {nombre: 'Agua de 1.5 L', precio: 11, costo: 7},
-                {nombre: 'Agua de 2 L', precio: 14, costo: 9},
-                {nombre: 'Agua de 2.5 L', precio: 17, costo: 11},
-                {nombre: 'Agua de 3 L', precio: 20, costo: 13}
-            ],
-            'Varios / Bico': [
-                {nombre: 'Bolsa Bicarbonato', precio: 5, costo: 3},
-                {nombre: 'Bolsa Hielo pequeña', precio: 10, costo: 6},
-                {nombre: 'Bolsa Hielo grande', precio: 18, costo: 11},
-                {nombre: 'Vaso térmico extra', precio: 2, costo: 1}
-            ],
-            'Cigarros': [
-                {nombre: 'Cigarro suelto', precio: 2, costo: 1.2},
-                {nombre: 'Cajetilla x 10', precio: 10, costo: 7},
-                {nombre: 'Caja dura regular', precio: 18, costo: 13}
-            ]
+        const opcionesPorCat = {
+            'Cervezas': [{nombre: 'Botella individual', precio: 15}, {nombre: 'Six-pack botellas', precio: 85}],
+            'Licores': [{nombre: 'Media botella', precio: 45}, {nombre: 'Botella entera', precio: 90}],
+            'Coca': [{nombre: 'Porción 10 Bs', precio: 10}, {nombre: '1 Libra', precio: 40}],
+            'Refrescos': [{nombre: 'Soda 1.5 L', precio: 13}, {nombre: 'Soda 2 L', precio: 15}],
+            'Varios / Bico': [{nombre: 'Hielo grande', precio: 18}, {nombre: 'Vaso extra', precio: 2}],
+            'Cigarros': [{nombre: 'Cigarro suelto', precio: 2}, {nombre: 'Cajetilla x 10', precio: 10}]
         };
 
-        let inventarioDetallado = JSON.parse(localStorage.getItem('pau_inventario_detallado')) || {};
-        let historialCompras = JSON.parse(localStorage.getItem('pau_historial_compras')) || [];
-        let ventasHistorial = JSON.parse(localStorage.getItem('pau_ventas_historial')) || [];
-
         document.getElementById('totalVentasText').textContent = ventasTotales.toFixed(2);
-        document.getElementById('reportTotal').textContent = ventasTotales.toFixed(2);
-
-        function exportarRespaldoJSON() {
-            const dataBackup = {
-                version: '1.0',
-                fechaRespaldo: new Date().toISOString(),
-                ventasTotalesHoy: ventasTotales,
-                categoriasExtra: categoriasAdicionales,
-                opcionesRapidas: opcionesPorCat,
-                inventarioDetallado: inventarioDetallado,
-                historialCompras: historialCompras,
-                ventasHistorial: ventasHistorial
-            };
-            const blob = new Blob([JSON.stringify(dataBackup, null, 2)], {type: 'application/json'});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `respaldo_licoreria_pau_${new Date().toISOString().slice(0, 10)}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        function importarRespaldoJSON(event) {
-            const file = event.target.files[0];
-            if(!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const parsed = JSON.parse(e.target.result);
-                    if(parsed.opcionesRapidas) {
-                        opcionesPorCat = parsed.opcionesRapidas;
-                        localStorage.setItem('pau_opciones_rapidas', JSON.stringify(opcionesPorCat));
-                    }
-                    if(parsed.inventarioDetallado) {
-                        inventarioDetallado = parsed.inventarioDetallado;
-                        localStorage.setItem('pau_inventario_detallado', JSON.stringify(inventarioDetallado));
-                    }
-                    if(parsed.historialCompras) {
-                        historialCompras = parsed.historialCompras;
-                        localStorage.setItem('pau_historial_compras', JSON.stringify(historialCompras));
-                    }
-                    if(parsed.ventasHistorial) {
-                        ventasHistorial = parsed.ventasHistorial;
-                        localStorage.setItem('pau_ventas_historial', JSON.stringify(ventasHistorial));
-                    }
-                    if(parsed.categoriasExtra) {
-                        categoriasAdicionales = parsed.categoriasExtra;
-                        localStorage.setItem('pau_categorias_extra', JSON.stringify(categoriasAdicionales));
-                    }
-                    if(typeof parsed.ventasTotalesHoy === 'number') {
-                        ventasTotales = parsed.ventasTotalesHoy;
-                        localStorage.setItem('pau_ventas_hoy', ventasTotales);
-                        document.getElementById('totalVentasText').textContent = ventasTotales.toFixed(2);
-                    }
-                    renderizarGridHome();
-                    renderizarReporteMensual();
-                    alert('¡Respaldo importado y restaurado con éxito!');
-                } catch(err) {
-                    alert('Error al leer el archivo JSON de respaldo.');
-                }
-            };
-            reader.readAsText(file);
-        }
+        document.getElementById('cambioInicialText').textContent = cambioInicial.toFixed(2);
 
         function renderizarGridHome() {
-            const grid = document.getElementById('homeCategoriesGrid');
-            const todas = obtenerTodasCategorias();
-            const iconosDefecto = {
-                'Cervezas': {icon: '🍾', sub: 'Botellas, latas, six-packs'},
-                'Cigarros': {icon: '🚬', sub: 'Marlboro, Camel, etc.'},
-                'Licores': {icon: '🥃', sub: 'Botellas, cajas y combos'},
-                'Coca': {icon: '🌿', sub: 'Porciones, machucada, libra'},
-                'Refrescos': {icon: '🥤', sub: 'Sodas y aguas 1L a 3L'},
-                'Varios / Bico': {icon: '❄️', sub: 'Bicarbonato, hielo, vasos'}
-            };
-
-            grid.innerHTML = todas.map(cat => {
-                const info = iconosDefecto[cat] || {icon: '📦', sub: 'Categoría personalizada'};
-                const invCount = (inventarioDetallado[cat] || []).length;
-                return `
-                    <div class="cat-card" onclick="abrirCategoria('${cat.replace(/'/g, "\\'")}')">
-                        <span class="prod-badge">${invCount} prod.</span>
-                        <div class="icon-gold-box"><span class="icon-animated">${info.icon}</span></div>
-                        <div>
-                            <div class="cat-title">${cat}</div>
-                            <div class="cat-sub">${info.sub}</div>
-                        </div>
+            document.getElementById('homeCategoriesGrid').innerHTML = categoriasBase.map(c => `
+                <div class="cat-card" onclick="abrirCategoria('${c.nombre}')">
+                    <span class="prod-badge">Activo</span>
+                    <div class="icon-gold-box">${c.icon}</div>
+                    <div>
+                        <div class="cat-title">${c.nombre}</div>
+                        <div class="cat-sub">${c.sub}</div>
                     </div>
-                `;
-            }).join('');
+                </div>
+            `).join('');
         }
         renderizarGridHome();
         actualizarCarritoUI();
 
-        function cambiarVista(vistaId, btnElement) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
-            document.getElementById('view-' + vistaId).classList.add('active-view');
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            if(btnElement) btnElement.classList.add('active');
-
-            if(vistaId === 'compras') {
-                poblarSelectCategoriasCompra();
-                renderizarListaCompras();
-            }
-            if(vistaId === 'reporte') {
-                renderizarReporteMensual();
-            }
-        }
-
-        function renderizarReporteMensual() {
-            const mesActual = new Date().toISOString().slice(0, 7); // "YYYY-MM"
-            const ventasMes = ventasHistorial.filter(v => v.mesAnio === mesActual);
-            const totalVentasMes = ventasMes.reduce((sum, v) => sum + Number(v.total), 0);
-            const totalCostoVendidoMes = ventasMes.reduce((sum, v) => sum + Number(v.costoTotalVendido || 0), 0);
-            
-            const cmvFinal = totalCostoVendidoMes > 0 ? totalCostoVendidoMes : (totalVentasMes * 0.7);
-            const gananciaBrutaMes = totalVentasMes - cmvFinal;
-
-            const totalComprasMes = historialCompras.reduce((sum, c) => sum + Number(c.costoTotal), 0);
-            const flujoCajaMes = totalVentasMes - totalComprasMes;
-
-            const conteoProductos = {};
-            ventasMes.forEach(v => {
-                v.items.forEach(item => {
-                    conteoProductos[item.nombre] = (conteoProductos[item.nombre] || 0) + 1;
-                });
-            });
-
-            const productosOrdenados = Object.entries(conteoProductos)
-                .sort((a, b) => b - a)
-                .slice(0, 5);
-
-            document.getElementById('reporteMensualBody').innerHTML = `
-                <div style="display:flex; flex-direction:column; gap:10px; font-size:0.85rem; margin-top:10px;">
-                    <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:10px;">
-                        <div style="color:#8892b0;">1. Ingresos por ventas (Mes actual):</div>
-                        <div style="color:#00ff96; font-size:1.1rem; font-weight:bold;">Bs. ${totalVentasMes.toFixed(2)}</div>
-                    </div>
-                    <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:10px;">
-                        <div style="color:#8892b0;">2. Costo de Mercadería Vendida (CMV estimado/teórico):</div>
-                        <div style="color:#ffa726; font-size:1.1rem; font-weight:bold;">Bs. ${cmvFinal.toFixed(2)}</div>
-                    </div>
-                    <div style="background:rgba(255,180,0,0.1); padding:10px; border-radius:10px; border:1px solid rgba(255,180,0,0.4);">
-                        <div style="color:#ffb400; font-weight:bold;">3. Ganancia Bruta (Ventas menos CMV):</div>
-                        <div style="color:#ffb400; font-size:1.2rem; font-weight:bold;">Bs. ${gananciaBrutaMes.toFixed(2)}</div>
-                    </div>
-                    <div style="background:rgba(255,255,255,0.03); padding:10px; border-radius:10px;">
-                        <div style="color:#8892b0;">Salidas por Compras / Abastecimiento bruto del mes:</div>
-                        <div style="color:#ff4757; font-size:1rem; font-weight:bold;">Bs. ${totalComprasMes.toFixed(2)}</div>
-                    </div>
-                    <div style="background:rgba(0,255,150,0.08); padding:10px; border-radius:10px; border:1px solid rgba(0,255,150,0.3);">
-                        <div style="color:#00ff96; font-weight:bold;">4. Flujo de Caja Mensual (Efectivo Neto):</div>
-                        <div style="color:#00ff96; font-size:1.2rem; font-weight:bold;">Bs. ${flujoCajaMes.toFixed(2)}</div>
-                    </div>
-                    
-                    <div style="margin-top:10px;">
-                        <div style="color:#ffb400; font-weight:bold; margin-bottom:8px;">🔥 Top Productos Más Vendidos (Mes):</div>
-                        ${productosOrdenados.length === 0 ? '<div style="color:#6e7996;">Sin ventas registradas este mes aún.</div>' : 
-                            productosOrdenados.map(([prod, cant]) => `
-                                <div style="display:flex; justify-content:space-between; background:rgba(255,255,255,0.02); padding:6px 10px; border-radius:6px; margin-bottom:4px;">
-                                    <span>${prod}</span>
-                                    <span style="color:#ffb400; font-weight:bold;">${cant} ventas</span>
-                                </div>
-                            `).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        function abrirCategoria(catNombre) {
-            categoriaActual = catNombre;
+        function abrirCategoria(cat) {
+            categoriaActual = cat;
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
             document.getElementById('view-categoria').classList.add('active-view');
-            document.getElementById('catPanelTitle').textContent = catNombre;
-            document.getElementById('vrTitleLabel').textContent = `⚡ Venta Rápida - ${catNombre}`;
-            
+            document.getElementById('catPanelTitle').textContent = cat;
             multiplicadorActual = 1;
-            document.getElementById('multValue').textContent = multiplicadorActual;
-            renderizarOpcionesRapidas();
-            renderizarInventarioDetallado();
-        }
-
-        function renderizarOpcionesRapidas() {
+            document.getElementById('multValue').textContent = '1';
+            
             const grid = document.getElementById('fastOptionsGrid');
-            const listaOpciones = opcionesPorCat[categoriaActual] || [];
-            if(listaOpciones.length === 0) {
-                grid.innerHTML = `<span style="color:#6e7996; font-size:0.75rem; grid-column:span 2;">Sin precios rápidos configurados aún.</span>`;
-                return;
-            }
-            grid.innerHTML = listaOpciones.map(opt => `
-                <div class="option-tile" onclick="agregarRapido('${opt.nombre.replace(/'/g, "\\'")}', ${opt.precio}, ${opt.costo || opt.precio*0.7})">
-                    <div class="option-name">${opt.nombre}</div>
-                    <div class="option-price">Bs. ${Number(opt.precio).toFixed(2)}</div>
+            const opts = opcionesPorCat[cat] || [];
+            grid.innerHTML = opts.map(o => `
+                <div class="option-tile" onclick="agregarAlCarrito('${o.nombre.replace(/'/g, "\\'")}', ${o.precio})">
+                    <div class="option-name">${o.nombre}</div>
+                    <div class="option-price">Bs. ${o.precio.toFixed(2)}</div>
                 </div>
             `).join('');
-        }
-
-        function renderizarInventarioDetallado() {
-            const container = document.getElementById('invListContainer');
-            const lista = inventarioDetallado[categoriaActual] || [];
-            if(lista.length === 0) {
-                container.innerHTML = `<span style="color:#6e7996; font-size:0.75rem;">No hay productos específicos registrados aún.</span>`;
-            } else {
-                container.innerHTML = lista.map((item, idx) => `
-                    <div class="inv-item-row">
-                        <div><strong>${item.nombre}</strong> (Bs. ${Number(item.precio).toFixed(2)})</div>
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <span style="color:#00ff96;">Stock: ${item.stock}</span>
-                            <button style="background:rgba(255,255,255,0.1); border:none; color:#ffb400; padding:4px 8px; border-radius:6px; cursor:pointer;" onclick="venderItemInventario('${categoriaActual.replace(/'/g, "\\'")}', ${idx})">+ Vender</button>
-                        </div>
-                    </div>
-                `).join('');
-            }
         }
 
         function volverAVender() {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
             document.getElementById('view-vender').classList.add('active-view');
-            renderizarGridHome();
         }
 
         function cambiarMultiplicador(delta) {
@@ -710,291 +236,67 @@
             document.getElementById('multValue').textContent = multiplicadorActual;
         }
 
-        function agregarRapido(nombre, precioUnitario, costoUnitario = 0) {
-            const precioTotalItem = precioUnitario * multiplicadorActual;
-            const costoTotalItem = costoUnitario * multiplicadorActual;
-            const nombreCompleto = multiplicadorActual > 1 ? `${nombre} (x${multiplicadorActual})` : nombre;
-            carrito.push({nombre: nombreCompleto, precio: precioTotalItem, costo: costoTotalItem});
+        function agregarAlCarrito(nombre, precio) {
+            const finalP = precio * multiplicadorActual;
+            const finalN = multiplicadorActual > 1 ? `${nombre} (x${multiplicadorActual})` : nombre;
+            carrito.push({nombre: finalN, precio: finalP});
             multiplicadorActual = 1;
-            document.getElementById('multValue').textContent = multiplicadorActual;
+            document.getElementById('multValue').textContent = '1';
             actualizarCarritoUI();
-        }
-
-        function venderItemInventario(cat, index) {
-            const item = inventarioDetallado[cat][index];
-            if(item.stock <= 0) {
-                alert('Stock agotado.');
-                return;
-            }
-            item.stock = Math.max(0, item.stock - 1);
-            carrito.push({nombre: `${item.nombre} (Detallado)`, precio: item.precio, costo: item.costo || item.precio * 0.7});
-            localStorage.setItem('pau_inventario_detallado', JSON.stringify(inventarioDetallado));
-            renderizarInventarioDetallado();
-            actualizarCarritoUI();
-        }
-
-        function abrirModalEditarPrecios() {
-            const fields = document.getElementById('editPricesFields');
-            if(!opcionesPorCat[categoriaActual]) opcionesPorCat[categoriaActual] = [];
-            fields.innerHTML = (opcionesPorCat[categoriaActual]).map((opt, i) => `
-                <div class="form-group" style="margin-bottom:8px;">
-                    <label>${opt.nombre} (Precio Bs.)</label>
-                    <input type="number" step="0.5" id="fastPriceInput_${i}" value="${opt.precio}">
-                </div>
-            `).join('');
-            document.getElementById('modalEditarPrecios').classList.add('active');
-        }
-
-        function guardarPreciosRapidos() {
-            const lista = opcionesPorCat[categoriaActual] || [];
-            lista.forEach((opt, i) => {
-                const el = document.getElementById(`fastPriceInput_${i}`);
-                if(el) {
-                    const val = parseFloat(el.value);
-                    if(!isNaN(val)) opt.precio = val;
-                }
-            });
-            localStorage.setItem('pau_opciones_rapidas', JSON.stringify(opcionesPorCat));
-            renderizarOpcionesRapidas();
-            cerrarModales();
-        }
-
-        function abrirModalAgregarOpcionRapida() {
-            document.getElementById('inputCustomFastNombre').value = '';
-            document.getElementById('inputCustomFastPrecio').value = '';
-            document.getElementById('modalAgregarOpcionRapida').classList.add('active');
-        }
-
-        function guardarOpcionRapidaCustom() {
-            const nombre = document.getElementById('inputCustomFastNombre').value.trim();
-            const precio = parseFloat(document.getElementById('inputCustomFastPrecio').value);
-            if(!nombre || isNaN(precio)) {
-                alert('Ingresa nombre y precio válidos.');
-                return;
-            }
-            if(!opcionesPorCat[categoriaActual]) opcionesPorCat[categoriaActual] = [];
-            opcionesPorCat[categoriaActual].push({nombre, precio, costo: precio * 0.7});
-            localStorage.setItem('pau_opciones_rapidas', JSON.stringify(opcionesPorCat));
-            renderizarOpcionesRapidas();
-            cerrarModales();
-        }
-
-        function abrirModalNuevoProducto() {
-            document.getElementById('modalProdTitle').textContent = `+ Nuevo Producto (${categoriaActual})`;
-            document.getElementById('inputProdNombre').value = '';
-            document.getElementById('inputProdPrecio').value = '';
-            document.getElementById('inputProdCostoUnit').value = '';
-            document.getElementById('inputProdStock').value = '10';
-            document.getElementById('modalNuevoProd').classList.add('active');
-        }
-
-        function abrirModalRegistroInventario() {
-            document.getElementById('modalProdTitle').textContent = `+ Registrar Inventario Detallado`;
-            document.getElementById('inputProdNombre').value = '';
-            document.getElementById('inputProdPrecio').value = '';
-            document.getElementById('inputProdCostoUnit').value = '';
-            document.getElementById('inputProdStock').value = '';
-            document.getElementById('modalNuevoProd').classList.add('active');
-        }
-
-        function guardarNuevoItemInventario() {
-            const nombre = document.getElementById('inputProdNombre').value.trim();
-            const precio = parseFloat(document.getElementById('inputProdPrecio').value);
-            const costoUnit = parseFloat(document.getElementById('inputProdCostoUnit').value);
-            const stock = parseFloat(document.getElementById('inputProdStock').value);
-
-            if(!nombre || isNaN(precio)) {
-                alert('Ingresa nombre y precio válido.');
-                return;
-            }
-
-            if(!inventarioDetallado[categoriaActual]) {
-                inventarioDetallado[categoriaActual] = [];
-            }
-            inventarioDetallado[categoriaActual].push({ 
-                nombre, 
-                precio, 
-                costo: isNaN(costoUnit) ? precio * 0.7 : costoUnit, 
-                stock: isNaN(stock) ? 0 : stock 
-            });
-            localStorage.setItem('pau_inventario_detallado', JSON.stringify(inventarioDetallado));
-            renderizarInventarioDetallado();
-            renderizarGridHome();
-            cerrarModales();
-        }
-
-        function poblarSelectCategoriasCompra() {
-            const select = document.getElementById('inputCompraCatSelect');
-            const todas = obtenerTodasCategorias();
-            select.innerHTML = todas.map(c => `<option value="${c}">${c}</option>`).join('') + `\n<option value="__nueva__">+ [ Escribir nueva categoría... ]</option>`;
-            toggleNuevaCategoriaCompra(select.value);
-        }
-
-        function toggleNuevaCategoriaCompra(val) {
-            document.getElementById('inputCompraCatNueva').style.display = val === '__nueva__' ? 'block' : 'none';
-        }
-
-        function togglePresentacionPersonalizada(val) {
-            document.getElementById('inputCompraPresPersonalizada').style.display = val === '__custom_pres__' ? 'block' : 'none';
-        }
-
-        function abrirModalNuevaCompra() {
-            poblarSelectCategoriasCompra();
-            document.getElementById('inputCompraCatSelect').value = categoriaActual || 'Cervezas';
-            toggleNuevaCategoriaCompra(document.getElementById('inputCompraCatSelect').value);
-            document.getElementById('inputCompraCatNueva').value = '';
-            document.getElementById('inputCompraNombre').value = '';
-            document.getElementById('inputCompraPresentacion').value = 'Unidad(es) suelta(s)';
-            togglePresentacionPersonalizada('Unidad(es) suelta(s)');
-            document.getElementById('inputCompraPresPersonalizada').value = '';
-            document.getElementById('inputCompraCantidad').value = '1';
-            document.getElementById('inputCompraCosto').value = '';
-            document.getElementById('inputCompraPrecioVenta').value = '';
-            document.getElementById('modalNuevaCompra').classList.add('active');
-        }
-
-        function guardarNuevaCompra() {
-            const catSelectVal = document.getElementById('inputCompraCatSelect').value;
-            let catFinal = catSelectVal;
-            if(catSelectVal === '__nueva__') {
-                catFinal = document.getElementById('inputCompraCatNueva').value.trim();
-                if(!catFinal) {
-                    alert('Escribe el nombre de la nueva categoría.');
-                    return;
-                }
-                if(!categoriasAdicionales.includes(catFinal)) {
-                    categoriasAdicionales.push(catFinal);
-                    localStorage.setItem('pau_categorias_extra', JSON.stringify(categoriasAdicionales));
-                }
-            }
-
-            const nombre = document.getElementById('inputCompraNombre').value.trim();
-            const presSelect = document.getElementById('inputCompraPresentacion').value;
-            const presCustom = document.getElementById('inputCompraPresPersonalizada').value.trim();
-            const presentacionFinal = presSelect === '__custom_pres__' ? (presCustom || 'Personalizado') : presSelect;
-            
-            const cantidad = parseFloat(document.getElementById('inputCompraCantidad').value);
-            const costoTotalPagado = parseFloat(document.getElementById('inputCompraCosto').value);
-            const precioVentaSugerido = parseFloat(document.getElementById('inputCompraPrecioVenta').value);
-
-            if(!nombre || isNaN(cantidad) || isNaN(costoTotalPagado)) {
-                alert('Completa los campos obligatorios de compra.');
-                return;
-            }
-
-            const costoUnitarioReal = costoTotalPagado / Math.max(1, cantidad);
-            const nuevaCompraObj = {
-                id: Date.now(),
-                fecha: new Date().toLocaleDateString('es-BO'),
-                cat: catFinal,
-                nombre,
-                presentacion: presentacionFinal,
-                cantidad,
-                costoTotal: costoTotalPagado,
-                costoUnitario: costoUnitarioReal,
-                precioVenta: isNaN(precioVentaSugerido) ? null : precioVentaSugerido
-            };
-            historialCompras.unshift(nuevaCompraObj);
-            localStorage.setItem('pau_historial_compras', JSON.stringify(historialCompras));
-
-            if(!inventarioDetallado[catFinal]) inventarioDetallado[catFinal] = [];
-            let precioVentaFinal = isNaN(precioVentaSugerido) 
-                ? Number(costoUnitarioReal * 1.3).toFixed(2) 
-                : precioVentaSugerido;
-
-            inventarioDetallado[catFinal].push({
-                nombre: `${nombre} (${presentacionFinal})`,
-                precio: parseFloat(precioVentaFinal),
-                costo: costoUnitarioReal,
-                stock: cantidad
-            });
-            localStorage.setItem('pau_inventario_detallado', JSON.stringify(inventarioDetallado));
-            
-            renderizarGridHome();
-            renderizarListaCompras();
-            cerrarModales();
-            alert('¡Compra y stock actualizado offline!');
-        }
-
-        function renderizarListaCompras() {
-            const container = document.getElementById('comprasListaContainer');
-            if(historialCompras.length === 0) {
-                container.innerHTML = `<span style="color:#6e7996; font-size:0.80rem;">No hay compras registradas aún.</span>`;
-                return;
-            }
-            container.innerHTML = historialCompras.map(c => `
-                <div class="compra-item-row">
-                    <div>
-                        <div style="font-weight:bold; color:#fff;">${c.nombre} <span style="font-size:0.75rem; color:#ffb400;">[${c.cat}]</span></div>
-                        <div style="font-size:0.75rem; color:#8892b0;">${c.fecha} • Cantidad: ${c.cantidad} ${c.presentacion}</div>
-                        ${c.precioVenta ? `<div style="font-size:0.7rem; color:#00ff96;">Venta sugerida: Bs. ${Number(c.precioVenta).toFixed(2)}</div>` : ''}
-                    </div>
-                    <div style="text-align:right;">
-                        <div style="font-weight:bold; color:#ff4757; font-size:0.8rem;">Pagado: Bs. ${Number(c.costoTotal).toFixed(2)}</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function cerrarModales() {
-            document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
         }
 
         function actualizarCarritoUI() {
-            const countItems = document.getElementById('countItems');
-            const cartContent = document.getElementById('cartContent');
-            const totalCartText = document.getElementById('totalCartText');
-            countItems.textContent = carrito.length;
-            let total = carrito.reduce((sum, item) => sum + item.precio, 0);
-            totalCartText.textContent = total.toFixed(2);
-            document.getElementById('reportTotal').textContent = (ventasTotales + total).toFixed(2);
-
-            localStorage.setItem('pau_carrito_actual', JSON.stringify(carrito));
-
+            document.getElementById('countItems').textContent = carrito.length;
+            const total = carrito.reduce((s, i) => s + i.precio, 0);
+            document.getElementById('totalCartText').textContent = total.toFixed(2);
+            localStorage.setItem('pau_c_v', JSON.stringify(carrito));
+            
+            const box = document.getElementById('cartContent');
             if(carrito.length === 0) {
-                cartContent.innerHTML = 'Carrito vacío';
-                cartContent.className = 'cart-empty';
+                box.className = 'cart-empty';
+                box.textContent = 'Carrito vacío';
             } else {
-                cartContent.className = '';
-                cartContent.innerHTML = carrito.map(i => `<div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:6px;"><span>${i.nombre}</span><span>Bs. ${Number(i.precio).toFixed(2)}</span></div>`).join('');
+                box.className = '';
+                box.innerHTML = carrito.map(i => `<div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px;"><span>${i.nombre}</span><span>Bs. ${i.precio.toFixed(2)}</span></div>`).join('');
             }
         }
 
         function cobrarVenta() {
-            if(carrito.length === 0) {
-                alert('El carrito está vacío.');
-                return;
-            }
-            let total = carrito.reduce((sum, item) => sum + item.precio, 0);
-            let costoTotalVendido = carrito.reduce((sum, item) => sum + (item.costo || item.precio * 0.7), 0);
+            if(carrito.length === 0) return alert('Carrito vacío.');
+            const total = carrito.reduce((s, i) => s + i.precio, 0);
             ventasTotales += total;
             document.getElementById('totalVentasText').textContent = ventasTotales.toFixed(2);
-            document.getElementById('reportTotal').textContent = ventasTotales.toFixed(2);
-            
-            localStorage.setItem('pau_ventas_hoy', ventasTotales);
-
-            ventasHistorial.push({
-                id: Date.now(),
-                fecha: new Date().toLocaleDateString('es-BO'),
-                mesAnio: new Date().toISOString().slice(0, 7),
-                items: [...carrito],
-                total: total,
-                costoTotalVendido: costoTotalVendido
-            });
-            localStorage.setItem('pau_ventas_historial', JSON.stringify(ventasHistorial));
-
+            localStorage.setItem('pau_v_tot', ventasTotales);
             carrito = [];
             actualizarCarritoUI();
-            alert('¡Venta cobrada con éxito!');
+            alert('¡Venta cobrada!');
         }
 
         function terminarJornada() {
-            if(confirm('¿Seguro que deseas terminar la jornada del día y poner a cero las ventas de hoy?')) {
-                alert(`Jornada terminada. Ventas totales del día: Bs. ${ventasTotales.toFixed(2)}`);
+            const efectivoTotal = cambioInicial + ventasTotales;
+            if(confirm(`=== CIERRE DE JORNADA ===\n🪙 Cambio inicial apartado: Bs. ${cambioInicial.toFixed(2)}\n📈 Ventas netas: Bs. ${ventasTotales.toFixed(2)}\n-----------------------------------------\n💵 Efectivo total en caja: Bs. ${efectivoTotal.toFixed(2)}\n\n¿Cerrar el día y resetear ventas a 0?`)) {
                 ventasTotales = 0;
-                localStorage.setItem('pau_ventas_hoy', ventasTotales);
+                localStorage.setItem('pau_v_tot', 0);
                 document.getElementById('totalVentasText').textContent = '0.00';
+                alert('Jornada cerrada. Separa tus Bs. ' + cambioInicial.toFixed(2) + ' de cambio inicial y guarda tu ganancia.');
             }
+        }
+
+        function abrirModalCambioInicial() {
+            document.getElementById('inputCambioInicial').value = cambioInicial.toFixed(2);
+            document.getElementById('modalCambioInicial').classList.add('active');
+        }
+        function guardarCambioInicial() {
+            const val = parseFloat(document.getElementById('inputCambioInicial').value);
+            if(!isNaN(val)) {
+                cambioInicial = val;
+                localStorage.setItem('pau_camb_ini', cambioInicial);
+                document.getElementById('cambioInicialText').textContent = cambioInicial.toFixed(2);
+            }
+            cerrarModal();
+        }
+        function cerrarModal() {
+            document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
         }
     </script>
 </body>
