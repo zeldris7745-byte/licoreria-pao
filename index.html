@@ -3,355 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Licorería Pau - Original Completo</title>
+    <title>Licorería Pau</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: #0b0c10; color: #fff; min-height: 100vh; padding: 12px; padding-bottom: 95px; }
+        body { 
+            background-color: #0b0c10; 
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.04' fill-rule='evenodd'%3E%3Ctext x='10' y='25' font-size='14'%3E🍷%3C/text%3E%3Ctext x='65' y='20' font-size='14'%3E🍺%3C/text%3E%3Ctext x='35' y='55' font-size='14'%3E🥂%3C/text%3E%3Ctext x='80' y='65' font-size='14'%3E🥃%3C/text%3E%3Ctext x='15' y='85' font-size='14'%3E🍾%3C/text%3E%3C/g%3E%3C/svg%3E");
+            color: #fff; 
+            min-height: 100vh; 
+            padding: 12px; 
+            padding-bottom: 90px; 
+        }
         
         .header-card {
-            background: linear-gradient(135deg, rgba(26,28,41,0.95), rgba(18,20,31,0.95));
-            border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px; margin-bottom: 16px;
-        }
-        .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px; }
-        .gold-circle-badge { width: 44px; height: 44px; border-radius: 50%; background: #2a2215; border: 1.5px dashed rgba(255, 180, 0, 0.6); display: flex; align-items: center; justify-content: center; }
-        .inner-dot { width: 14px; height: 14px; border-radius: 50%; background: #ffb400; }
-        h1.titulo-animado { font-size: 1.5rem; color: #ff5e9c; font-style: italic; font-weight: 800; }
-        .offline-badge { background: rgba(0,255,150,0.15); color: #00ff96; font-size: 0.75rem; padding: 6px 12px; border-radius: 14px; font-weight: bold; }
-        .header-info-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; flex-wrap: wrap; gap: 8px; }
-        .ventas-hoy { font-size: 0.85rem; color: #aaa; text-transform: uppercase; letter-spacing: 0.5px; }
-        .ventas-hoy span { color: #00ff96; font-weight: bold; font-size: 1.3rem; }
-        .btn-cambio-inicial { background: rgba(255,180,0,0.15); color: #ffb400; border: 1px solid rgba(255,180,0,0.4); padding: 6px 12px; border-radius: 10px; font-size: 0.8rem; cursor: pointer; font-weight: bold; }
-
-        .section-header { font-size: 0.85rem; color: #00ff96; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: bold; }
-        .categories-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
-        .cat-card {
-            background: linear-gradient(145deg, rgba(22, 26, 40, 0.95), rgba(15, 18, 29, 0.95));
+            background: linear-gradient(135deg, rgba(26,28,41,0.92), rgba(18,20,31,0.92));
+            backdrop-filter: blur(4px);
             border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 18px; padding: 18px 14px; position: relative; display: flex; flex-direction: column;
-            justify-content: space-between; min-height: 120px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
         }
-        .prod-badge { position: absolute; top: 12px; right: 12px; background: rgba(255,180,0,0.15); color: #ffb400; font-size: 0.72rem; padding: 3px 9px; border-radius: 10px; font-weight: bold; }
-        .icon-gold-box { width: 44px; height: 44px; border-radius: 14px; background: rgba(255, 180, 0, 0.1); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 10px; }
-        .cat-title { font-size: 1.05rem; font-weight: bold; color: #fff; margin-bottom: 3px; }
-        .cat-sub { font-size: 0.72rem; color: #8892b0; line-height: 1.2; }
+
+        .header-bg-drinks {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            opacity: 0.15; pointer-events: none;
+            display: flex; justify-content: space-around; align-items: center;
+            font-size: 1.3rem; filter: drop-shadow(0 0 3px rgba(255,180,0,0.6));
+            animation: flotarFondo 6s ease-in-out infinite alternate;
+        }
+        @keyframes flotarFondo {
+            0% { transform: translateY(-3px) scale(0.98); }
+            100% { transform: translateY(3px) scale(1.02); }
+        }
+
+        .header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px; position: relative; z-index: 2; }
+        
+        .title-container-wrapper { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .gold-circle-badge {
+            width: 44px; height: 44px; border-radius: 50%;
+            background: radial-gradient(circle, #2a2215 0%, #151419 100%);
+            border: 1.5px dashed rgba(255, 180, 0, 0.6);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 10px rgba(255, 180, 0, 0.2);
+            position: relative;
+        }
+        .gold-circle-badge::after {
+            content: ''; position: absolute; inset: -3px; border-radius: 50%;
+            border: 1px dotted rgba(255, 180, 0, 0.3);
+        }
+        .inner-dot { width: 14px; height: 14px; border-radius: 50%; background: #6e7996; border: 2px solid #ffb400; animation: pulsoPunto 2s infinite; }
+        @keyframes pulsoPunto { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); box-shadow: 0 0 8px #ffb400; } }
+        
+        h1.titulo-animado {
+            font-size: 1.5rem;
+            color: #ff5e9c;
+            font-style: italic;
+            animation: brilloNeonTitulo 3s ease-in-out infinite;
+        }
+        @keyframes brilloNeonTitulo {
+            0% { opacity: 0.85; text-shadow: 0 0 5px rgba(255,94,156,0.4), 0 0 10px rgba(255,180,0,0.2); transform: translateY(0px); }
+            50% { opacity: 1; text-shadow: 0 0 12px rgba(255,94,156,0.9), 0 0 25px rgba(255,215,0,0.7); transform: translateY(-2px); }
+            100% { opacity: 0.85; text-shadow: 0 0 5px rgba(255,94,156,0.4), 0 0 10px rgba(255,180,0,0.2); transform: translateY(0px); }
+        }
+        
+        .brindis-container {
+            display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; border-radius: 20px;
+            background: rgba(255, 255, 255, 0.05); border: 1px dashed rgba(255, 94, 156, 0.4); animation: brillarBordes 3s infinite alternate;
+        }
+        .copa { font-size: 1.25rem; display: inline-block; animation: chocarCopas 1.5s ease-in-out infinite; }
+        .copa-left { transform-origin: bottom right; }
+        .copa-right { transform-origin: bottom left; transform: scaleX(-1); }
+        @keyframes chocarCopas { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(18deg) translateX(2px); } }
+        @keyframes brillarBordes { 0% { border-color: rgba(255,94,156,0.3); } 100% { border-color: rgba(0,255,200,0.6); } }
+
+        .offline-badge { background: rgba(0,255,150,0.15); color: #00ff96; font-size: 0.75rem; padding: 4px 10px; border-radius: 12px; display: inline-block; position: relative; z-index: 2; font-weight: bold; }
+        
+        .header-info-row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; flex-wrap: wrap; gap: 8px; position: relative; z-index: 2; }
+        .ventas-hoy { font-size: 0.85rem; color: #aaa; }
+        .ventas-hoy span { color: #00ff96; font-weight: bold; font-size: 1.1rem; }
+        .btn-cambio-inicial { background: rgba(255,180,0,0.15); color: #ffb400; border: 1px solid rgba(255,180,0,0.4); padding: 5px 10px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; font-weight: bold; }
+
+        .section-header { font-size: 0.85rem; color: #8892b0; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
+        
+        .categories-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .cat-card {
+            background: rgba(20, 23, 36, 0.9); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px; padding: 14px; position: relative; display: flex; flex-direction: column;
+            justify-content: space-between; min-height: 115px; cursor: pointer; transition: transform 0.15s, border-color 0.15s;
+        }
+        .cat-card:active { transform: scale(0.97); border-color: rgba(255,180,0,0.5); }
+        
+        .icon-gold-box {
+            width: 42px; height: 42px; border-radius: 12px; background: rgba(255, 180, 0, 0.08);
+            border: 1px solid rgba(255, 180, 0, 0.25); display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
+        }
+        .icon-animated { font-size: 1.4rem; display: inline-block; animation: bounceIcon 2.5s ease-in-out infinite; }
+        @keyframes bounceIcon { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-4px) rotate(4deg); } }
+
+        .prod-badge { position: absolute; top: 12px; right: 12px; background: rgba(255,180,0,0.15); color: #ffb400; font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; }
+        .cat-title { font-size: 1rem; font-weight: bold; margin-bottom: 2px; }
+        .cat-sub { font-size: 0.75rem; color: #6e7996; }
 
         .view-section { display: none; }
         .view-section.active-view { display: block; }
-        .panel-card { background: rgba(20, 23, 36, 0.92); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
-        .top-cat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+
+        .panel-card { background: rgba(20, 23, 36, 0.92); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
+        .top-cat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
         .back-btn { background: rgba(255,255,255,0.08); color: #fff; border: none; padding: 8px 14px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; }
+        .btn-new-prod { background: #ffb400; color: #0b0c10; border: none; padding: 8px 14px; border-radius: 10px; font-weight: bold; font-size: 0.8rem; cursor: pointer; }
 
         .venta-rapida-box { background: rgba(18, 21, 32, 0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 14px; margin-bottom: 16px; }
-        .multiplicador-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 10px; font-size: 0.8rem; color: #ffa726; font-weight: bold; }
+        .vr-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+        .vr-title { font-size: 0.95rem; font-weight: bold; color: #fff; }
+        .btn-edit-fast { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #ffb400; padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; }
+        
+        .multiplicador-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 10px; }
+        .multiplicador-row span { font-size: 0.8rem; color: #ffa726; font-weight: bold; }
         .mult-controls { display: flex; align-items: center; gap: 12px; }
-        .mult-btn { background: rgba(255,255,255,0.1); color: #fff; border: none; width: 28px; height: 28px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .mult-btn { background: rgba(255,255,255,0.1); color: #fff; border: none; width: 28px; height: 28px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
         .mult-val { font-size: 0.95rem; font-weight: bold; min-width: 16px; text-align: center; }
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .option-tile { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 12px; cursor: pointer; }
-        .option-name { font-size: 0.85rem; color: #fff; margin-bottom: 4px; font-weight: 500; }
-        .option-price { font-size: 0.85rem; color: #ffb400; font-weight: bold; }
 
-        .cart-card { background: rgba(20, 23, 36, 0.92); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
-        .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 0.95rem; }
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .option-tile { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px; cursor: pointer; transition: border-color 0.15s; }
+        .option-tile:active { border-color: #ffb400; background: rgba(255,180,0,0.08); }
+        .option-name { font-size: 0.8rem; color: #fff; margin-bottom: 4px; font-weight: 500; }
+        .option-price { font-size: 0.8rem; color: #ffb400; font-weight: bold; }
+
+        .inventario-box { text-align: center; padding: 20px 10px; border-top: 1px dashed rgba(255,255,255,0.1); }
+        .inv-text { font-size: 0.8rem; color: #8892b0; margin-bottom: 12px; line-height: 1.4; }
+        .btn-register-inv { background: rgba(0,255,150,0.15); color: #00ff96; border: 1px solid rgba(0,255,150,0.3); padding: 10px 16px; border-radius: 10px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
+        .inv-list-container { margin-top: 12px; text-align: left; display: flex; flex-direction: column; gap: 6px; }
+        .inv-item-row { background: rgba(255,255,255,0.04); border-radius: 8px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
+
+        .compra-item-row { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.85rem; border-left: 3px solid #ffb400; }
+
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; z-index: 500; padding: 16px; }
+        .modal-overlay.active { display: flex; }
+        .modal-card { background: #141724; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; width: 100%; max-width: 380px; padding: 20px; max-height: 90vh; overflow-y: auto; }
+        .modal-card h3 { color: #ffb400; font-size: 1.05rem; margin-bottom: 14px; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 0.75rem; color: #8892b0; margin-bottom: 4px; }
+        .form-group input, .form-group select { width: 100%; background: #0b0c10; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #fff; padding: 10px; font-size: 0.85rem; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+        .btn-save-modal { background: #ffb400; color: #0b0c10; border: none; padding: 8px 14px; border-radius: 10px; font-weight: bold; font-size: 0.8rem; cursor: pointer; }
+
+        .cart-card { background: rgba(20, 23, 36, 0.92); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .cart-title { font-size: 1rem; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+        .cart-items-count { font-size: 0.75rem; color: #8892b0; }
         .cart-empty { font-size: 0.85rem; color: #6e7996; margin-bottom: 16px; }
-        .total-row { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px; margin-bottom: 16px; }
-        .total-value { font-size: 1.2rem; color: #ffb400; font-weight: bold; }
+        .total-row { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-bottom: 16px; }
+        .total-label { font-size: 0.9rem; font-weight: bold; }
+        .total-value { font-size: 1.1rem; color: #ffb400; font-weight: bold; }
+
         .action-buttons { display: grid; grid-template-columns: 1.2fr 1fr; gap: 10px; }
         .btn { padding: 14px; border-radius: 12px; border: none; font-weight: bold; font-size: 0.85rem; text-align: center; cursor: pointer; }
         .btn-primary { background: #00ff96; color: #0b0c10; }
         .btn-danger { background: #ff4757; color: #fff; }
 
-        /* Reportes Estilo Original */
-        .report-card { background: rgba(18, 21, 32, 0.9); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 14px; margin-bottom: 12px; }
-        .report-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 8px; color: #aaa; }
-        .report-row strong { color: #fff; }
-        .report-neto { border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 10px; margin-top: 10px; display: flex; justify-content: space-between; font-size: 0.95rem; font-weight: bold; color: #00ff96; }
-
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; z-index: 500; padding: 16px; }
-        .modal-overlay.active { display: flex; }
-        .modal-card { background: #141724; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; width: 100%; max-width: 380px; padding: 20px; }
-        .form-group { margin-bottom: 12px; }
-        .form-group label { display: block; font-size: 0.75rem; color: #8892b0; margin-bottom: 4px; }
-        .form-group input { width: 100%; background: #0b0c10; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #fff; padding: 10px; font-size: 0.85rem; }
-        .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
-        .btn-modal-save { background: #ffb400; color: #0b0c10; border: none; padding: 8px 14px; border-radius: 10px; font-weight: bold; font-size: 0.8rem; cursor: pointer; }
-
-        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(18, 20, 31, 0.98); border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-around; padding: 10px 4px; z-index: 100; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.72rem; color: #6e7996; gap: 4px; background: transparent; border: none; cursor: pointer; }
-        .nav-item.active { color: #ffb400; font-weight: bold; }
-        .placeholder-content { text-align: center; color: #8892b0; padding: 30px 10px; font-size: 0.9rem; }
+        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(18, 20, 31, 0.95); backdrop-filter: blur(6px); border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-around; padding: 12px 4px; z-index: 100; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 0.75rem; color: #6e7996; gap: 5px; text-decoration: none; cursor: pointer; border: none; background: transparent; }
+        .nav-item.active { color: #ffb400; font-weight: 500; }
     </style>
 </head>
 <body>
 
     <div class="header-card">
+        <div class="header-bg-drinks">
+            <span>🍷</span><span>🍺</span><span>🥂</span><span>🥃</span><span>🍷</span><span>🍺</span><span>🥂</span><span>🥃</span>
+        </div>
         <div class="header-top">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <div class="gold-circle-badge"><div class="inner-dot"></div></div>
-                <h1 class="titulo-animado">Licorería Pau</h1>
-            </div>
-            <div class="offline-badge">⚡ CERO INTERNET REQUERIDO</div>
-        </div>
-        <div class="header-info-row">
-            <div class="ventas-hoy">Ventas Hoy<br><span>Bs. <strong id="totalVentasText">0.00</strong></span></div>
-            <button class="btn-cambio-inicial" onclick="abrirModalCambioInicial()">🪙 Cambio: Bs. <span id="cambioInicialText">30.00</span></button>
-        </div>
-    </div>
-
-    <!-- VISTA VENDER -->
-    <div id="view-vender" class="view-section active-view">
-        <div class="section-header">SELECCIONA UNA CATEGORÍA</div>
-        <div class="categories-grid" id="homeCategoriesGrid"></div>
-        <div class="cart-card">
-            <div class="cart-header">
-                <strong>🛒 Carrito de Venta Actual</strong>
-                <span style="font-size:0.75rem; color:#8892b0;"><span id="countItems">0</span> items</span>
-            </div>
-            <div id="cartContent" class="cart-empty">Carrito vacío</div>
-            <div class="total-row">
-                <span>Total Venta:</span>
-                <span class="total-value">Bs. <strong id="totalCartText">0.00</strong></span>
-            </div>
-            <div class="action-buttons">
-                <button class="btn btn-primary" onclick="cobrarVenta()">Cobrar / Vender</button>
-                <button class="btn btn-danger" onclick="terminarJornada()">Terminar Jornada</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- VISTA CATEGORÍA / VENTA RÁPIDA -->
-    <div id="view-categoria" class="view-section">
-        <div class="panel-card">
-            <div class="top-cat-header">
-                <button class="back-btn" onclick="cambiarVista('vender')">← Volver</button>
-                <h2 id="catPanelTitle" style="color:#ffb400; font-size: 1.1rem;">Cervezas</h2>
-                <div></div>
-            </div>
-            <div class="venta-rapida-box">
-                <div class="multiplicador-row">
-                    <span>Multiplicador:</span>
-                    <div class="mult-controls">
-                        <button class="mult-btn" onclick="cambiarMultiplicador(-1)">-</button>
-                        <span class="mult-val" id="multValue">1</span>
-                        <button class="mult-btn" onclick="cambiarMultiplicador(1)">+</button>
-                    </div>
-                </div>
-                <div class="options-grid" id="fastOptionsGrid"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- VISTA CATÁLOGO / STOCK -->
-    <div id="view-catalogo" class="view-section">
-        <div class="panel-card">
-            <div class="top-cat-header"><h2 style="color:#ffb400; font-size: 1.1rem;">📦 Catálogo / Stock</h2></div>
-            <div class="placeholder-content">Inventario local activo y sincronizado offline.</div>
-        </div>
-    </div>
-
-    <!-- VISTA COMPRAS -->
-    <div id="view-compras" class="view-section">
-        <div class="panel-card">
-            <div class="top-cat-header"><h2 style="color:#ffb400; font-size: 1.1rem;">📦 Compras a Proveedores</h2></div>
-            <div class="placeholder-content">Registro de facturas y reabastecimiento local.</div>
-        </div>
-    </div>
-
-    <!-- VISTA PEDIR -->
-    <div id="view-pedir" class="view-section">
-        <div class="panel-card">
-            <div class="top-cat-header"><h2 style="color:#ffb400; font-size: 1.1rem;">⚠️ Pedir / Reposición</h2></div>
-            <div class="placeholder-content">Sugerencias de reposición por stock bajo.</div>
-        </div>
-    </div>
-
-    <!-- VISTA REPORTE (RESTAURADA COMPLETA) -->
-    <div id="view-reporte" class="view-section">
-        <div class="panel-card">
-            <div class="top-cat-header"><h2 style="color:#ffb400; font-size: 1.1rem;">📄 Reporte de Ganancias y Caja</h2></div>
-            <div class="report-card">
-                <div class="report-row"><span>Ventas Acumuladas Hoy:</span><strong id="repVentasHoy">Bs. 0.00</strong></div>
-                <div class="report-row"><span>Cambio Inicial Apartado:</span><strong id="repCambioIni">Bs. 30.00</strong></div>
-                <div class="report-row"><span>Efectivo Total en Caja:</span><strong id="repEfectivoCaja">Bs. 30.00</strong></div>
-                <div class="report-neto"><span>Ganancia / Neto del Mes (Estimado):</span><strong id="repGananciaMes">Bs. 0.00</strong></div>
-            </div>
-            <div class="placeholder-content" style="padding-top:10px; font-size:0.78rem;">Datos calculados localmente desde tu historial de jornadas guardadas.</div>
-        </div>
-    </div>
-
-    <!-- MODAL CAMBIO INICIAL -->
-    <div id="modalCambioInicial" class="modal-overlay">
-        <div class="modal-card">
-            <h3 style="color:#ffb400; margin-bottom:12px;">🪙 Cambio Inicial del Día</h3>
-            <div class="form-group">
-                <label>Monto de cambio con el que inicias (Bs.):</label>
-                <input type="number" id="inputCambioInicial" step="0.5" value="30.00">
-            </div>
-            <div class="modal-actions">
-                <button class="back-btn" onclick="cerrarModal()">Cancelar</button>
-                <button class="btn-modal-save" onclick="guardarCambioInicial()">Guardar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- NAVEGACIÓN INFERIOR COMPLETA -->
-    <div class="nav-bar">
-        <button class="nav-item active" id="nav-vender" onclick="cambiarVista('vender')"><span>🛒</span> Vender</button>
-        <button class="nav-item" id="nav-catalogo" onclick="cambiarVista('catalogo')"><span>📦</span> Catálogo/Stock</button>
-        <button class="nav-item" id="nav-compras" onclick="cambiarVista('compras')"><span>📦</span> Compras</button>
-        <button class="nav-item" id="nav-pedir" onclick="cambiarVista('pedir')"><span>⚠️</span> Pedir</button>
-        <button class="nav-item" id="nav-reporte" onclick="cambiarVista('reporte')"><span>📄</span> Reporte</button>
-    </div>
-
-    <script>
-        let carrito = JSON.parse(localStorage.getItem('pau_c_v')) || [];
-        let ventasTotales = parseFloat(localStorage.getItem('pau_v_tot')) || 0;
-        let gananciaAcumuladaMes = parseFloat(localStorage.getItem('pau_gan_mes')) || 0;
-        let cambioInicial = parseFloat(localStorage.getItem('pau_camb_ini')) || 30.00;
-        let multiplicadorActual = 1;
-
-        const categoriasBase = [
-            {nombre: 'Cervezas', icon: '🍾', sub: 'Botellas, latas, six-packs', prodCount: '2 prod.'},
-            {nombre: 'Cigarros', icon: '🚬', sub: 'Marlboro, Camel, etc.', prodCount: '2 prod.'},
-            {nombre: 'Licores', icon: '🥃', sub: 'Botellas, cajas y combos', prodCount: '2 prod.'},
-            {nombre: 'Coca', icon: '🌿', sub: 'Porciones, machucada, libra', prodCount: '2 prod.'},
-            {nombre: 'Refrescos', icon: '🥤', sub: 'Sodas y aguas 1L a 3L', prodCount: '2 prod.'},
-            {nombre: 'Varios / Bico', icon: '❄️', sub: 'Bicarbonato, hielo, vasos', prodCount: '2 prod.'}
-        ];
-
-        const opcionesPorCat = {
-            'Cervezas': [{nombre: 'Botella individual', precio: 15}, {nombre: 'Six-pack botellas', precio: 85}],
-            'Licores': [{nombre: 'Media botella', precio: 45}, {nombre: 'Botella entera', precio: 90}],
-            'Coca': [{nombre: 'Porción 10 Bs', precio: 10}, {nombre: '1 Libra', precio: 40}],
-            'Refrescos': [{nombre: 'Soda 1.5 L', precio: 13}, {nombre: 'Soda 2 L', precio: 15}],
-            'Varios / Bico': [{nombre: 'Hielo grande', precio: 18}, {nombre: 'Vaso extra', precio: 2}],
-            'Cigarros': [{nombre: 'Cigarro suelto', precio: 2}, {nombre: 'Cajetilla x 10', precio: 10}]
-        };
-
-        actualizarUIPrincipal();
-
-        function renderizarGridHome() {
-            document.getElementById('homeCategoriesGrid').innerHTML = categoriasBase.map(c => `
-                <div class="cat-card" onclick="abrirCategoria('${c.nombre}')">
-                    <span class="prod-badge">${c.prodCount}</span>
-                    <div class="icon-gold-box">${c.icon}</div>
-                    <div>
-                        <div class="cat-title">${c.nombre}</div>
-                        <div class="cat-sub">${c.sub}</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-        renderizarGridHome();
-        actualizarCarritoUI();
-
-        function actualizarUIPrincipal() {
-            document.getElementById('totalVentasText').textContent = ventasTotales.toFixed(2);
-            document.getElementById('cambioInicialText').textContent = cambioInicial.toFixed(2);
-            document.getElementById('repVentasHoy').textContent = `Bs. ${ventasTotales.toFixed(2)}`;
-            document.getElementById('repCambioIni').textContent = `Bs. ${cambioInicial.toFixed(2)}`;
-            document.getElementById('repEfectivoCaja').textContent = `Bs. ${(cambioInicial + ventasTotales).toFixed(2)}`;
-            document.getElementById('repGananciaMes').textContent = `Bs. ${gananciaAcumuladaMes.toFixed(2)}`;
-        }
-
-        function cambiarVista(vista) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            
-            const targetView = document.getElementById('view-' + vista);
-            const targetNav = document.getElementById('nav-' + vista);
-            if (targetView) targetView.classList.add('active-view');
-            if (targetNav) targetNav.classList.add('active');
-            actualizarUIPrincipal();
-        }
-
-        function abrirCategoria(cat) {
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
-            document.getElementById('view-categoria').classList.add('active-view');
-            document.getElementById('catPanelTitle').textContent = cat;
-            multiplicadorActual = 1;
-            document.getElementById('multValue').textContent = '1';
-            
-            const grid = document.getElementById('fastOptionsGrid');
-            const opts = opcionesPorCat[cat] || [];
-            grid.innerHTML = opts.map(o => `
-                <div class="option-tile" onclick="agregarAlCarrito('${o.nombre.replace(/'/g, "\\'")}', ${o.precio})">
-                    <div class="option-name">${o.nombre}</div>
-                    <div class="option-price">Bs. ${o.precio.toFixed(2)}</div>
-                </div>
-            `).join('');
-        }
-
-        function cambiarMultiplicador(delta) {
-            multiplicadorActual = Math.max(1, multiplicadorActual + delta);
-            document.getElementById('multValue').textContent = multiplicadorActual;
-        }
-
-        function agregarAlCarrito(nombre, precio) {
-            const finalP = precio * multiplicadorActual;
-            const finalN = multiplicadorActual > 1 ? `${nombre} (x${multiplicadorActual})` : nombre;
-            carrito.push({nombre: finalN, precio: finalP});
-            multiplicadorActual = 1;
-            document.getElementById('multValue').textContent = '1';
-            actualizarCarritoUI();
-            cambiarVista('vender');
-        }
-
-        function actualizarCarritoUI() {
-            document.getElementById('countItems').textContent = carrito.length;
-            const total = carrito.reduce((s, i) => s + i.precio, 0);
-            document.getElementById('totalCartText').textContent = total.toFixed(2);
-            localStorage.setItem('pau_c_v', JSON.stringify(carrito));
-            
-            const box = document.getElementById('cartContent');
-            if(carrito.length === 0) {
-                box.className = 'cart-empty';
-                box.textContent = 'Carrito vacío';
-            } else {
-                box.className = '';
-                box.innerHTML = carrito.map(i => `<div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:4px;"><span>${i.nombre}</span><span>Bs. ${i.precio.toFixed(2)}</span></div>`).join('');
-            }
-        }
-
-        function cobrarVenta() {
-            if(carrito.length === 0) return alert('Carrito vacío.');
-            const total = carrito.reduce((s, i) => s + i.precio, 0);
-            ventasTotales += total;
-            gananciaAcumuladaMes += total * 0.35; // Estimado de margen comercial operativo
-            localStorage.setItem('pau_v_tot', ventasTotales);
-            localStorage.setItem('pau_gan_mes', gananciaAcumuladaMes);
-            carrito = [];
-            actualizarCarritoUI();
-            actualizarUIPrincipal();
-            alert('¡Venta cobrada con éxito!');
-        }
-
-        function terminarJornada() {
-            const efectivoTotal = cambioInicial + ventasTotales;
-            if(confirm(`=== CIERRE DE JORNADA ===\n🪙 Cambio inicial apartado: Bs. ${cambioInicial.toFixed(2)}\n📈 Ventas netas: Bs. ${ventasTotales.toFixed(2)}\n-----------------------------------------\n💵 Efectivo total en caja: Bs. ${efectivoTotal.toFixed(2)}\n\n¿Cerrar el día y resetear ventas de hoy a 0?`)) {
-                ventasTotales = 0;
-                localStorage.setItem('pau_v_tot', 0);
-                actualizarUIPrincipal();
-                alert('Jornada cerrada. Separa tus Bs. ' + cambioInicial.toFixed(2) + ' de cambio inicial y guarda tu efectivo.');
-            }
-        }
-
-        function abrirModalCambioInicial() {
-            document.getElementById('inputCambioInicial').value = cambioInicial.toFixed(2);
-            document.getElementById('modalCambioInicial').classList.add('active');
-        }
-        function guardarCambioInicial() {
-            const val = parseFloat(document.getElementById('inputCambioInicial').value);
-            if(!isNaN(val)) {
-                cambioInicial = val;
-                localStorage.setItem('pau_camb_ini', cambioInicial);
-                actualizarUIPrincipal();
-            }
-            cerrarModal();
-        }
-        function cerrarModal() {
-            document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
-        }
-    </script>
-</body>
-</html>
+            <div class="title-container-wrapper">
+                <div class="gold-circle-badge">
+                    <div class="inner-dot">
