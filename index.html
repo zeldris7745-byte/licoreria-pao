@@ -84,6 +84,13 @@
         .cambio-box { background: rgba(255,255,255,0.05); padding: 6px 10px; border-radius: 10px; font-size: 0.75rem; color: #fff; display: flex; align-items: center; gap: 6px; }
         .cambio-box input { background: #0b0c10; border: 1px solid rgba(255,255,255,0.2); color: #ffb400; width: 65px; border-radius: 6px; padding: 3px 6px; font-weight: bold; text-align: right; }
 
+        .search-container { margin-top: 12px; position: relative; z-index: 2; }
+        .search-input { width: 100%; background: rgba(11, 12, 16, 0.8); border: 1px solid rgba(255, 180, 0, 0.4); border-radius: 10px; padding: 10px 14px; color: #fff; font-size: 0.9rem; outline: none; }
+        .search-input:focus { border-color: #00ff96; }
+        .search-results-dropdown { position: absolute; top: 100%; left: 0; right: 0; background: #141724; border: 1px solid rgba(255,255,255,0.15); border-radius: 0 0 10px 10px; max-height: 200px; overflow-y: auto; z-index: 10; display: none; }
+        .search-result-item { padding: 10px 14px; font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; display: flex; justify-content: space-between; }
+        .search-result-item:hover { background: rgba(255,180,0,0.15); }
+
         .section-header { font-size: 0.85rem; color: #8892b0; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
         
         .categories-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
@@ -152,6 +159,11 @@
         .cart-title { font-size: 1rem; font-weight: bold; display: flex; align-items: center; gap: 8px; }
         .cart-items-count { font-size: 0.75rem; color: #8892b0; }
         .cart-empty { font-size: 0.85rem; color: #6e7996; margin-bottom: 16px; }
+        
+        .cart-item-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; margin-bottom: 8px; background: rgba(255,255,255,0.03); padding: 6px 10px; border-radius: 8px; }
+        .cart-item-controls { display: flex; align-items: center; gap: 6px; }
+        .cart-qty-btn { background: rgba(255,255,255,0.1); border: none; color: #fff; width: 22px; height: 22px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.8rem; }
+
         .total-row { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-bottom: 16px; }
         .total-label { font-size: 0.9rem; font-weight: bold; }
         .total-value { font-size: 1.1rem; color: #ffb400; font-weight: bold; }
@@ -191,6 +203,11 @@
                 <span>Cambio inicial (Bs.):</span>
                 <input type="number" id="inputCambioInicial" step="0.5" value="0.00" onchange="actualizarCambioInicial(this.value)">
             </div>
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="inputBuscadorGlobal" class="search-input" placeholder="🔍 Buscar producto para vender rápido..." oninput="buscarProductosGlobal(this.value)" autocomplete="off">
+            <div id="searchResultsDropdown" class="search-results-dropdown"></div>
         </div>
     </div>
 
@@ -427,7 +444,6 @@
     </div>
 
     <script>
-        // Eliminado cualquier enlace externo que exija red o manifiesto externo problemático.
         let carrito = JSON.parse(localStorage.getItem('pau_carrito_actual')) || [];
         let ventasTotales = parseFloat(localStorage.getItem('pau_ventas_hoy')) || 0;
         let cambioInicial = parseFloat(localStorage.getItem('pau_cambio_inicial')) || 0;
@@ -507,6 +523,59 @@
             document.getElementById('reportTotal').textContent = ventasTotales.toFixed(2);
             document.getElementById('reportCambioInicial').textContent = cambioInicial.toFixed(2);
             document.getElementById('reportEfectivoEsperado').textContent = (cambioInicial + ventasTotales).toFixed(2);
+        }
+
+        function buscarProductosGlobal(query) {
+            const dropdown = document.getElementById('searchResultsDropdown');
+            const q = query.trim().toLowerCase();
+            if(!q) {
+                dropdown.style.display = 'none';
+                dropdown.innerHTML = '';
+                return;
+            }
+
+            let resultados = [];
+            for(let cat in opcionesPorCat) {
+                opcionesPorCat[cat].forEach(opt => {
+                    if(opt.nombre.toLowerCase().includes(q)) {
+                        resultados.push({nombre: `${opt.nombre} (${cat})`, precio: opt.precio, costo: opt.costo || opt.precio*0.7});
+                    }
+                });
+            }
+            for(let cat in inventarioDetallado) {
+                inventarioDetallado[cat].forEach(item => {
+                    if(item.nombre.toLowerCase().includes(q)) {
+                        resultados.push({nombre: `${item.nombre} [Detallado]`, precio: item.precio, costo: item.costo || item.precio*0.7});
+                    }
+                });
+            }
+
+            if(resultados.length === 0) {
+                dropdown.style.display = 'block';
+                dropdown.innerHTML = `<div class="search-result-item" style="color:#6e7996;">No se encontró ningún producto.</div>`;
+                return;
+            }
+
+            dropdown.style.display = 'block';
+            dropdown.innerHTML = resultados.map(r => `
+                <div class="search-result-item" onclick="seleccionarProductoBuscado('${r.nombre.replace(/'/g, "\\'")}', ${r.precio}, ${r.costo})">
+                    <span>${r.nombre}</span>
+                    <strong style="color:#ffb400;">Bs. ${Number(r.precio).toFixed(2)}</strong>
+                </div>
+            `).join('');
+        }
+
+        function seleccionarProductoBuscado(nombre, precio, costo) {
+            const existente = carrito.find(i => i.nombre === nombre && i.precioUnitario === precio);
+            if(existente) {
+                existente.cantidad = (existente.cantidad || 1) + 1;
+                existente.precio = existente.cantidad * existente.precioUnitario;
+            } else {
+                carrito.push({nombre, precioUnitario: precio, precio, costo, cantidad: 1});
+            }
+            document.getElementById('inputBuscadorGlobal').value = '';
+            document.getElementById('searchResultsDropdown').style.display = 'none';
+            actualizarCarritoUI();
         }
 
         function exportarRespaldoJSON() {
@@ -625,7 +694,7 @@
 
         function renderizarReporteMensual() {
             actualizarReporteUI();
-            const mesActual = new Date().toISOString().slice(0, 7); // "YYYY-MM"
+            const mesActual = new Date().toISOString().slice(0, 7);
             const ventasMes = ventasHistorial.filter(v => v.mesAnio === mesActual);
             const totalVentasMes = ventasMes.reduce((sum, v) => sum + Number(v.total), 0);
             const totalCostoVendidoMes = ventasMes.reduce((sum, v) => sum + Number(v.costoTotalVendido || 0), 0);
@@ -639,7 +708,8 @@
             const conteoProductos = {};
             ventasMes.forEach(v => {
                 v.items.forEach(item => {
-                    conteoProductos[item.nombre] = (conteoProductos[item.nombre] || 0) + 1;
+                    const cant = item.cantidad || 1;
+                    conteoProductos[item.nombre] = (conteoProductos[item.nombre] || 0) + cant;
                 });
             });
 
@@ -676,7 +746,7 @@
                             productosOrdenados.map(([prod, cant]) => `
                                 <div style="display:flex; justify-content:space-between; background:rgba(255,255,255,0.02); padding:6px 10px; border-radius:6px; margin-bottom:4px;">
                                     <span>${prod}</span>
-                                    <span style="color:#ffb400; font-weight:bold;">${cant} ventas</span>
+                                    <span style="color:#ffb400; font-weight:bold;">${cant} unidades</span>
                                 </div>
                             `).join('')}
                     </div>
@@ -742,12 +812,41 @@
         }
 
         function agregarRapido(nombre, precioUnitario, costoUnitario = 0) {
-            const precioTotalItem = precioUnitario * multiplicadorActual;
-            const costoTotalItem = costoUnitario * multiplicadorActual;
-            const nombreCompleto = multiplicadorActual > 1 ? `${nombre} (x${multiplicadorActual})` : nombre;
-            carrito.push({nombre: nombreCompleto, precio: precioTotalItem, costo: costoTotalItem});
+            const cantidadSeleccionada = multiplicadorActual;
+            const precioTotalItem = precioUnitario * cantidadSeleccionada;
+            const costoTotalItem = costoUnitario * cantidadSeleccionada;
+            
+            const existente = carrito.find(i => i.nombre === nombre && i.precioUnitario === precioUnitario);
+            if(existente) {
+                existente.cantidad = (existente.cantidad || 1) + cantidadSeleccionada;
+                existente.precio = existente.cantidad * existente.precioUnitario;
+                existente.costo = existente.cantidad * (costoUnitario || existente.precioUnitario * 0.7);
+            } else {
+                carrito.push({
+                    nombre: nombre, 
+                    precioUnitario: precioUnitario,
+                    precio: precioTotalItem, 
+                    costo: costoTotalItem, 
+                    cantidad: cantidadSeleccionada
+                });
+            }
+
             multiplicadorActual = 1;
-            document.getElementById('multValue').textContent = multiplicadorActual;
+            document.getElementById('multValue').textContent = '1';
+            actualizarCarritoUI();
+            volverAVender();
+        }
+
+        function cambiarCantidadCarrito(index, delta) {
+            const item = carrito[index];
+            const nuevaCantidad = (item.cantidad || 1) + delta;
+            if(nuevaCantidad <= 0) {
+                carrito.splice(index, 1);
+            } else {
+                item.cantidad = nuevaCantidad;
+                item.precio = item.cantidad * item.precioUnitario;
+                if(item.costoUnitario) item.costo = item.cantidad * item.costoUnitario;
+            }
             actualizarCarritoUI();
         }
 
@@ -758,7 +857,24 @@
                 return;
             }
             item.stock = Math.max(0, item.stock - 1);
-            carrito.push({nombre: `${item.nombre} (Detallado)`, precio: item.precio, costo: item.costo || item.precio * 0.7});
+            
+            const precioUnit = item.precio;
+            const costoUnit = item.costo || item.precio * 0.7;
+            const existente = carrito.find(i => i.nombre === `${item.nombre} [Detallado]` && i.precioUnitario === precioUnit);
+            
+            if(existente) {
+                existente.cantidad = (existente.cantidad || 1) + 1;
+                existente.precio = existente.cantidad * existente.precioUnitario;
+            } else {
+                carrito.push({
+                    nombre: `${item.nombre} [Detallado]`,
+                    precioUnitario: precioUnit,
+                    precio: precioUnit,
+                    costo: costoUnit,
+                    cantidad: 1
+                });
+            }
+
             localStorage.setItem('pau_inventario_detallado', JSON.stringify(inventarioDetallado));
             renderizarInventarioDetallado();
             actualizarCarritoUI();
@@ -975,7 +1091,10 @@
             const countItems = document.getElementById('countItems');
             const cartContent = document.getElementById('cartContent');
             const totalCartText = document.getElementById('totalCartText');
-            countItems.textContent = carrito.length;
+            
+            const totalItemsCount = carrito.reduce((sum, item) => sum + (item.cantidad || 1), 0);
+            countItems.textContent = totalItemsCount;
+            
             let total = carrito.reduce((sum, item) => sum + item.precio, 0);
             totalCartText.textContent = total.toFixed(2);
             document.getElementById('reportTotal').textContent = (ventasTotales + total).toFixed(2);
@@ -988,7 +1107,19 @@
                 cartContent.className = 'cart-empty';
             } else {
                 cartContent.className = '';
-                cartContent.innerHTML = carrito.map(i => `<div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:6px;"><span>${i.nombre}</span><span>Bs. ${Number(i.precio).toFixed(2)}</span></div>`).join('');
+                cartContent.innerHTML = carrito.map((i, index) => `
+                    <div class="cart-item-row">
+                        <div>
+                            <div>${i.nombre}</div>
+                            <div style="font-size:0.75rem; color:#ffb400;">Bs. ${Number(i.precio).toFixed(2)}</div>
+                        </div>
+                        <div class="cart-item-controls">
+                            <button class="cart-qty-btn" onclick="cambiarCantidadCarrito(${index}, -1)">-</button>
+                            <span style="font-size:0.85rem; font-weight:bold; min-width:18px; text-align:center;">${i.cantidad || 1}</span>
+                            <button class="cart-qty-btn" onclick="cambiarCantidadCarrito(${index}, 1)">+</button>
+                        </div>
+                    </div>
+                `).join('');
             }
         }
 
