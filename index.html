@@ -113,4 +113,38 @@
         .back-btn { background: rgba(255,255,255,0.08); color: #fff; border: none; padding: 8px 14px; border-radius: 10px; cursor: pointer; font-size: 0.85rem; }
         .btn-new-prod { background: #ffb400; color: #0b0c10; border: none; padding: 8px 14px; border-radius: 10px; font-weight: bold; font-size: 0.8rem; cursor: pointer; }
 
-        .venta-rapida-box { background: rgba(18, 21, 32, 0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 
+        .venta-rapida-box { background: rgba(18, 21, 32, 0.85); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 14px; margin-bottom: 16px; }
+        .vr-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+        .vr-title { font-size: 0.95rem; font-weight: bold; color: #fff; }
+        .btn-edit-fast { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #ffb400; padding: 6px 12px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; }
+        
+        .multiplicador-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; background: rgba(0,0,0,0.25); padding: 8px 12px; border-radius: 10px; }
+        .multiplicador-row span { font-size: 0.8rem; color: #ffa726; font-weight: bold; }
+        .mult-controls { display: flex; align-items: center; gap: 12px; }
+        .mult-btn { background: rgba(255,255,255,0.1); color: #fff; border: none; width: 28px; height: 28px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
+        .mult-val { font-size: 0.95rem; font-weight: bold; min-width: 16px; text-align: center; }
+
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .option-tile { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 10px; cursor: pointer; transition: border-color 0.15s; }
+        .option-tile:active { border-color: #ffb400; background: rgba(255,180,0,0.08); }
+        .option-name { font-size: 0.8rem; color: #fff; margin-bottom: 4px; font-weight: 500; }
+        .option-price { font-size: 0.8rem; color: #ffb400; font-weight: bold; }
+
+        .inventario-box { text-align: center; padding: 20px 10px; border-top: 1px dashed rgba(255,255,255,0.1); }
+        .inv-text { font-size: 0.8rem; color: #8892b0; margin-bottom: 12px; line-height: 1.4; }
+        .btn-register-inv { background: rgba(0,255,150,0.15); color: #00ff96; border: 1px solid rgba(0,255,150,0.3); padding: 10px 16px; border-radius: 10px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
+        .inv-list-container { margin-top: 12px; text-align: left; display: flex; flex-direction: column; gap: 6px; }
+        .inv-item-row { background: rgba(255,255,255,0.04); border-radius: 8px; padding: 8px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; }
+
+        .compra-item-row { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.85rem; border-left: 3px solid #ffb400; }
+
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; z-index: 500; padding: 16px; }
+        .modal-overlay.active { display: flex; }
+        .modal-card { background: #141724; border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; width: 100%; max-width: 380px; padding: 20px; max-height: 90vh; overflow-y: auto; }
+        .modal-card h3 { color: #ffb400; font-size: 1.05rem; margin-bottom: 14px; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 0.75rem; color: #8892b0; margin-bottom: 4px; }
+        .form-group input, .form-group select { width: 100%; background: #0b0c10; border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; color: #fff; padding: 10px; font-size: 0.85rem; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+
+        .cart-card { background: rgba(20, 23, 36, 0.92); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 16px; margin-bottom: 20px; }
